@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>52939 · Блок 1 · Модель, зачем её объясняют, эффекты в линейной модели</title>
+<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --paper:#FFFFFF;
+    --ink:#1E2430;
+    --ink-soft:#5B6472;
+    --rule:#E3E2DC;
+    --accent:#2F6F6D;
+    --accent-bg:#EBF2F1;
+    --trap:#B5540B;
+    --trap-bg:#FCF1E8;
+    --core:#8A5CB8;
+    --calc:#C0392B;
+    --safe:#2F6F6D;
+    --source:#5B6472;
+    --illustr:#9AA0A6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:16.5px; line-height:1.65;
+    width:66.67%; margin:0 auto; padding:40px 0 100px;
+  }
+  @media (max-width:900px){ body{width:auto; max-width:760px; padding:40px 20px 100px;} }
+  h1{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.7em; font-weight:600; margin:0 0 6px;}
+  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
+  .badges{margin-bottom:28px;}
+  .badge{
+    display:inline-block; font-size:0.78em; padding:2px 9px; border-radius:3px; margin-right:6px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .badge.core{background:var(--core);color:#fff;}
+  .badge.calc{background:var(--calc);color:#fff;}
+  .badge.safe{background:var(--safe);color:#fff;}
+
+  nav.toc{
+    background:var(--paper); border:1px solid var(--rule); border-radius:4px;
+    padding:14px 18px; margin-bottom:36px; font-size:0.92em;
+  }
+  nav.toc a{color:var(--accent); text-decoration:none;}
+  nav.toc a:hover{text-decoration:underline;}
+  nav.toc ol{margin:6px 0 0; padding-left:20px;}
+
+  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
+  section.step:first-of-type{border-top:none;}
+
+  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
+  h3{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.06em; margin:22px 0 4px;}
+  .src{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:0.78em; color:var(--source); margin-bottom:14px;
+  }
+  .src a{color:var(--accent);}
+  .src.illustr{color:var(--illustr); font-style:italic;}
+
+  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
+  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
+  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
+    color:var(--illustr); font-style:normal; font-weight:600;}
+
+  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .trap b{color:var(--trap);}
+
+  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .calcbox b{color:var(--accent);}
+
+  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
+  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
+  table.contrast th{background:#DCEAE8;}
+
+  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
+
+  .lead{font-size:1.03em;}
+  ul{padding-left:22px;}
+  li{margin:4px 0;}
+  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
+  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
+  table.plain th{background:#F2F1EC; font-weight:600;}
+  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .trap .src{margin-top:8px;}
+  a{color:var(--accent);}
+
+  a.back-link{
+    display:inline-block; font-size:0.85em; color:var(--accent);
+    text-decoration:none; margin-bottom:14px;
+  }
+  a.back-link:hover{text-decoration:underline;}
+  @media (max-width:480px){
+    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
+  }
+  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
+</style>
+</head>
+
+<body>
+
+<a class="back-link" href="index.html">← Back to topics</a>
+<h1>Модель, объяснение, эффект: линейная модель как точка отсчёта</h1>
+<div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 1 · тема 1</div>
+<div class="badges">
+  <span class="badge safe">🟢 Страховка</span>
+</div>
+
+<nav class="toc">
+  Оглавление
+  <ol>
+    <li><a href="#setup">Постановка: что значит «эффект признака»</a></li>
+    <li><a href="#model">Что такое модель</a></li>
+    <li><a href="#why">Зачем объясняют модели — три причины</a></li>
+    <li><a href="#taxonomy">Таксономия объяснений: пять осей (карточка + ссылка)</a></li>
+    <li><a href="#lm">Линейная модель и интерпретация весов</a></li>
+    <li><a href="#effects">Weight plot → effects → effect plot</a></li>
+    <li><a href="#calc">Счётный разбор: почему $|\beta_j|$ — плохая важность, а $|\beta_j|\,\sigma_j$ — хорошая</a></li>
+    <li><a href="#local">Локальная интерпретация и мостик к SHAP</a></li>
+    <li><a href="#glm">GLM и регуляризация</a></li>
+    <li><a href="#breiman">Breiman, «Two Cultures» — три тезиса (карточка)</a></li>
+    <li><a href="#cards">Карточки для экзамена</a></li>
+  </ol>
+</nav>
+
+<!-- ============ ПОСТАНОВКА ============ -->
+<section class="step" id="setup">
+  <h2>Постановка: что значит «эффект признака»</h2>
+  <div class="src">src: course_map.md, лекция 1 + раздел «Паттерн экзамена»; study_plan.md, тема 1</div>
+
+  <p class="lead">Весь курс вращается вокруг одного вопроса: <b>каков эффект признака на предсказание
+  модели</b>. Начинать с линейной модели удобно не потому, что она проста, а потому, что это
+  единственный случай, где вопрос имеет ответ <b>одним числом</b> — коэффициентом $\beta_j$.
+  Именно поэтому линейная модель называется <i>inherently interpretable</i>: объяснение не надо
+  строить, оно уже записано в параметрах.</p>
+
+  <p>Дальше по курсу это число будет постепенно распадаться. Сначала выяснится, что даже в линейном
+  случае $\beta_j$ — <b>плохая мера важности</b>, и вместо него понадобится $\beta_jx_j$
+  (разделы 5–6). Потом, когда модель перестанет быть линейной, одного числа не хватит и эффект
+  станет <b>кривой</b>. Потом окажется, что кривую можно построить несколькими несовпадающими
+  способами. Потом кривую снова свернут в число — но уже иначе, чем $\beta_j$. Эта тема задаёт
+  точку отсчёта для всей цепочки, а заодно словарь («модель», «объяснение») и таксономию пяти осей,
+  по которой дальше классифицируют каждый метод.</p>
+</section>
+
+<!-- ============ ЧТО ТАКОЕ МОДЕЛЬ ============ -->
+<section class="step" id="model">
+  <h2>1. Что такое модель</h2>
+  <div class="src">src: слайды л. 1 (сл. 2–3); master_conspect.md, л. 1 «Что такое модель»</div>
+
+  <p><b>Классическое определение со слайда:</b> «упрощённое описание системы или процесса,
+  помогающее в вычислениях и предсказаниях». Пример, с которого начинается курс, — закон Гука:</p>
+
+  $$\Delta L = k\,m$$
+
+  <p>собираем пары $(\Delta L_1,m_1),\dots,(\Delta L_n,m_n)$, оцениваем $k$ по данным. Что даёт модель:</p>
+  <ul>
+    <li><b>суммирует данные</b> — вместо $n$ пар одно число $k$;</li>
+    <li><b>переводит данные в инсайты</b> — $k$ имеет физический смысл;</li>
+    <li><b>позволяет задать новые вопросы</b> — как $k$ зависит от материала, от толщины.</li>
+  </ul>
+
+  <p><b>Определение, принятое в этом курсе:</b> модель — это функция или вычислительный алгоритм,
+  предсказывающий значение $Y$ (или выбирающий действие $A$) по входу $X$, где параметры $\theta$
+  подбираются по данным под «объективный» критерий потерь.</p>
+
+  <p><b>Откуда берётся потребность в объяснениях.</b> Слайд формулирует это как «life is messy»:
+  подбор моделей под данные улучшил предсказания, но сделал модели большими и грязными —</p>
+
+  <table class="plain">
+    <tr><th>Что «много»</th><th>Пример со слайда</th><th>Почему это мешает понять модель</th></tr>
+    <tr><td><b>Переменных</b></td><td>130 переменных в задаче о рецидиве (recidivism); миллионы кликов в соцсетях</td>
+        <td>нельзя посмотреть на все коэффициенты глазами</td></tr>
+    <tr><td><b>Параметров</b></td><td>3 млрд в небольшой языковой модели</td>
+        <td>параметры перестают соответствовать чему-либо осмысленному по отдельности</td></tr>
+    <tr><td><b>Шагов вычисления</b></td><td>глубокая сеть</td>
+        <td>нет короткого пути от входа к выходу, который можно проследить</td></tr>
+  </table>
+
+  <p>Отсюда рабочее определение объяснения в курсе: <b>объяснения переводят модель на язык,
+  на котором человек может понять и действовать</b> («Explanations translate models, so humans
+  can understand and act»).</p>
+</section>
+
+<!-- ============ ЗАЧЕМ ============ -->
+<section class="step" id="why">
+  <h2>2. Зачем объясняют модели — три причины</h2>
+  <div class="src">src: слайды л. 1 (сл. 4–8); master_conspect.md, «Зачем объясняют модели (л. 1)»</div>
+
+  <p>Слайды отводят этому пять слайдов подряд, и структура ответа ровно такая: <b>три причины,
+  причём вторая — с тремя подпунктами</b>. Это готовый ответ на подпункт «зачем вообще нужна
+  интерпретируемость».</p>
+
+  <table class="plain">
+    <tr><th>#</th><th>Причина</th><th>Что конкретно</th><th>Куда ведёт в курсе</th></tr>
+    <tr>
+      <td><b>1</b></td><td><b>Получить инсайт</b></td>
+      <td>инсайт <i>о модели</i> или <i>о мире</i> — обратите внимание, что это уже здесь разделено;
+      именно это разделение станет осью TTTM/TTTD</td>
+      <td>вся ось «true-to-the-model vs true-to-the-data»</td>
+    </tr>
+    <tr>
+      <td><b>2</b></td><td><b>Отладить / улучшить / проаудировать модель</b></td>
+      <td>три отдельных слайда с тремя разными смыслами:<br>
+      (а) <b>найти ошибки</b> в модели и в обработке данных;<br>
+      (б) <b>направить усилия</b> — понимание того, что полезно модели, направляет и моделирование,
+      и <i>сбор данных</i>;<br>
+      (в) <b>выявить bias</b> и использование защищённых признаков (protected information),
+      особенно в решениях с высокой ценой ошибки</td>
+      <td>sanity checks (<a href="topic-08.html">тема 8</a>),
+      COMPAS у Fisher (<a href="topic-05.html">тема 5</a>),
+      оценка методов (<a href="topic-11.html">тема 11</a>)</td>
+    </tr>
+    <tr>
+      <td><b>3</b></td><td><b>Понять и контролировать отдельное решение</b></td>
+      <td>counterfactual-примеры показывают, как изменить решение <b>минимальным</b> изменением входа</td>
+      <td>counterfactuals (<a href="topic-07.html">тема 7</a>,
+      <a href="topic-09.html">тема 9</a>)</td>
+    </tr>
+  </table>
+
+  <div class="trap"><b>Как это спрашивают.</b> Отдельным вопросом «зачем нужны объяснения» —
+  почти никогда. Зато это <b>первое предложение хорошего ответа</b> на любой вопрос вида
+  «зачем нужен метод X»: сначала назвать, к какой из трёх целей метод относится
+  (аудит модели? контроль отдельного решения?), потом описывать механику. Обратная сторона —
+  в <a href="topic-11.html">теме 11</a>: Doshi-Velez отдельно разбирает,
+  <b>когда объяснения НЕ нужны</b>.</div>
+</section>
+
+<!-- ============ ТАКСОНОМИЯ ============ -->
+<section class="step" id="taxonomy">
+  <h2>3. Таксономия объяснений: пять осей</h2>
+  <div class="src">src: слайды л. 1 (сл. 9), повторено в л. 13 (сл. 14) — полный разбор с полюсами и примерами:
+  <a href="topic-04.html#taxonomy">тема 4, §«Таксономия объяснений»</a></div>
+
+  <p><b>Таксономия разобрана подробно в теме 4</b> (там же — что означают полюса каждой оси и куда
+  попадают методы лекций 2–4). Здесь — только сама пятёрка в том виде, в каком она дана на слайде
+  лекции 1, плюс координаты методов <i>этой</i> темы.</p>
+
+  <table class="plain">
+    <tr><th>#</th><th>Ось (формулировка слайда)</th><th>Одна строка смысла</th></tr>
+    <tr><td>1</td><td>Explaining the model (<b>TTTM</b>) or explaining the data (<b>TTTD</b>)</td>
+        <td>объяснение говорит про $\hat f$ или про мир</td></tr>
+    <tr><td>2</td><td><b>White box vs Black box</b> — «используем ли мы параметры модели, чтобы построить объяснение?»</td>
+        <td>нужен ли доступ внутрь модели</td></tr>
+    <tr><td>3</td><td>Explanations in <b>Feature space</b> vs in <b>Example space</b></td>
+        <td>ответ в терминах переменных или в терминах примеров</td></tr>
+    <tr><td>4</td><td><b>Global</b> (on a population) vs <b>Local</b> (on a single example)</td>
+        <td>про всю популяцию или про одно наблюдение</td></tr>
+    <tr><td>5</td><td><b>Computability constraints</b></td>
+        <td>сколько это стоит посчитать</td></tr>
+  </table>
+
+  <p><b>Координаты методов лекции 1.</b> Их полезно проговорить сразу — это тренировка того самого
+  подпункта «классифицируй метод», который есть почти в каждом вопросе Moed A.</p>
+
+  <table class="contrast">
+    <tr><th>Метод</th><th>TTTM / TTTD</th><th>White / Black</th><th>Global / Local</th><th>Стоимость</th></tr>
+    <tr><td><b>Вес $\beta_j$</b></td><td>TTTM (это буквально параметр модели)</td><td><b>White box</b></td>
+        <td>глобальный</td><td>ноль — уже посчитан</td></tr>
+    <tr><td><b>Effect $\beta_j x_j^{(i)}$</b></td><td>TTTM</td><td><b>White box</b></td>
+        <td><b>локальный</b> (одно наблюдение $i$)</td><td>ноль</td></tr>
+    <tr><td><b>Effect plot</b> (распределение эффектов)</td><td>TTTM</td><td><b>White box</b></td>
+        <td><b>глобальный</b> (агрегат по всем $i$)</td><td>$O(n)$</td></tr>
+  </table>
+
+  <p>Дополнительная ось, которая появится в л. 12 для концептов: <b>at-training vs post-hoc</b> ×
+  <b>supervised vs unsupervised</b> (<a href="topic-10.html">тема 10</a>).</p>
+</section>
+
+<!-- ============ ЛИНЕЙНАЯ МОДЕЛЬ ============ -->
+<section class="step" id="lm">
+  <h2>4. Линейная модель и интерпретация весов</h2>
+  <div class="src">src: слайды л. 1 (сл. 17–20), «Interpreting the weights of a model [see board]»; IML гл. 6; master_conspect.md, л. 1</div>
+
+  $$\hat f(x)=\beta_0+\sum_{j=1}^{p}\beta_j x_j$$
+
+  <p><b>Что означает вес.</b> $\beta_j$ — изменение предсказания при изменении $x_j$ на единицу,
+  <b>при фиксированных остальных признаках</b>. Эта оговорка «при фиксированных остальных» —
+  и есть <i>ceteris paribus</i>; в <a href="topic-02.html">теме 2</a> из неё
+  вырастет целый график, а в <a href="topic-04.html#pd-problem">теме 4</a>
+  выяснится, что «зафиксировать остальные» не всегда физически возможно.</p>
+
+  <p><b>Как обучается.</b> Классический метод — обычный МНК (ordinary least squares):</p>
+  $$\hat\beta=\arg\min_{\beta}\sum_{i=1}^{n}\big(y^{(i)}-\hat f(x^{(i)})\big)^2
+    \qquad\Longrightarrow\qquad \hat\beta=(X^\top X)^{-1}X^\top y$$
+
+  <p><b>Регуляризация</b> (слайд 19) — два варианта и два разных эффекта на интерпретируемость:</p>
+  <table class="plain">
+    <tr><th>Штраф</th><th>Название</th><th>Что делает с весами</th><th>Что это даёт интерпретации</th></tr>
+    <tr><td>$\lambda\sum_j|\beta_j|$</td><td><b>L1 / Lasso</b></td><td><b>разреженные</b> веса (часть ровно нулевые)</td>
+        <td>модель сама выбирает короткий список признаков — это уже форма объяснения</td></tr>
+    <tr><td>$\lambda\sum_j\beta_j^2$</td><td><b>L2 / Ridge</b></td><td><b>сжатые</b> веса (все уменьшены, нулей нет)</td>
+        <td>стабилизирует веса при коррелированных признаках, но список признаков не сокращает</td></tr>
+  </table>
+
+  <div class="trap"><b>Ловушка «при фиксированных остальных».</b> Интерпретация $\beta_j$ верна как
+  утверждение <b>о модели</b> всегда, но как утверждение <b>о мире</b> — только если признаки
+  действительно можно двигать независимо. Если $x_j$ сильно коррелирует с $x_k$, точка
+  «$x_j$ увеличили на 1, остальные оставили» может просто не существовать в природе. Это первое
+  появление в курсе темы <b>off-manifold</b>, к которой курс возвращается в теме 4 (экстраполяция PD)
+  и в теме 5 (критика Hooker).</div>
+</section>
+
+<!-- ============ EFFECTS ============ -->
+<section class="step" id="effects">
+  <h2>5. Weight plot → effects → effect plot</h2>
+  <div class="src">src: слайды л. 1 (сл. 21–24, 26–27) — «Determining importance», «Effects and Effect Plots»; master_conspect.md, л. 1 «Линейная модель и эффекты»</div>
+
+  <p>Три слайда подряд задают вопрос «какой признак важнее?» и последовательно отбраковывают
+  первый ответ. Это <b>первая мера важности в курсе</b>, и логика её появления повторится потом
+  почти дословно для Gini FI и PFI.</p>
+
+  <h3>Шаг 1. Weight plot — и почему он плохой</h3>
+  <p>Molnar предлагает смотреть на <b>weight plot</b>: столбики $\beta_j$ с доверительными интервалами.
+  Слайд 22 буквально спрашивает: «хороший ли это прокси важности? почему да или нет?».</p>
+
+  <p><b>Ответ: нет.</b> $\beta_j$ измеряется в единицах «выход на единицу признака», а <i>единица</i>
+  у каждого признака своя. Признак с огромным весом, который в данных почти не меняется,
+  на предсказание влияет мало; признак с маленьким весом, который меняется в широких пределах, —
+  сильно. Weight plot не видит <b>разброса самого признака</b>.</p>
+
+  <h3>Шаг 2. Effects</h3>
+  <p>Слайд 23 вводит поправку одной формулой: «contribution of the feature depends on
+  <b>effects = feature-value × weight</b>»:</p>
+  $$\text{effect}_j^{(i)}=\beta_j\cdot x_j^{(i)}$$
+  <p>Это уже <b>локальная</b> величина: вклад признака $j$ в предсказание <i>конкретного</i>
+  наблюдения $i$.</p>
+
+  <h3>Шаг 3. Effect plot</h3>
+  <p><b>Effect plot</b> — boxplot распределения $\{\beta_j x_j^{(i)}\}_{i=1}^{n}$, отдельно для каждого $j$.
+  Из локальных величин собирается глобальная картина, и важность читается как
+  <b>ширина распределения эффектов</b>: чем шире «ящик», тем сильнее этот признак двигает
+  предсказание по популяции.</p>
+
+  <div class="fig"><div id="plot-eff" style="height:330px;"></div></div>
+  <div class="fig-cap illustr">Рис. 1. Weight plot против effect plot на одних и тех же двух признаках.
+  Слева по $|\beta_j|$ побеждает <code class="f">holiday</code> (вес 50 против 2). Справа, после
+  умножения на реальные значения признака, побеждает <code class="f">temp</code>: праздники редки,
+  поэтому их эффект почти всегда равен нулю, а температура меняется каждый день. Числа —
+  из счётного разбора ниже.</div>
+
+  <div class="trap"><b>Как это спрашивают.</b> Формулировка со слайда — «какой из этих признаков самый
+  важный?» с показанным weight plot. Правильный ответ в три шага: <b>(1)</b> по весам судить нельзя;
+  <b>(2)</b> нужны effects = <i>значение признака × вес</i>; <b>(3)</b> упомянуть <b>шкалу /
+  стандартизацию</b> — если признаки предварительно стандартизованы, $|\beta_j|$ снова становится
+  осмысленным, потому что «единица» у всех признаков стала одна и та же ($1\sigma$).</div>
+</section>
+
+<!-- ============ СЧЁТНЫЙ ============ -->
+<section class="step" id="calc">
+  <h2>6. Счётный разбор: $|\beta_j|$ против $|\beta_j|\,\sigma_j$</h2>
+  <div class="src illustr">src: числа сконструированы под механику слайдов 21–24 и 26–27 (реальных значений на слайдах нет) — на экзамене не цитировать, арифметику воспроизводить можно</div>
+
+  <p>Задача даёт в руки то, что на экзамене превращается в одну строчку ответа: <b>во сколько раз
+  ошибётся ранжирование, если считать важностью $|\beta_j|$</b>.</p>
+
+  <div class="calcbox">
+    <b>Дано.</b> Модель проката велосипедов
+    $$\hat f(x)=100+2\cdot\text{temp}+50\cdot\text{holiday}$$
+    <ul style="margin:6px 0;">
+      <li><code class="f">temp</code> — температура в °C, среднее $\bar x=15$, стандартное отклонение $\sigma=8$;</li>
+      <li><code class="f">holiday</code> — бинарный, праздник ($1$) в $p=4\%$ дней.</li>
+    </ul>
+    Вопрос: какой признак важнее для модели?
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 1. Наивный ответ по весам (weight plot).</b>
+    $$|\beta_{\text{holiday}}|=50 \gg |\beta_{\text{temp}}|=2$$
+    Вывод «holiday в 25 раз важнее» — <b>неверен</b>, и именно его ждут отбраковать.
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 2. Разброс каждого признака.</b> Для бинарного признака с долей $p$
+    $$\operatorname{Var}(\text{holiday})=p(1-p)=0{,}04\cdot0{,}96=0{,}0384
+      \ \Rightarrow\ \sigma_{\text{holiday}}=\sqrt{0{,}0384}\approx0{,}196$$
+    $$\sigma_{\text{temp}}=8$$
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 3. Разброс эффектов.</b> Эффект — это $\beta_j x_j$, а умножение на константу
+    умножает стандартное отклонение на ту же константу:
+    $$\operatorname{sd}\big(\text{effect}_{\text{temp}}\big)=|\beta_j|\,\sigma_j=2\cdot 8=\mathbf{16}$$
+    $$\operatorname{sd}\big(\text{effect}_{\text{holiday}}\big)=50\cdot0{,}196=\mathbf{9{,}80}$$
+    <b>Ранжирование перевернулось:</b> temp важнее holiday примерно в $16/9{,}8\approx1{,}63$ раза,
+    хотя по весам holiday «выигрывал» в 25 раз.
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 4. Проверка через дисперсию (и мостик в тему 5).</b> Возведём в квадрат:
+    $$\operatorname{Var}\big(\beta_j X_j\big)=\beta_j^2\operatorname{Var}(X_j):\qquad
+      \text{temp}: 4\cdot64=256,\qquad \text{holiday}: 2500\cdot0{,}0384=96$$
+    $\sqrt{256}=16$ ✓, $\sqrt{96}\approx9{,}80$ ✓.
+    <p style="margin:8px 0 0;">А теперь важное: для линейной модели PD-кривая признака $j$ равна
+    $\hat f_{PD,j}(x_j)=\beta_j x_j+\text{const}$, поэтому
+    $$\text{PDI}_j=\operatorname{Var}\big(\hat f_{PD,j}(X_j)\big)=\beta_j^2\operatorname{Var}(X_j)$$
+    — то есть <b>Partial Dependence Importance из лекции 5 в линейном случае буквально совпадает
+    с квадратом «ширины effect plot»</b>. Effect plot — не устаревшая наивность, а частный случай PDI.</p>
+  </div>
+
+  <div class="trap"><b>Три вывода, которые стоят баллов.</b>
+  (1) Важность ≈ $|\beta_j|\cdot\sigma_j$, а не $|\beta_j|$ — <b>если признаки стандартизованы,
+  это одно и то же</b>, поэтому вопрос «стандартизованы ли признаки» здесь не придирка, а суть.
+  (2) Effect plot <b>вообще не смотрит на $y$</b>: он строится только из модели и распределения $X$.
+  Это роднит его с <b>PD Importance</b>, а не с PFI, который считается по <i>ошибке</i> и потому
+  требует меток (<a href="topic-05.html">тема 5</a>).
+  (3) Оборотная сторона: effect plot — <b>white-box</b> метод, он существует только потому,
+  что модель линейна и её параметры доступны.</div>
+
+  <div class="trap"><b>Та же ошибка в живом виде — из ДЗ 1.</b> В третьем вопросе ДЗ 1 важность
+  категориальных признаков считалась как $\sum|\beta_{\text{dummy}}|$ по всем уровням. На этой мере
+  первое место занял <code class="f">mnth</code> (важность 3421) — но у месяца <b>11 дамми-переменных</b>,
+  а у <code class="f">holiday</code> одна. Мера, которая суммирует по уровням, автоматически
+  награждает признаки с большим числом уровней. <b>Это ровно тот же дефект, что у Gini FI</b>
+  (смещение к признакам с многими возможными разбиениями) — см.
+  <a href="topic-03.html">тему 3</a>.
+  <div class="src" style="margin:8px 0 0;">src: ex1/Ex1.ipynb, Q3г — таблица ranking (mnth 3421 · windspeed 2944 · season 2718 · … · hum 218)</div></div>
+</section>
+
+<!-- ============ ЛОКАЛЬНОЕ ============ -->
+<section class="step" id="local">
+  <h2>7. Локальная интерпретация и мостик к SHAP</h2>
+  <div class="src">src: слайды л. 1 (сл. 25 «Local interpretations», сл. 26–27 «A first measure of feature importance»)</div>
+
+  <p>Слайд 25 отдельно вводит <b>локальную</b> интерпретацию: объяснить предсказание одного примера,
+  разложив его на слагаемые:</p>
+  $$\hat f(x^{(i)})=\beta_0+\underbrace{\beta_1x_1^{(i)}}_{\text{effect}_1}+\dots+
+    \underbrace{\beta_px_p^{(i)}}_{\text{effect}_p}$$
+
+  <p>Это <b>первое в курсе аддитивное разложение предсказания</b> — та же форма, которую потом примет
+  waterfall plot у SHAP: база плюс вклады, дающие в сумме предсказание.</p>
+
+  <div class="calcbox">
+    <b>Связь, которую полезно знать заранее.</b> Для линейной модели с независимыми признаками
+    Shapley-значение признака $j$ на наблюдении $x$ считается в точности:
+    $$\phi_j(x)=\beta_j\big(x_j-\mathbb{E}[X_j]\big)$$
+    То есть SHAP для линейной модели — это <b>тот же effect $\beta_jx_j$, только отсчитанный
+    от среднего значения признака, а не от нуля</b>. Именно центрирование даёт нужное свойство:
+    $\sum_j\phi_j(x)=\hat f(x)-\mathbb{E}[\hat f(X)]$ (аксиома efficiency / local accuracy).
+    Разбор — <a href="topic-06.html">тема 6</a>.
+  </div>
+
+  <div class="trap"><b>Почему «от нуля» — плохая база.</b> Если у признака нет осмысленного нуля
+  (температура в °C, год), эффект $\beta_jx_j$ можно сдвинуть на любую константу, перенеся её
+  в свободный член. Абсолютное значение эффекта тогда ничего не значит — значим только <b>разброс</b>.
+  Отсюда и практика центрировать кривые эффекта, которая дальше встретится трижды:
+  centered ICE (<a href="topic-02.html">тема 2</a>), центрирование ALE
+  и центрирование компонент fANOVA (<a href="topic-04.html">тема 4</a>).</div>
+</section>
+
+<!-- ============ GLM ============ -->
+<section class="step" id="glm">
+  <h2>8. GLM: обобщение, которое ведёт в лекцию 2</h2>
+  <div class="src">src: слайды л. 1 (сл. 13, «The linear model [Chp 6], Logistic regression [Chp 7], GAMs [Chp 8]»); слайды л. 2 (сл. 3); master_conspect.md, л. 1 «GLM»</div>
+
+  <p>Обобщённая линейная модель оставляет линейную часть, но связывает её с $Y$ не напрямую,
+  а через <b>функцию связи</b> $g$:</p>
+  $$\mu_x:=\mathbb{E}[Y\mid X=x],\qquad g(\mu_x)=\beta_0+\beta_1x_1+\dots+\beta_px_p$$
+
+  <p>Зачем: когда распределение отклика несимметрично или ограничено (вероятность лежит в $[0,1]$,
+  счётчик неотрицателен, время до события положительно), линейная комбинация не может напрямую
+  равняться $\mathbb{E}[Y]$. Функция связи переводит одно в другое, а вместе с ней меняется и функция
+  потерь — вместо MSE берётся правдоподобие соответствующего распределения.</p>
+
+  <p><b>Цена для интерпретации</b> — та, что разбирается в следующей теме: коэффициент теперь
+  аддитивен <i>на шкале $g$</i>, а не на шкале $Y$. Для логистической модели это означает, что
+  $\beta_j$ складывается в логите и <b>умножается</b> в odds. Полный разбор с числами —
+  <a href="topic-02.html#logistic">тема 2, §2–3</a>.</p>
+
+  <p><b>Часть 1 курса целиком</b> (слайд 13) — «inherently interpretable models»: линейная модель →
+  логистическая регрессия → GAM → правиловые модели → деревья. То есть лекции 1–3 это один блок:
+  модели, которые интерпретируемы <i>по построению</i>. Всё, что после лекции 4, — это post-hoc
+  объяснения моделей, которые интерпретируемыми по построению не являются.</p>
+</section>
+
+<!-- ============ BREIMAN ============ -->
+<section class="step" id="breiman">
+  <h2>9. Breiman, «Two Cultures» — три тезиса</h2>
+  <div class="src">src: study_plan.md, тема 1 («3 тезиса, не больше»); слайд л. 1 (сл. 11) — статья задана как чтение к следующей лекции.
+  <b>Полный разбор с таблицей культур и Rashomon-эффектом — <a href="topic-03.html#breiman">тема 3</a></b></div>
+
+  <p>Статья задана на лекции 1 («For next week: Statistical Modeling: The Two Cultures, Breiman 2001»),
+  а обсуждалась в классе на лекции 2 и относится к блоку деревьев. Поэтому здесь — только
+  минимальная карточка, которую план подготовки и требует («3 тезиса, не больше»):</p>
+
+  <table class="plain">
+    <tr><th>#</th><th>Тезис</th><th>Одна строка</th></tr>
+    <tr><td>1</td><td><b>Две культуры моделирования</b></td>
+        <td><i>Data modeling</i>: модель обязана правильно описать порождающий процесс.
+        <i>Algorithmic modeling</i>: если модель хорошо предсказывает — изучаем модель.</td></tr>
+    <tr><td>2</td><td><b>Rashomon effect</b></td>
+        <td>Много <b>одинаково точных</b> моделей дают <b>разные</b> объяснения.</td></tr>
+    <tr><td>3</td><td><b>Смена критерия</b></td>
+        <td>Подбор моделей «объективно», под критерий потерь, улучшил предсказания —
+        но лишил гарантий соответствия реальности; остаются лишь результаты о состоятельности.</td></tr>
+  </table>
+
+  <p>Логика курса, которая из этого следует: раз изучать надо <b>предсказания</b>, а не параметры,
+  то нужны инструменты, которые зондируют $\hat f$ снаружи. С этой фразы («if the predictions are
+  correct, study the predictions») в лекции 2 начинается блок CP → ICE → PD.</p>
+</section>
+
+<!-- ============ КАРТОЧКИ ============ -->
+<section class="step" id="cards">
+  <h2>10. Карточки для экзамена</h2>
+  <div class="src">src: study_plan.md — «Правила на самом экзамене», п. 4 (формат карточки)</div>
+
+  <div class="trap"><b>Почему 🟢-тема заслуживает часа, а не пяти минут.</b> Разбор Moed A 2026 даёт
+  прямой вывод: <b>лекций 1–3 в том варианте не было вообще</b> — ни линейной/логистической модели,
+  ни ICE/PD, ни деревьев с Gini. В карте курса это записано так: «Чего в Moed A НЕ было: лекции 1–3 …
+  <b>Это кандидаты №1 на новый вариант</b>». То есть тир 🟢 здесь означает «мало материала»,
+  а не «маловероятно».
+  <div class="src" style="margin:8px 0 0;">src: course_map.md, §5 «Разбор Moed A 2026 — что реально спрашивали», п. 6 выводов</div></div>
+
+  <table class="plain">
+    <tr><th></th><th>Что делает</th><th>Формула</th><th>Уровень</th><th>Слабость</th><th>Чем чинят</th></tr>
+    <tr><td><b>Вес $\beta_j$</b></td><td>изменение предсказания на единицу признака при фиксированных остальных</td>
+        <td>$\hat f=\beta_0+\sum\beta_jx_j$</td><td>глобальный, white-box</td>
+        <td>зависит от шкалы признака; «фиксированные остальные» могут быть невозможны</td>
+        <td>стандартизация; переход к effects</td></tr>
+    <tr><td><b>Effect</b></td><td>вклад признака в предсказание одного наблюдения</td>
+        <td>$\beta_jx_j^{(i)}$</td><td><b>локальный</b></td>
+        <td>база «ноль» произвольна</td><td>центрировать → $\phi_j=\beta_j(x_j-\mathbb{E}X_j)$</td></tr>
+    <tr><td><b>Effect plot</b></td><td>распределение эффектов по всем наблюдениям; важность = ширина</td>
+        <td>boxplot $\{\beta_jx_j^{(i)}\}_i$, ширина $\approx|\beta_j|\sigma_j$</td><td>глобальный</td>
+        <td>white-box, только линейные модели; не смотрит на $y$</td>
+        <td>PDI (та же идея для любой модели), PFI (смотрит на ошибку)</td></tr>
+    <tr><td><b>GLM</b></td><td>линейная модель через функцию связи</td>
+        <td>$g(\mu_x)=\beta_0+\sum\beta_jx_j$</td><td>глобальный</td>
+        <td>коэффициент аддитивен на шкале $g$, а не на шкале $Y$</td>
+        <td>переводить в odds ratio (тема 2)</td></tr>
+  </table>
+
+  <div class="trap"><b>Что теряет баллы именно на этой теме.</b>
+  (1) Ответить «самый важный признак — тот, у кого больше $\beta$», не сказав про шкалу.
+  (2) Назвать effect plot «глобальным методом» и не заметить, что он собран из <b>локальных</b>
+  величин — переход «локальное → глобальное усреднением/агрегацией» повторяется в курсе четыре раза
+  (effects → effect plot, ICE → PD, локальные SHAP → глобальный FI, локальный TCAV → глобальный).
+  (3) Сказать, что линейная модель «интерпретируема, значит объяснения ей не нужны»:
+  причины 2 и 3 (аудит и контроль решения) остаются в силе для любой модели.</div>
+</section>
+
+<script>
+const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
+const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
+
+/* ---- Рис.1: weight plot vs effect plot ---- */
+{
+  // temp ~ N(15,8) усечённая, holiday ~ Bernoulli(0.04)
+  function randn(){const u=1-Math.random(), v=Math.random();
+    return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+  const n=400, temp=[], hol=[];
+  for(let i=0;i<n;i++){
+    temp.push(15+8*randn());
+    hol.push(Math.random()<0.04?1:0);
+  }
+  const effTemp = temp.map(v=>2*v);
+  const effHol  = hol.map(v=>50*v);
+
+  const trWeight = {
+    x:['temp','holiday'], y:[2,50], type:'bar',
+    marker:{color:['#9AA0A6','#8A5CB8']},
+    text:['|β_j| = 2','|β_j| = 50'], textposition:'outside',
+    hoverinfo:'skip', xaxis:'x', yaxis:'y'
+  };
+  const trBox1 = {y:effTemp, type:'box', name:'temp',
+    marker:{color:'#2F6F6D'}, boxpoints:false, xaxis:'x2', yaxis:'y2'};
+  const trBox2 = {y:effHol, type:'box', name:'holiday',
+    marker:{color:'#8A5CB8'}, boxpoints:false, xaxis:'x2', yaxis:'y2'};
+
+  Plotly.newPlot('plot-eff', [trWeight, trBox1, trBox2], {
+    margin:{l:50,r:15,t:28,b:40}, showlegend:false,
+    grid:{rows:1, columns:2, pattern:'independent'},
+    annotations:[
+      {text:'weight plot: |β_j|', x:0.16, y:1.12, xref:'paper', yref:'paper',
+       showarrow:false, font:{size:12, color:'#5B6472'}},
+      {text:'effect plot: β_j·x_j по 400 дням', x:0.82, y:1.12, xref:'paper', yref:'paper',
+       showarrow:false, font:{size:12, color:'#5B6472'}}
+    ],
+    xaxis:{domain:[0,0.42], ...AXIS},
+    yaxis:{title:'|β_j|', range:[0,60], ...AXIS},
+    xaxis2:{domain:[0.58,1], ...AXIS},
+    yaxis2:{title:'effect_j = β_j·x_j', ...AXIS}
+  }, CFG);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>52939 · Блок 3 · Деревья, ансамбли и Gini</title>
+<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --bg:#FAFAF7; --paper:#FFFFFF; --ink:#1E2430; --ink-soft:#5B6472; --rule:#E3E2DC;
+    --accent:#2F6F6D; --accent-bg:#EBF2F1; --trap:#B5540B; --trap-bg:#FCF1E8;
+    --core:#8A5CB8; --calc:#C0392B; --safe:#2F6F6D; --source:#5B6472; --illustr:#9AA0A6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:16.5px; line-height:1.65; width:66.67%; margin:0 auto; padding:40px 0 100px;
+  }
+  @media (max-width:900px){ body{width:auto; max-width:760px; padding:40px 20px 100px;} }
+  h1{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.7em; font-weight:600; margin:0 0 6px;}
+  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
+  .badges{margin-bottom:28px;}
+  .badge{display:inline-block; font-size:0.78em; padding:2px 9px; border-radius:3px; margin-right:6px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .badge.core{background:var(--core);color:#fff;}
+  .badge.calc{background:var(--calc);color:#fff;}
+  .badge.safe{background:var(--safe);color:#fff;}
+
+  nav.toc{background:var(--paper); border:1px solid var(--rule); border-radius:4px;
+    padding:14px 18px; margin-bottom:36px; font-size:0.92em;}
+  nav.toc a{color:var(--accent); text-decoration:none;}
+  nav.toc a:hover{text-decoration:underline;}
+  nav.toc ol{margin:6px 0 0; padding-left:20px;}
+
+  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
+  section.step:first-of-type{border-top:none;}
+
+  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
+  h3{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.06em; margin:22px 0 4px;}
+  .src{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:0.78em; color:var(--source); margin-bottom:14px;}
+  .src a{color:var(--accent);}
+  .src.illustr{color:var(--illustr); font-style:italic;}
+
+  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
+  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
+  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
+    color:var(--illustr); font-style:normal; font-weight:600;}
+
+  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .trap b{color:var(--trap);}
+  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .calcbox b{color:var(--accent);}
+
+  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
+  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
+  table.contrast th{background:#DCEAE8;}
+
+  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .lead{font-size:1.03em;}
+  ul{padding-left:22px;}
+  li{margin:4px 0;}
+  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
+  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
+  table.plain th{background:#F2F1EC; font-weight:600;}
+  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
+  tr.best td{background:#EBF2F1; font-weight:600;}
+  .trap .src{margin-top:8px;}
+  a{color:var(--accent);}
+
+  a.back-link{
+    display:inline-block; font-size:0.85em; color:var(--accent);
+    text-decoration:none; margin-bottom:14px;
+  }
+  a.back-link:hover{text-decoration:underline;}
+  @media (max-width:480px){
+    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
+  }
+  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
+</style>
+</head>
+
+<body>
+
+<a class="back-link" href="index.html">← Back to topics</a>
+<h1>Деревья, ансамбли и мера Gini</h1>
+<div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 3 · тема 3</div>
+<div class="badges">
+  <span class="badge safe">🟢 Механика</span>
+  <span class="badge calc">🔴 Gini: счётные задачи 1 и 2</span>
+</div>
+
+<nav class="toc">
+  Оглавление
+  <ol>
+    <li><a href="#setup">Постановка: последняя интерпретируемая по построению модель</a></li>
+    <li><a href="#tree">Дерево как кусочно-постоянная функция</a></li>
+    <li><a href="#greedy">Жадный рост и его четыре последствия</a></li>
+    <li><a href="#gini">Gini impurity: определение, доказательство, экстремумы</a></li>
+    <li><a href="#split">Правило разбиения $\Theta(s,t)$</a></li>
+    <li><a href="#calc1">🔴 Счётная задача 1: построить дерево по 14 наблюдениям</a></li>
+    <li><a href="#calc2">🔴 Счётная задача 2: Gini feature importance (MDI)</a></li>
+    <li><a href="#understand">Как понимают дерево: локально и глобально</a></li>
+    <li><a href="#ensembles">Ансамбли: Random Forest против Boosting</a></li>
+    <li><a href="#mdi-pfi">Gini FI против PFI: реальные числа из ДЗ 2</a></li>
+    <li><a href="#breiman">Breiman, «Two Cultures» и Rashomon</a></li>
+    <li><a href="#cards">Карточки для экзамена</a></li>
+  </ol>
+</nav>
+
+<!-- ============ ПОСТАНОВКА ============ -->
+<section class="step" id="setup">
+  <h2>Постановка: последняя интерпретируемая по построению модель</h2>
+  <div class="src">src: course_map.md, лекция 3; study_plan.md, тема 3 и блок счётных задач (задачи 1 и 2)</div>
+
+  <p class="lead">Лекция 3 закрывает «часть 1» курса — модели, интерпретируемые <b>по построению</b>.
+  Дерево — последняя такая модель, и одновременно первая, у которой понятие «эффект признака как
+  производная» перестаёт работать: дерево кусочно-постоянно и <b>не дифференцируемо</b>.</p>
+
+  <p>Отсюда два следствия, которые тянутся через весь курс:</p>
+  <ul>
+    <li><b>Внутренняя мера важности.</b> Дерево считает важность признаков «бесплатно», по ходу
+    обучения — это <b>Gini feature importance (MDI)</b>. Она white-box, считается на train и смещена;
+    именно её недостатки мотивируют PFI в лекции 5.</li>
+    <li><b>Внешняя мера эффекта.</b> Раз производной нет, эффект признака придётся определять
+    через <i>подстановку значений и наблюдение за выходом</i> — это PD/ALE из
+    <a href="topic-04.html">темы 4</a>. По той же причине к деревьям
+    неприменим и весь градиентный инструментарий из
+    <a href="topic-08.html">темы 8</a>: там, где производная равна нулю
+    почти всюду и не определена в точках разбиения, «важность как градиент» смысла не имеет.</li>
+  </ul>
+
+  <p><b>Где искать «сжатый прогон».</b> В <a href="topic-12.html#t1">теме 12</a>
+  те же две задачи прогоняются «только арифметика» на других числах, для финального повторения.
+  Здесь — полный разбор с выводом, реальными данными ДЗ 2 и объяснением, почему каждый шаг такой.</p>
+</section>
+
+<!-- ============ ДЕРЕВО ============ -->
+<section class="step" id="tree">
+  <h2>1. Дерево как кусочно-постоянная функция</h2>
+  <div class="src">src: слайды л. 3 (сл. 4–9); IML гл. 9; ISLR гл. 8; master_conspect.md, л. 3</div>
+
+  <p><b>Определение через гиперпрямоугольники.</b> Дерево разбивает пространство примеров на
+  прямоугольники, рёбра которых <b>параллельны осям координат</b>, и в каждом даёт постоянный прогноз:</p>
+
+  $$\hat f(x)=\sum_{m=1}^{M}c_m\,\mathbb{1}(x\in R_m)$$
+
+  <p><b>Если прямоугольники известны</b>, подбор $c_m$ тривиален: при квадратичной потере и
+  непересекающихся регионах оптимально</p>
+  $$\hat c_m=\text{avg}\{y_i:\ x_i\in R_m\}$$
+  <p>(для классификации — доля/мода классов в регионе).</p>
+
+  <p><b>Если прямоугольники не заданы</b> — задача поиска оптимальных $R_1,\dots,R_M$ трудна
+  по трём причинам, названным на слайде дословно:</p>
+  <ul>
+    <li><b>экспоненциальна по $M$</b> — перебор разбиений невозможен;</li>
+    <li><b>невыпукла</b> — градиентные методы не применимы;</li>
+    <li><b>решение неединственно</b> — разные разбиения дают одинаковую ошибку.</li>
+  </ul>
+
+  <p>Поэтому берут не все гиперпрямоугольные функции, а их подмножество — <b>binary partition trees</b>,
+  где каждый регион получается бинарным разбиением предыдущего. На шаге $i$:</p>
+
+  $$R_i=R_{k(i)}\cap\{x_{j_i}\ge t_i\},\qquad R_{k(i)}\leftarrow R_{k(i)}\cap\{x_{j_i}<t_i\}$$
+
+  <p>то есть выбираем <b>какой регион</b> резать ($k(i)$), <b>по какой переменной</b> ($j_i$) и
+  <b>в какой точке</b> ($t_i$). Такое разбиение представимо деревом решений — отсюда и название.</p>
+</section>
+
+<!-- ============ ЖАДНЫЙ ============ -->
+<section class="step" id="greedy">
+  <h2>2. Жадный рост и его четыре последствия</h2>
+  <div class="src">src: слайд л. 3 (сл. 10) — «Growing a binary partition tree (greedy alg.)», пометка «Splitting conditions … (board)»</div>
+
+  <p>Алгоритм жадный: на каждом шаге выбирается тот сплит, который <b>прямо сейчас</b> сильнее всего
+  снижает потерю. Слайд перечисляет четыре следствия — и все четыре дальше всплывают в курсе:</p>
+
+  <table class="plain">
+    <tr><th>Свойство</th><th>Что означает</th><th>Куда ведёт</th></tr>
+    <tr><td><b>Ошибка всегда падает при сплите</b></td>
+        <td>любой сплит не хуже отсутствия сплита, поэтому дерево будет расти до чистых листьев</td>
+        <td>нужны <b>внешние критерии остановки</b> (глубина, минимум наблюдений в листе, pruning)</td></tr>
+    <tr><td><b>Нет гарантии оптимальности</b></td>
+        <td>жадный выбор на шаге 1 может закрыть путь к лучшему дереву</td>
+        <td>нестабильность и мотивация ансамблей</td></tr>
+    <tr><td><b>Интеракция находится только при сильном маргинальном эффекте</b></td>
+        <td>чтобы дерево «увидело» интеракцию $x_1\times x_2$, оно сначала должно сделать сплит
+        по $x_1$ <i>или</i> $x_2$ — а он будет выбран только если признак хорош сам по себе</td>
+        <td>ключевое ограничение; сравните с fANOVA
+        (<a href="topic-04.html#fanova">тема 4</a>), которая раскладывает
+        функцию на все $2^p$ компонент независимо от маргинальных эффектов</td></tr>
+    <tr><td><b>Пороги $t$ определяются обучающими данными</b></td>
+        <td>положение границы подогнано под конкретную выборку</td>
+        <td>переобучение; и это же чинит бутстрэп в Random Forest — ресемплинг «сглаживает» пороги</td></tr>
+  </table>
+
+  <div class="trap"><b>Формулировка на экзамен.</b> «Дерево ловит интеракции дёшево» и «дерево ловит
+  интеракции только при сильном маргинальном эффекте» — <b>оба верны одновременно</b>, и хороший
+  ответ содержит оба: глубокая интеракция достаётся деревьям почти бесплатно, <i>если</i> хотя бы
+  один из участвующих признаков заметен маргинально; в чистом случае (эффект есть только
+  во взаимодействии) дерево её не найдёт.</div>
+</section>
+
+<!-- ============ GINI ============ -->
+<section class="step" id="gini">
+  <h2>3. Gini impurity: определение, доказательство, экстремумы</h2>
+  <div class="src">src: ДЗ 2, вопрос 1 (а–б) — <code class="f">_EXERCISE_02---Instructions---XAI.pdf</code>, с. 2; master_conspect.md, л. 3</div>
+
+  <p><b>Постановка из ДЗ дословно:</b> цель — построить <i>наименьшее возможное</i> дерево,
+  у которого каждый лист содержит наблюдения только одного класса. Чистота (purity) узла описывает,
+  насколько узел близок к тому, чтобы содержать один класс; у полностью чистого узла impurity $=0$.</p>
+
+  <p>Определение, данное в задании (форма 1):</p>
+  $$\phi(p)=\sum_{i=1}^{m}p_i(1-p_i),\qquad p=(p_1,\dots,p_m),\ \ \sum_i p_i=1$$
+  <p>где $p_i$ — доля наблюдений класса $i$ из $m$ классов в узле.</p>
+
+  <div class="calcbox">
+    <b>Пункт (а). Доказать, что $\phi(p)=1-\sum_i p_i^2$.</b> Доказательство в три строки —
+    раскрыть скобки, разбить сумму, использовать $\sum_ip_i=1$:
+    $$\phi(p)=\sum_{i=1}^{m}p_i(1-p_i)=\sum_{i=1}^{m}\big(p_i-p_i^2\big)
+      =\underbrace{\sum_{i=1}^{m}p_i}_{=\,1}-\sum_{i=1}^{m}p_i^2=1-\sum_{i=1}^{m}p_i^2 \qquad\blacksquare$$
+    <p style="margin:8px 0 0;"><b>Зачем нужна вторая форма:</b> считать быстрее (одна сумма квадратов
+    вместо произведений), и сразу видно, что $\phi$ максимальна, когда сумма квадратов минимальна.</p>
+  </div>
+
+  <div class="calcbox">
+    <b>Пункт (б). Когда impurity минимальна и максимальна.</b>
+    <p style="margin:6px 0;"><b>Двухклассовый случай.</b> Подставим $p_1=p$, $p_2=1-p$:</p>
+    $$\phi(p)=1-p^2-(1-p)^2=1-p^2-1+2p-p^2=2p(1-p)$$
+    <p style="margin:6px 0;"><b>Минимум:</b> $\phi=0$ при $p=0$ или $p=1$ — узел чист, классы не смешаны.</p>
+    <p style="margin:6px 0;"><b>Максимум:</b> $\phi'(p)=2-4p=0\Rightarrow p=\tfrac12$, и
+    $\phi(\tfrac12)=2\cdot\tfrac12\cdot\tfrac12=\mathbf{0{,}5}$ — классы представлены поровну.</p>
+    <p style="margin:6px 0;"><b>Для $m$ классов</b> та же интуиция: минимум (ноль) — вся масса
+    на одном классе; максимум — равномерное распределение $p_i=1/m$, и тогда
+    $$\phi_{\max}=1-m\cdot\frac{1}{m^2}=1-\frac1m$$
+    (для $m=2$ даёт $0{,}5$ ✓, для $m=3$ — $\approx0{,}667$, для $m=10$ — $0{,}9$).</p>
+  </div>
+
+  <div class="trap"><b>Мелочь, которая экономит время на экзамене.</b> Для двух классов
+  $\phi=2p(1-p)$ считается в уме: $p=\tfrac78\Rightarrow2\cdot\tfrac78\cdot\tfrac18=\tfrac{14}{64}=0{,}21875$.
+  Для узла $n$ наблюдений с $a$ и $b$ по классам удобна форма $\phi=\dfrac{2ab}{(a+b)^2}$ —
+  например $9$ и $5$: $\dfrac{2\cdot45}{196}=\dfrac{90}{196}\approx0{,}4592$.
+  Обе формы дают одно и то же; вторая избавляет от промежуточных десятичных дробей.</div>
+</section>
+
+<!-- ============ SPLIT ============ -->
+<section class="step" id="split">
+  <h2>4. Правило разбиения: goodness-of-split</h2>
+  <div class="src">src: ДЗ 2, вопрос 1 — формулы $\Theta(t)$ и $\Theta(s,t)$; master_conspect.md, л. 3 «Gini impurity и Gini feature importance»</div>
+
+  <p>Алгоритм рекурсивно дробит обучающие данные. При разбиении узла <b>перебираются все признаки
+  и все точки разреза</b>, и выбирается тот сплит, который даёт <b>наибольшее снижение примеси</b>.
+  Эта величина называется goodness-of-split:</p>
+
+  $$\Theta(t)=\phi(p)-\sum_{k}P_k\,\phi(p_k)$$
+
+  <p>где $t$ — узел, сумма идёт по всем детям, $P_k$ — <b>доля наблюдений узла</b>, попавших
+  в $k$-го ребёнка. Для числового признака с порогом $s$:</p>
+
+  $$\Theta(s,t)=\phi(p)-P_L\,\phi(p_L)-P_R\,\phi(p_R)$$
+
+  <p>$P_L$ и $P_R$ — доли, ушедшие в левого ($x_j<s$) и правого ($x_j\ge s$) ребёнка.
+  <b>Чем больше $\Theta$, тем лучше сплит.</b> В обозначениях master-конспекта та же величина —
+  это $\Delta\text{Gini}(m)$.</p>
+
+  <div class="trap"><b>Первое из двух взвешиваний.</b> Внутри $\Theta$ примеси детей взвешиваются
+  долями $n_{\text{child}}/n_m$ — <b>не</b> усредняются просто так. Причина: разбиение, которое
+  отрезает один-единственный чистый объект, снижает примесь мало, потому что этот ребёнок весит $1/n_m$.
+  Второе взвешивание появится в §7, при переходе от сплита к важности признака.</div>
+
+  <p><b>Какие пороги перебирают для числового признака.</b> Все средние точки между соседними
+  <i>различными</i> значениями, встречающимися в узле: если значения $9,10,11,18,\dots$, то пороги
+  $9{,}5;\ 10{,}5;\ 14{,}5;\dots$ Для категориального признака с двумя уровнями сплит один
+  («$=$ уровень» против «$\ne$ уровень»), и обе его записи дают одно и то же $\Theta$.</p>
+</section>
+
+<!-- ============ СЧЁТНАЯ 1 ============ -->
+<section class="step" id="calc1">
+  <h2>5. 🔴 Счётная задача 1: построить дерево по 14 наблюдениям</h2>
+  <div class="src">src: ДЗ 2, вопрос 1в — <code class="f">_EXERCISE_02---Instructions---XAI.pdf</code>, с. 2 (таблица дана в задании); решение — <code class="f">ex2/ex2_ver2.ipynb</code>. Числа реальные, цитировать можно. Вся арифметика ниже перепроверена скриптом</div>
+
+  <p>Задача: по погодным признакам предсказать, будет ли Шахар играть в теннис. 14 дней наблюдений,
+  таблица отсортирована по температуре:</p>
+
+  <table class="plain">
+    <tr><th>День</th><th>Temp (°C)</th><th>Humidity</th><th>Wind</th><th>Tennis?</th></tr>
+    <tr><td>6</td><td class="num">9</td><td>Normal</td><td>Strong</td><td><b>No</b></td></tr>
+    <tr><td>5</td><td class="num">10</td><td>Normal</td><td>Weak</td><td>Yes</td></tr>
+    <tr><td>9</td><td class="num">10</td><td>Normal</td><td>Weak</td><td>Yes</td></tr>
+    <tr><td>7</td><td class="num">11</td><td>Normal</td><td>Strong</td><td>Yes</td></tr>
+    <tr><td>12</td><td class="num">11</td><td>High</td><td>Strong</td><td>Yes</td></tr>
+    <tr><td>4</td><td class="num">18</td><td>High</td><td>Weak</td><td>Yes</td></tr>
+    <tr><td>8</td><td class="num">20</td><td>High</td><td>Weak</td><td><b>No</b></td></tr>
+    <tr><td>10</td><td class="num">20</td><td>Normal</td><td>Weak</td><td>Yes</td></tr>
+    <tr><td>14</td><td class="num">22</td><td>High</td><td>Strong</td><td><b>No</b></td></tr>
+    <tr><td>11</td><td class="num">22</td><td>Normal</td><td>Strong</td><td>Yes</td></tr>
+    <tr><td>13</td><td class="num">29</td><td>Normal</td><td>Weak</td><td>Yes</td></tr>
+    <tr><td>2</td><td class="num">32</td><td>High</td><td>Strong</td><td><b>No</b></td></tr>
+    <tr><td>3</td><td class="num">32</td><td>High</td><td>Weak</td><td>Yes</td></tr>
+    <tr><td>1</td><td class="num">35</td><td>High</td><td>Weak</td><td><b>No</b></td></tr>
+  </table>
+
+  <h3>Шаг 1. Примесь корня</h3>
+  <div class="calcbox">
+    Всего 14 наблюдений: <b>9 Yes, 5 No</b>.
+    $$\phi(\text{корень})=1-\Big(\tfrac{9}{14}\Big)^2-\Big(\tfrac{5}{14}\Big)^2
+      =1-\frac{81}{196}-\frac{25}{196}=\frac{90}{196}\approx\mathbf{0{,}4592}$$
+    Проверка второй формой: $\dfrac{2\cdot9\cdot5}{14^2}=\dfrac{90}{196}$ ✓
+  </div>
+
+  <h3>Шаг 2. Перебор категориальных сплитов в корне</h3>
+  <div class="calcbox">
+    <b>Humidity == Normal.</b> Слева 7 набл. (6 Yes, 1 No), справа 7 (3 Yes, 4 No):
+    $$\phi_L=\frac{2\cdot6\cdot1}{49}=\frac{12}{49}\approx0{,}2449,\qquad
+      \phi_R=\frac{2\cdot3\cdot4}{49}=\frac{24}{49}\approx0{,}4898$$
+    $$\Theta=0{,}4592-\tfrac{7}{14}(0{,}2449)-\tfrac{7}{14}(0{,}4898)
+      =0{,}4592-0{,}1224-0{,}2449=\mathbf{0{,}0918}$$
+    <b>Wind == Strong.</b> Слева 6 (3 Yes, 3 No), справа 8 (6 Yes, 2 No):
+    $$\phi_L=\frac{2\cdot3\cdot3}{36}=0{,}5,\qquad \phi_R=\frac{2\cdot6\cdot2}{64}=0{,}375$$
+    $$\Theta=0{,}4592-\tfrac{6}{14}(0{,}5)-\tfrac{8}{14}(0{,}375)
+      =0{,}4592-0{,}2143-0{,}2143=\mathbf{0{,}0306}$$
+  </div>
+
+  <h3>Шаг 3. Перебор всех порогов по Temp в корне</h3>
+  <p>Различных значений температуры восемь ($9,10,11,18,20,22,29,32,35$ → восемь границ между
+  соседними уровнями). Все восемь кандидатов:</p>
+
+  <table class="plain">
+    <tr><th>Порог</th><th>$n_L$</th><th>$n_R$</th><th>$\phi_L$</th><th>$\phi_R$</th><th>взвеш. примесь</th><th>$\Theta$</th></tr>
+    <tr><td>Temp &lt; 9,5</td><td class="num">1</td><td class="num">13</td><td class="num">0,0000</td><td class="num">0,4260</td><td class="num">0,3956</td><td class="num">0,0636</td></tr>
+    <tr><td>Temp &lt; 10,5</td><td class="num">3</td><td class="num">11</td><td class="num">0,4444</td><td class="num">0,4628</td><td class="num">0,4589</td><td class="num">0,0003</td></tr>
+    <tr><td>Temp &lt; 14,5</td><td class="num">5</td><td class="num">9</td><td class="num">0,3200</td><td class="num">0,4938</td><td class="num">0,4317</td><td class="num">0,0274</td></tr>
+    <tr><td>Temp &lt; 19,0</td><td class="num">6</td><td class="num">8</td><td class="num">0,2778</td><td class="num">0,5000</td><td class="num">0,4048</td><td class="num">0,0544</td></tr>
+    <tr><td>Temp &lt; 21,0</td><td class="num">8</td><td class="num">6</td><td class="num">0,3750</td><td class="num">0,5000</td><td class="num">0,4286</td><td class="num">0,0306</td></tr>
+    <tr><td>Temp &lt; 25,5</td><td class="num">10</td><td class="num">4</td><td class="num">0,4200</td><td class="num">0,5000</td><td class="num">0,4429</td><td class="num">0,0163</td></tr>
+    <tr><td>Temp &lt; 30,5</td><td class="num">11</td><td class="num">3</td><td class="num">0,3967</td><td class="num">0,4444</td><td class="num">0,4069</td><td class="num">0,0523</td></tr>
+    <tr><td>Temp &lt; 33,5</td><td class="num">13</td><td class="num">1</td><td class="num">0,4260</td><td class="num">0,0000</td><td class="num">0,3956</td><td class="num">0,0636</td></tr>
+  </table>
+
+  <div class="calcbox">
+    <b>Итог корневого перебора.</b>
+    $$\Theta_{\text{Humidity}}=0{,}0918\ >\ \Theta_{\text{Temp}}^{\max}=0{,}0636\ >\
+      \Theta_{\text{Wind}}=0{,}0306$$
+    <b>Корневой сплит — Humidity.</b> Ни один порог температуры не бьёт влажность.
+  </div>
+
+  <h3>Шаг 4. Левая ветвь: Humidity = Normal</h3>
+  <div class="calcbox">
+    Узел: 7 набл., <b>6 Yes, 1 No</b>, $\phi=0{,}2449$. Единственный No — день 6 (Temp 9).
+    Перебор даёт:
+    <table class="plain" style="margin:8px 0;">
+      <tr><th>Кандидат</th><th>$\Theta$</th></tr>
+      <tr class="best"><td>Temp &lt; 9,5</td><td class="num">0,2449</td></tr>
+      <tr><td>Temp &lt; 10,5</td><td class="num">0,0544</td></tr>
+      <tr><td>Wind == Weak / Strong</td><td class="num">0,0544</td></tr>
+      <tr><td>Temp &lt; 15,5</td><td class="num">0,0306</td></tr>
+    </table>
+    <b>Temp &lt; 9,5</b> отрезает ровно этот день: слева 1 набл. (No, $\phi=0$), справа 6 (все Yes, $\phi=0$).
+    Взвешенная примесь после сплита равна нулю, значит $\Theta=\phi_{\text{parent}}=0{,}2449$ —
+    <b>максимально возможное значение</b> для этого узла. Ветвь закончена, оба ребёнка — листья.
+  </div>
+
+  <h3>Шаг 5. Правая ветвь: Humidity = High</h3>
+  <div class="calcbox">
+    Узел: 7 набл., <b>3 Yes, 4 No</b>, $\phi=0{,}4898$.
+    <table class="plain" style="margin:8px 0;">
+      <tr><th>Кандидат</th><th>$\Theta$</th></tr>
+      <tr class="best"><td>Temp &lt; 19,0</td><td class="num">0,2612</td></tr>
+      <tr><td>Temp &lt; 14,5</td><td class="num">0,1088</td></tr>
+      <tr><td>Temp &lt; 21,0</td><td class="num">0,0850</td></tr>
+      <tr><td>Wind == Strong / Weak</td><td class="num">0,0136</td></tr>
+    </table>
+    <b>Temp &lt; 19</b>: слева 2 набл. (дни 12 и 4, оба Yes) — чистый лист; справа 5 набл.
+    (1 Yes, 4 No), $\phi=\frac{2\cdot1\cdot4}{25}=0{,}32$.
+    <p style="margin:8px 0 0;">Проверка: $0{,}4898-\tfrac27\cdot0-\tfrac57\cdot0{,}32
+    =0{,}4898-0{,}2286=0{,}2612$ ✓</p>
+  </div>
+
+  <h3>Шаг 6. Узел (High, Temp ≥ 19) — здесь важная тонкость</h3>
+  <div class="calcbox">
+    Узел: 5 набл. (1 Yes, 4 No), $\phi=0{,}32$. Три кандидата дают <b>ровно одинаковое</b> $\Theta$:
+    $$\Theta(\text{Temp}<27)=\Theta(\text{Wind}==\text{Strong})=\Theta(\text{Wind}==\text{Weak})=\mathbf{0{,}0533}$$
+    Это <b>ничья</b>: алгоритм может выбрать любой из них, и получатся <i>разные деревья с одинаковым
+    качеством сплита</i>. В решении ДЗ выбран <b>Wind</b> — «просто как наш вариант, поскольку он
+    легче интерпретируется». Дальше следуем этому выбору.
+    <p style="margin:8px 0 0;">Проверка: Wind==Strong отправляет налево 2 набл. (оба No, $\phi=0$),
+    направо 3 (1 Yes, 2 No, $\phi=\frac{2\cdot1\cdot2}{9}=0{,}4444$):
+    $0{,}32-\tfrac25\cdot0-\tfrac35\cdot0{,}4444=0{,}32-0{,}2667=0{,}0533$ ✓</p>
+  </div>
+
+  <div class="trap"><b>Ничья — это не мелочь, а сюжет курса.</b> Три разных дерева с идентичным
+  качеством сплита дадут <b>три разных объяснения</b> того, от чего зависит игра в теннис.
+  Это <b>Rashomon effect</b> в миниатюре (§11 ниже) — и прямая причина того, почему в лекции 5
+  появляется <b>Model Class Reliance</b>: важность признака оценивают не для одной модели,
+  а для целого класса одинаково хороших моделей
+  (<a href="topic-05.html">тема 5</a>).</div>
+
+  <h3>Шаг 7. Остаток ветви</h3>
+  <div class="calcbox">
+    <b>(High, Temp ≥ 19, Wind = Strong):</b> 2 набл., оба <b>No</b>, $\phi=0$ → <b>лист</b>.
+    <p style="margin:8px 0;"><b>(High, Temp ≥ 19, Wind = Weak):</b> 3 набл. (1 Yes, 2 No),
+    $\phi=0{,}4444$. Кандидаты Temp &lt; 26 и Temp &lt; 33,5 дают одинаковое
+    $\Theta=0{,}4444-\tfrac13\cdot0-\tfrac23\cdot0{,}5=0{,}1111$; берём <b>Temp &lt; 26</b>.
+    Слева 1 набл. (No) — лист. Справа 2 набл. (дни 3 и 1: Yes при 32°, No при 35°), $\phi=0{,}5$.</p>
+    <p style="margin:8px 0 0;"><b>Финальный сплит Temp &lt; 33,5</b> разделяет последние два
+    наблюдения: $\Theta=0{,}5-0-0=\mathbf{0{,}5}$, оба ребёнка чисты. Дерево выращено полностью.</p>
+  </div>
+
+  <div class="fig"><div id="svg-tree" style="padding:6px 0;"></div></div>
+  <div class="fig-cap">Рис. 1. Построенное дерево. В каждом узле — состав классов, $n$ и $\phi$;
+  на рёбрах — условие сплита и его $\Theta$. Обратите внимание: <b>Temp используется в четырёх
+  сплитах</b>, Humidity — в одном, Wind — в одном. Именно это соотношение решит вопрос о важности
+  признаков в §7. Числа взяты из разбора выше (реальные данные ДЗ 2).</div>
+
+  <div class="calcbox">
+    <b>Пункт (г) ДЗ: какой признак важнее «в смысле наибольшего снижения примеси»?</b>
+    Ответ по формулировке задания: <b>Humidity</b> — её сплит даёт наибольшее снижение примеси
+    <i>в корне</i> ($0{,}0918$ против $0{,}0636$ у лучшего Temp и $0{,}0306$ у Wind),
+    а корневой сплит затрагивает все 14 наблюдений.
+  </div>
+
+  <div class="trap"><b>Ловушка на стыке задач 1 и 2.</b> «Важнейший признак по корневому сплиту» и
+  «важнейший признак по Gini feature importance» — <b>это разные вопросы, и здесь они дают разные
+  ответы</b>. По корню побеждает Humidity. По MDI, где суммируются <i>все</i> сплиты по признаку
+  и учитываются веса узлов, побеждает <b>Temp</b> — см. следующий параграф, где это считается
+  до числа. Читайте формулировку вопроса буквально.</div>
+</section>
+
+<!-- ============ СЧЁТНАЯ 2 ============ -->
+<section class="step" id="calc2">
+  <h2>6. 🔴 Счётная задача 2: Gini feature importance (MDI)</h2>
+  <div class="src">src: ДЗ 2, вопрос 2 — пошаговый алгоритм MDI (5 шагов) из <code class="f">_EXERCISE_02---Instructions---XAI.pdf</code>, с. 3; master_conspect.md, л. 3; слайд л. 3 (сл. 12). Единственный источник формулы — ДЗ 2, в IML её нет</div>
+
+  <h3>Алгоритм в том виде, в каком он дан в задании</h3>
+  <ol>
+    <li>Обучить модель (дерево или лес).</li>
+    <li>Для каждого узла каждого дерева посчитать примесь <b>до</b> и <b>после</b> сплита по признаку.</li>
+    <li>Посчитать <b>взвешенную сумму</b> снижений примеси по всем узлам, где сплит шёл по этому
+    признаку; вес — <b>доля наблюдений, попавших в этот узел</b>.</li>
+    <li>Для леса — <b>усреднить</b> по всем деревьям.</li>
+    <li><b>Нормировать</b> так, чтобы сумма скоров по признакам равнялась 1.</li>
+  </ol>
+  <p>Для одного дерева шаг 4 пропускается (в задании прямо: «для деревьев процесс упрощается
+  до шагов 1, 2, 3, 5»).</p>
+
+  <div class="calcbox">
+    <b>Формулы.</b> Снижение примеси в узле $t$:
+    $$\Delta G(t)=G(t)-\frac{n_L}{n_t}G(t_L)-\frac{n_R}{n_t}G(t_R)$$
+    Вклад узла (второе взвешивание — <b>снаружи</b>):
+    $$\text{contribution}(t)=\frac{n_t}{n_{\text{root}}}\,\Delta G(t)$$
+    Важность признака $j$ по лесу из $M$ деревьев:
+    $$\mathrm{GI}_j=\sum_{m=1}^{M}\ \sum_{t\in\mathcal T_m(j)}\frac{n_t}{n_{\text{root}}}\,\Delta G(t),
+      \qquad
+      \mathrm{GI}_j^{\text{norm}}=\frac{\mathrm{GI}_j}{\sum_{k=1}^{p}\mathrm{GI}_k}$$
+    <p style="margin:8px 0 0;"><b>Важное замечание из задания:</b> примеси $G(t)$ уже вычислены
+    при построении дерева — пересчитывать их не нужно. Поэтому MDI «бесплатна».</p>
+  </div>
+
+  <h3>Считаем MDI для нашего дерева</h3>
+  <p>В дереве из §5 ровно шесть внутренних узлов. Для каждого берём $\Theta$, посчитанное выше,
+  и умножаем на долю наблюдений в узле:</p>
+
+  <table class="plain">
+    <tr><th>#</th><th>Узел</th><th>Признак</th><th>$n_t$</th><th>$\Delta G(t)=\Theta$</th><th>$n_t/14$</th><th>вклад</th></tr>
+    <tr><td>1</td><td>корень</td><td><b>Humidity</b></td><td class="num">14</td><td class="num">0,091837</td><td class="num">1,0000</td><td class="num">0,091837</td></tr>
+    <tr><td>2</td><td>Normal</td><td><b>Temp</b> &lt; 9,5</td><td class="num">7</td><td class="num">0,244898</td><td class="num">0,5000</td><td class="num">0,122449</td></tr>
+    <tr><td>3</td><td>High</td><td><b>Temp</b> &lt; 19</td><td class="num">7</td><td class="num">0,261224</td><td class="num">0,5000</td><td class="num">0,130612</td></tr>
+    <tr><td>4</td><td>High, T≥19</td><td><b>Wind</b></td><td class="num">5</td><td class="num">0,053333</td><td class="num">0,3571</td><td class="num">0,019048</td></tr>
+    <tr><td>5</td><td>High, T≥19, Weak</td><td><b>Temp</b> &lt; 26</td><td class="num">3</td><td class="num">0,111111</td><td class="num">0,2143</td><td class="num">0,023810</td></tr>
+    <tr><td>6</td><td>…, T≥26</td><td><b>Temp</b> &lt; 33,5</td><td class="num">2</td><td class="num">0,500000</td><td class="num">0,1429</td><td class="num">0,071429</td></tr>
+  </table>
+
+  <div class="calcbox">
+    <b>Шаг 1. Сумма по признакам.</b>
+    $$\mathrm{GI}_{\text{Temp}}=0{,}122449+0{,}130612+0{,}023810+0{,}071429=\mathbf{0{,}348299}$$
+    $$\mathrm{GI}_{\text{Humidity}}=\mathbf{0{,}091837},\qquad
+      \mathrm{GI}_{\text{Wind}}=\mathbf{0{,}019048}$$
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 2. Нормировка.</b>
+    $$\Sigma=0{,}348299+0{,}091837+0{,}019048=0{,}459184$$
+    $$\widetilde{\mathrm{GI}}_{\text{Temp}}=\frac{0{,}348299}{0{,}459184}=\mathbf{0{,}7585},\quad
+      \widetilde{\mathrm{GI}}_{\text{Humidity}}=\mathbf{0{,}2000},\quad
+      \widetilde{\mathrm{GI}}_{\text{Wind}}=\mathbf{0{,}0415}$$
+    Проверка: $0{,}7585+0{,}2000+0{,}0415=1{,}0000$ ✓
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 3. Проверка, которую стоит запомнить.</b> Заметьте:
+    $$\Sigma=0{,}459184=\phi(\text{корень})$$
+    Это <b>не совпадение</b>. Для полностью выращенного дерева (все листья чисты) сумма всех
+    взвешенных снижений примеси телескопируется:
+    $$\sum_{t\ \text{внутр.}}\frac{n_t}{n}\Delta G(t)
+      =G(\text{корень})-\sum_{\ell\ \text{листья}}\frac{n_\ell}{n}G(\ell)
+      =G(\text{корень})-0$$
+    <b>Практический смысл:</b> посчитав MDI вручную, сложите все вклады — если сумма не равна примеси
+    корня (при чистых листьях), где-то потеряно слагаемое или вес.
+  </div>
+
+  <div class="fig"><div id="plot-mdi" style="height:260px;"></div></div>
+  <div class="fig-cap">Рис. 2. Нормированная Gini FI по дереву из §5 против «важности по корневому
+  сплиту». Ранжирование <b>переворачивается</b>: по корню лидирует Humidity, по MDI — Temp,
+  потому что Temp участвует в четырёх сплитах из шести.</div>
+
+  <div class="trap"><b>Три ловушки счётной задачи (те же, что в <a href="topic-12.html#t2">теме 12</a>).</b>
+  (1) <b>Двойное взвешивание.</b> Внутри $\Delta G$ веса $n_{\text{child}}/n_t$, <b>снаружи</b> ещё
+  $n_t/n_{\text{root}}$. Пропуск любого даёт другой ответ.
+  (2) <b>Суммировать по всем сплитам</b> по этому признаку, а не брать один — здесь у Temp их четыре.
+  (3) <b>Нормировка</b> — отдельный шаг 5 в задании; без неё числа несопоставимы между деревьями
+  и между лесами разного размера.</div>
+
+  <div class="trap"><b>Почему у непрерывного признака здесь фора.</b> У Temp девять различных
+  значений и восемь возможных порогов в корне; у Humidity и Wind — по одному возможному сплиту.
+  Чем больше у признака кандидатов на разрез, тем выше шанс, что <i>какой-нибудь</i> из них случайно
+  хорошо разделит выборку. Это и есть знаменитое <b>смещение MDI в пользу непрерывных признаков
+  и признаков с большим числом уровней</b>. Ровно та же болезнь была у наивной важности
+  $\sum|\beta_{\text{dummy}}|$ из <a href="topic-01.html#calc">темы 1</a>,
+  где первое место занял <code class="f">mnth</code> с его 11 дамми-переменными.</div>
+</section>
+
+<!-- ============ ПОНИМАНИЕ ДЕРЕВА ============ -->
+<section class="step" id="understand">
+  <h2>7. Как понимают дерево: локально и глобально</h2>
+  <div class="src">src: слайды л. 3 (сл. 11–13); IML гл. 9</div>
+
+  <table class="contrast">
+    <tr><th>Уровень</th><th>Метод (дословно со слайда)</th><th>Что получаем</th><th>Координаты по таксономии</th></tr>
+    <tr><td><b>Локальный</b></td><td>«Follow the tree branches» — пройти по ветвям для данного примера</td>
+        <td>цепочка условий: «влажность высокая И температура ≥ 19 И ветер слабый ⇒ не играет».
+        Это готовое правило, понятное человеку без обучения</td>
+        <td>локальный · white-box · feature space</td></tr>
+    <tr><td><b>Глобальный</b></td><td>«Follow reduction of error / gini per split and aggregate by features»</td>
+        <td>Gini FI / MDI из §6</td>
+        <td>глобальный · white-box · feature space · TTTM</td></tr>
+  </table>
+
+  <p><b>Плюсы одиночного дерева</b> (слайд 13): очень легко понять и валидировать; дёшево добавляет
+  глубокие интеракции.<br>
+  <b>Минусы:</b> интеракции находятся только при сильнейшем маргинальном эффекте; функция разрывна,
+  поэтому <b>монотонные эффекты обходятся дорого</b> (гладкую прямую приходится аппроксимировать
+  лесенкой из многих сплитов); дерево нестабильно и склонно к переобучению.</p>
+
+  <div class="trap"><b>«Дорогие монотонные эффекты» — на что это влияет в курсе.</b>
+  Кусочно-постоянная функция означает, что у дерева <b>нет производной</b>. Поэтому к нему неприменим
+  ни один градиентный метод объяснения (<a href="topic-08.html">тема 8</a>),
+  а определение ALE через интеграл от частной производной требует
+  <b>второго определения — через конечные разности</b>, которое как раз и работает без
+  дифференцируемости (<a href="topic-04.html#ale">тема 4</a>,
+  Definition 1 у Apley &amp; Zhu). Это прямая связь между лекцией 3 и лекцией 4.</div>
+</section>
+
+<!-- ============ АНСАМБЛИ ============ -->
+<section class="step" id="ensembles">
+  <h2>8. Ансамбли: Random Forest против Gradient Boosting</h2>
+  <div class="src">src: слайды л. 3 (сл. 14–16); ISLR гл. 8; master_conspect.md, л. 3 «Ансамбли»</div>
+
+  $$\hat f(x)=\frac1B\sum_{b=1}^{B}\hat f_b(x)$$
+
+  <p>Каждое $\hat f_b$ — дерево, обученное на <b>других данных</b>, под <b>другую потерю</b>, или и то и другое.
+  Отсюда деление на два семейства:</p>
+
+  <table class="contrast">
+    <tr><th></th><th>Random Forest</th><th>Gradient Boosting Trees</th></tr>
+    <tr><td><b>Что варьируется</b></td><td>одинаковая потеря, <b>разные данные</b></td>
+        <td><b>разная потеря</b>, разные данные</td></tr>
+    <tr><td><b>Механика</b></td>
+        <td>ресемпл данных (обычно ~2/3 обучающей выборки) + подвыборка признаков
+        (обычно $\sqrt p$) на каждый сплит</td>
+        <td>деревья обучаются на <b>остатках</b> предсказаний предыдущих деревьев;
+        (иногда) ресемпл данных, (обычно) подвыборка признаков</td></tr>
+    <tr><td><b>Зачем это работает</b></td>
+        <td>ресемпл данных <b>сглаживает пороги</b> $t$ (лечит четвёртое свойство жадного роста);
+        подвыборка признаков даёт менее важным признакам шанс попасть в первый сплит</td>
+        <td>быстрее и лучше сходится</td></tr>
+    <tr><td><b>Зависимость деревьев</b></td><td><b>независимы</b> — удобно для анализа</td>
+        <td>отрицательно зависимы</td></tr>
+  </table>
+
+  <div class="trap"><b>Почему «деревья независимы, удобно для анализа» — не проходная фраза.</b>
+  Именно независимость деревьев в RF позволяет (а) усреднять MDI по деревьям как в шаге 4 алгоритма,
+  (б) строить <b>out-of-bag</b> оценки, (в) использовать структуру леса для <i>условной</i>
+  перестановки признаков в CFI: у Strobl сетка для условной перестановки берётся прямо из разбиений
+  дерева (<a href="topic-05.html">тема 5</a>), и (г) определять
+  <b>model-based расстояние между примерами</b> — как часто два примера попадают в один лист
+  (<a href="topic-09.html">тема 9</a>).</div>
+
+  <p><b>Цена за ансамбль — интерпретируемость.</b> Одно дерево читается как набор правил;
+  сто деревьев — уже нет. Поэтому у леса остаётся только глобальная агрегированная важность
+  (MDI, PFI), и именно здесь начинается post-hoc часть курса.</p>
+</section>
+
+<!-- ============ MDI vs PFI ============ -->
+<section class="step" id="mdi-pfi">
+  <h2>9. Gini FI против PFI: реальные числа</h2>
+  <div class="src">src: ДЗ 2, вопрос 2 (в, г) — <code class="f">ex2/ex2_ver2.ipynb</code>. RF: 3 дерева, глубина 3, критерий gini, целевая <code class="f">cnt</code> разбита на 10 равных бинов, train 80 %. Числа реальные</div>
+
+  <p>Та же модель, две меры важности. PFI считалась с MSE-потерей на тестовой выборке,
+  MDI — по внутренностям леса:</p>
+
+  <table class="plain">
+    <tr><th>Признак</th><th>MDI (нормир.)</th><th>PFI (MSE, разность)</th><th>Комментарий</th></tr>
+    <tr><td><b>temp</b></td><td class="num">0,4177</td><td class="num">2,2397</td><td>лидер по обеим мерам</td></tr>
+    <tr><td><b>season</b></td><td class="num">0,1539</td><td class="num">1,0616</td><td>второй по обеим</td></tr>
+    <tr><td><b>hum</b></td><td class="num">0,1223</td><td class="num">0,2466</td><td>третий по обеим</td></tr>
+    <tr><td><b>weathersit</b></td><td class="num">0,0983</td><td class="num">0,0822</td><td>слабо положителен в обеих</td></tr>
+    <tr><td><b>holiday</b></td><td class="num">0,0000</td><td class="num">0,0000</td><td>ни в одном сплите не участвует ⇒ ноль по определению обеих мер</td></tr>
+    <tr><td><b>windspeed</b></td><td class="num">0,1178</td><td class="num"><b>−0,0685</b></td><td><b>расхождение:</b> лес его использует, но предсказаниям он не помогает</td></tr>
+    <tr><td><b>workingday</b></td><td class="num">0,0436</td><td class="num"><b>−0,3630</b></td><td>то же</td></tr>
+    <tr><td><b>weekday</b></td><td class="num">0,0464</td><td class="num"><b>−0,3904</b></td><td>то же</td></tr>
+  </table>
+
+  <p><b>Что из этой таблицы нужно уметь сказать.</b> Верхушка совпадает (temp, season, hum),
+  хвост — расходится, и расхождение имеет знак: <b>MDI неотрицательна по построению, PFI может
+  быть отрицательной</b>. Отрицательная PFI означает, что после разрушения связи признака с откликом
+  модель стала предсказывать <i>лучше</i> — признак использовался, но вредил.</p>
+
+  <table class="contrast">
+    <tr><th>Ось сравнения</th><th>Gini FI (MDI)</th><th>PFI</th></tr>
+    <tr><td>Что измеряет</td><td>сколько примеси признак снял <b>при построении</b> модели</td>
+        <td>насколько вырастет <b>ошибка</b>, если разрушить связь признака с $y$</td></tr>
+    <tr><td>Доступ к модели</td><td><b>white box</b> — нужны внутренности</td><td><b>black box</b> — нужны только предсказания</td></tr>
+    <tr><td>На каких данных</td><td>на <b>train</b>, по построению</td><td>можно на <b>test</b> (и обычно нужно)</td></tr>
+    <tr><td>Нужны ли метки $y$</td><td>да, но косвенно — через примесь узлов</td><td>да, напрямую — считается по потере</td></tr>
+    <tr><td>TTTM / TTTD</td><td><b>TTTM</b> — описывает, как модель устроена</td>
+        <td><b>TTTM</b> (с оговоркой: на тесте приближается к утверждению о данных)</td></tr>
+    <tr><td>Знак</td><td>всегда $\ge0$</td><td>может быть отрицательной</td></tr>
+    <tr><td>Смещение</td><td>к <b>непрерывным</b> признакам и признакам с <b>многими уровнями</b>;
+        зависит от конкретной выученной структуры, особенно в маленьких/неглубоких лесах</td>
+        <td>к признакам, у которых нет коррелированных заместителей; экстраполяция при перестановке</td></tr>
+    <tr><td>Применима к</td><td>только к деревьям и лесам</td><td>к любой модели</td></tr>
+  </table>
+
+  <div class="calcbox">
+    <b>Готовый ответ на пункт (г) ДЗ 2: «получим ли то же самое при повторном запуске?»</b>
+    <b>Нет — и по двум разным причинам.</b>
+    <ul style="margin:6px 0;">
+      <li><b>MDI:</b> Random Forest случаен по построению — бутстрэп данных и подвыборка $\sqrt p$
+      признаков на каждый сплит. При 3 деревьях глубины 3 разброс огромен: другой seed — другие
+      корневые сплиты — другая MDI.</li>
+      <li><b>PFI:</b> добавляется вторая случайность — сама перестановка. Даже на <i>фиксированной</i>
+      модели PFI меняется от запуска к запуску, поэтому её обычно усредняют по нескольким
+      перестановкам.</li>
+    </ul>
+    Это же — источник <b>нестабильности объяснений</b> из
+    <a href="topic-11.html">темы 11</a>.
+  </div>
+
+  <div class="trap"><b>Формулировка, которую стоит держать наготове.</b> «Gini FI и PFI отвечают
+  на разные вопросы: MDI — <i>насколько модель опиралась на признак при обучении</i>
+  (model reliance), PFI — <i>насколько предсказание становится хуже без него</i> (predictability).
+  Поэтому совпадение верхушки рангов — свидетельство, а не тавтология». Три трактовки важности
+  (`X_j causal in the model` / `Y predictable by X_j` / `model needs X_j`) разобраны в
+  <a href="topic-05.html">теме 5</a>.</div>
+</section>
+
+<!-- ============ BREIMAN ============ -->
+<section class="step" id="breiman">
+  <h2>10. Breiman 2001, «Two Cultures» — читательская работа 1</h2>
+  <div class="src">src: <code class="f">BREIMAN.L---twoCultures.pdf</code>; слайды л. 2 (сл. 19–21) — часть 2 лекции 2, «что обсуждали в классе»; master_conspect.md, л. 3. Требование курса: понимание понятий <b>в том виде, как их обсуждали в классе</b></div>
+
+  <p>Статья задана на лекции 1 как чтение, обсуждалась в классе на лекции 2 и по библиографии
+  относится к блоку деревьев. Слайд формулирует противопоставление так:</p>
+
+  <table class="contrast">
+    <tr><th>Data Modeling Culture</th><th>Algorithmic Modeling Culture</th></tr>
+    <tr><td>Модель должна <b>правильно определить порождающий процесс</b></td>
+        <td>Если модель <b>хорошо описывает данные</b> — можно исследовать саму модель</td></tr>
+    <tr><td>Работает, «если мы не упустили переменные, интеракции…»</td>
+        <td>Нет гарантий, что модель соответствует порождающему процессу</td></tr>
+    <tr><td>—</td><td>Опирается на результаты о <b>состоятельности</b> (consistency)</td></tr>
+  </table>
+
+  <p><b>Что именно обсуждали в классе</b> (слайд 21 — это и есть требуемый уровень ответа):</p>
+  <ul>
+    <li><b>Rashomon effect</b> — «multiple models same work»: много разных моделей работают одинаково
+    хорошо. Что из этого следует для интерпретации?</li>
+    <li>Разница между <b>model-selection consistency</b> и <b>prediction consistency</b>:
+    состоятельность предсказания не влечёт, что выбран «правильный» набор переменных.</li>
+    <li>Деревья и т. п.</li>
+    <li>«Может быть, интерпретируемость / простота всё-таки нужна?»</li>
+  </ul>
+
+  <div class="trap"><b>Ловушка про Rashomon.</b> Rashomon — это <b>не</b> «модели неточны».
+  Это «много <i>одинаково точных</i> моделей дают <i>разные</i> объяснения». Разница принципиальна:
+  проблема не в качестве предсказаний, а в том, что объяснение <b>не определяется данными
+  однозначно</b>. Мы видели это буквально в §5, шаг 6: три сплита с одинаковым $\Theta=0{,}0533$
+  дают три разных дерева и три разных объяснения.
+  <br><b>Прямой мостик:</b> отсюда вырастает <b>Model Class Reliance</b> Fisher, Rudin &amp; Dominici —
+  важность признака оценивается не для одной модели, а как интервал по всему $\varepsilon$-Rashomon-множеству
+  одинаково хороших моделей (<a href="topic-05.html">тема 5</a>, читательская работа 2).</div>
+
+  <p><b>Третий тезис — тот, с которого начинается вся вторая половина курса:</b> если изучать надо
+  предсказания, а не параметры, то нужны инструменты, зондирующие $\hat f$ снаружи. Лекция 2
+  открывает этим часть 3 дословно: <i>«Breiman's perspective: if the predictions are correct,
+  study the predictions»</i> — и дальше идут CP, ICE, PD.</p>
+</section>
+
+<!-- ============ КАРТОЧКИ ============ -->
+<section class="step" id="cards">
+  <h2>11. Карточки для экзамена</h2>
+  <div class="src">src: study_plan.md — «Правила на самом экзамене», п. 4</div>
+
+  <div class="trap"><b>Тир темы двойной, и это важно.</b> Механика деревьев — 🟢: её спрашивают
+  коротко и словами. А <b>Gini</b> — 🔴: преподаватель вынес «метод важности Gini» отдельным
+  пунктом в список тем курса, то есть это экзаменуемый материал, а не «просто ДЗ».
+  Две счётные задачи из блока десяти (№1 «Gini impurity split» и №2 «Gini FI по дереву») —
+  отсюда.
+  <div class="src" style="margin:8px 0 0;">src: course_map.md — «נושאים שהופיעו בעיקר בתרגילים»: метод важности Gini + minipatch; study_plan.md, блок счётных задач</div></div>
+
+  <table class="plain">
+    <tr><th></th><th>Что делает</th><th>Формула</th><th>Уровень</th><th>Слабость</th><th>Чем чинят</th></tr>
+    <tr><td><b>Дерево</b></td><td>разбивает пространство на прямоугольники, в каждом константа</td>
+        <td>$\hat f=\sum_m c_m\mathbb{1}(x\in R_m)$</td><td>локально: путь по ветвям; глобально: MDI</td>
+        <td>нестабильно, разрывно, интеракции только при сильном маргинальном эффекте</td>
+        <td>ансамбли</td></tr>
+    <tr><td><b>Gini impurity</b></td><td>мера смешанности классов в узле</td>
+        <td>$\phi=1-\sum_ip_i^2=\sum_ip_i(1-p_i)$; для 2 классов $2p(1-p)$</td><td>—</td>
+        <td>максимум $1-1/m$ при равномерности</td><td>—</td></tr>
+    <tr><td><b>Правило сплита</b></td><td>выбирает признак и порог</td>
+        <td>$\Theta(s,t)=\phi(p)-P_L\phi(p_L)-P_R\phi(p_R)$</td><td>—</td>
+        <td>жадное, неоптимальное; ничьи ⇒ разные деревья</td><td>—</td></tr>
+    <tr><td><b>Gini FI / MDI</b></td><td>суммирует взвешенные снижения примеси по признаку</td>
+        <td>$\mathrm{GI}_j=\sum_{t\in\mathcal T(j)}\frac{n_t}{n}\Delta G(t)$, затем нормировка</td>
+        <td>глобальный, white-box, TTTM, train</td>
+        <td>смещена к непрерывным и многоуровневым признакам; нестабильна</td>
+        <td>PFI (black-box, test), CFI, LOCO</td></tr>
+    <tr><td><b>Random Forest</b></td><td>усредняет независимые деревья</td>
+        <td>$\hat f=\frac1B\sum_b\hat f_b$; ресемпл ~2/3, $\sqrt p$ признаков</td><td>—</td>
+        <td>теряет читаемость правил</td><td>post-hoc объяснения (весь остальной курс)</td></tr>
+    <tr><td><b>Boosting</b></td><td>деревья на остатках предыдущих</td><td>—</td><td>—</td>
+        <td>деревья зависимы, анализировать труднее</td><td>—</td></tr>
+  </table>
+
+  <div class="trap"><b>Что теряет баллы именно на этой теме.</b>
+  (1) Пропустить одно из <b>двух</b> взвешиваний в MDI.
+  (2) Ответить на «какой признак важнее» без уточнения, <i>в каком смысле</i>: по корневому сплиту
+  здесь Humidity, по MDI — Temp.
+  (3) Сказать «MDI и PFI — одно и то же»: разные вопросы, разные данные (train/test),
+  разный доступ к модели, разный знак.
+  (4) Rashomon описать как «модели неточны» вместо «одинаково точные модели дают разные объяснения».
+  (5) Забыть, что $\Theta$ при <b>чистых детях</b> равна примеси родителя — это самая быстрая
+  проверка правильности вычислений.</div>
+</section>
+
+<script>
+const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
+const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
+
+/* ---- Рис.1: дерево (SVG) ---- */
+{
+  const box=(x,y,w,h,t1,t2,fill)=>`
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${fill}" stroke="#E3E2DC"/>
+    <text class="t" x="${x+w/2}" y="${y+19}" text-anchor="middle">${t1}</text>
+    <text class="ts" x="${x+w/2}" y="${y+35}" text-anchor="middle">${t2}</text>`;
+  const edge=(x1,y1,x2,y2)=>`<line class="e" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  const lab=(x,y,t,anchor)=>`<text class="el" x="${x}" y="${y}" text-anchor="${anchor||'middle'}" fill="#2F6F6D">${t}</text>`;
+
+  document.getElementById('svg-tree').innerHTML = `
+  <svg viewBox="0 0 720 470" width="100%" style="max-width:720px;display:block;margin:0 auto;">
+    <style>
+      .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
+      .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
+      .e{stroke:#C9C8C2;stroke-width:1.6;}
+      .el{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;}
+      .leaf{font:600 11px ui-monospace,Menlo,Consolas,monospace;}
+    </style>
+
+    ${box(280,8,160,46,'9 Yes / 5 No','n = 14 · φ = 0.459','#F2F1EC')}
+    ${edge(360,54,170,96)} ${edge(360,54,550,96)}
+    ${lab(228,80,'Humidity = Normal  ·  Θ = 0.0918','middle')}
+    ${lab(500,80,'Humidity = High','middle')}
+
+    ${box(90,96,160,46,'6 Yes / 1 No','n = 7 · φ = 0.245','#FFFFFF')}
+    ${box(470,96,160,46,'3 Yes / 4 No','n = 7 · φ = 0.490','#FFFFFF')}
+
+    ${edge(170,142,110,186)} ${edge(170,142,240,186)}
+    ${lab(96,168,'Temp < 9.5','end')}
+    ${lab(258,168,'Θ = 0.2449','start')}
+    ${box(40,186,140,38,'No','n = 1 · лист','#EBF2F1')}
+    ${box(196,186,140,38,'Yes','n = 6 · лист','#EBF2F1')}
+
+    ${edge(550,142,470,186)} ${edge(550,142,620,186)}
+    ${lab(452,168,'Temp < 19','end')}
+    ${lab(636,168,'Θ = 0.2612','start')}
+    ${box(400,186,140,38,'Yes','n = 2 · лист','#EBF2F1')}
+    ${box(556,186,150,46,'1 Yes / 4 No','n = 5 · φ = 0.320','#FFFFFF')}
+
+    ${edge(631,232,570,276)} ${edge(631,232,690,276)}
+    ${lab(556,258,'Wind = Strong','end')}
+    ${lab(704,258,'Θ = 0.0533','start')}
+    ${box(500,276,140,38,'No','n = 2 · лист','#EBF2F1')}
+    ${box(600,276,150,46,'1 Yes / 2 No','n = 3 · φ = 0.444','#FFFFFF')}
+
+    ${edge(675,322,610,366)} ${edge(675,322,700,366)}
+    ${lab(596,348,'Temp < 26','end')}
+    ${lab(714,348,'Θ = 0.1111','start')}
+    ${box(540,366,140,38,'No','n = 1 · лист','#EBF2F1')}
+    ${box(620,366,150,46,'1 Yes / 1 No','n = 2 · φ = 0.500','#FFFFFF')}
+
+    ${edge(695,412,640,448)} ${edge(695,412,712,448)}
+    ${lab(628,436,'Temp < 33.5  ·  Θ = 0.5','end')}
+  </svg>`;
+}
+
+/* ---- Рис.2: MDI vs важность по корню ---- */
+{
+  const feats=['Temp','Humidity','Wind'];
+  Plotly.newPlot('plot-mdi', [
+    {x:feats, y:[0.7585,0.2000,0.0415], type:'bar', name:'Gini FI (MDI), нормир.',
+     marker:{color:'#2F6F6D'},
+     text:['0.7585','0.2000','0.0415'], textposition:'outside'},
+    {x:feats, y:[0.0636,0.0918,0.0306], type:'bar', name:'Θ лучшего сплита в корне',
+     marker:{color:'#9AA0A6'},
+     text:['0.0636','0.0918','0.0306'], textposition:'outside'}
+  ], {
+    margin:{l:50,r:15,t:36,b:36}, barmode:'group',
+    legend:{orientation:'h', y:1.22, x:0},
+    xaxis:{title:'признак',...AXIS},
+    yaxis:{range:[0,0.92], ...AXIS}
+  }, CFG);
+}
+</script>
+
+</body>
+</html>

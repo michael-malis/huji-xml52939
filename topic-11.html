@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>52939 · Блок 11 · Оценка методов объяснения</title>
+<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --paper:#FFFFFF;
+    --ink:#1E2430;
+    --ink-soft:#5B6472;
+    --rule:#E3E2DC;
+    --accent:#2F6F6D;
+    --accent-bg:#EBF2F1;
+    --trap:#B5540B;
+    --trap-bg:#FCF1E8;
+    --core:#8A5CB8;
+    --calc:#C0392B;
+    --source:#5B6472;
+    --illustr:#9AA0A6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:16.5px;
+    line-height:1.65;
+    width:66.67%;
+    margin:0 auto;
+    padding:40px 0 100px;
+  }
+  @media (max-width:900px){
+    body{width:auto; max-width:760px; padding:40px 20px 100px;}
+  }
+  h1{
+    font-family:Georgia,"Iowan Old Style","Charter",serif;
+    font-size:1.7em;
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
+  .badges{margin-bottom:28px;}
+  .badge{
+    display:inline-block;
+    font-size:0.78em;
+    padding:2px 9px;
+    border-radius:3px;
+    margin-right:6px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .badge.core{background:var(--core);color:#fff;}
+  .badge.calc{background:var(--calc);color:#fff;}
+
+  nav.toc{
+    background:var(--paper);
+    border:1px solid var(--rule);
+    border-radius:4px;
+    padding:14px 18px;
+    margin-bottom:36px;
+    font-size:0.92em;
+  }
+  nav.toc a{color:var(--accent); text-decoration:none;}
+  nav.toc a:hover{text-decoration:underline;}
+  nav.toc ol{margin:6px 0 0; padding-left:20px;}
+
+  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
+  section.step:first-of-type{border-top:none;}
+
+  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
+  h3{font-size:1.03em; margin:22px 0 4px;}
+  .src{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:0.78em;
+    color:var(--source);
+    margin-bottom:14px;
+  }
+  .src.illustr{color:var(--illustr); font-style:italic;}
+
+  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
+  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
+  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
+    color:var(--illustr); font-style:normal; font-weight:600;}
+
+  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .trap b{color:var(--trap);}
+
+  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .calcbox b{color:var(--accent);}
+
+  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
+  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
+  table.contrast th{background:#DCEAE8;}
+
+  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
+
+  .lead{font-size:1.03em;}
+  ul{padding-left:22px;}
+  li{margin:4px 0;}
+  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
+  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
+  table.plain th{background:#F2F1EC; font-weight:600;}
+  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .trap .src{margin-top:8px;}
+
+  a.back-link{
+    display:inline-block; font-size:0.85em; color:var(--accent);
+    text-decoration:none; margin-bottom:14px;
+  }
+  a.back-link:hover{text-decoration:underline;}
+  @media (max-width:480px){
+    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
+  }
+  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
+</style>
+</head>
+
+<body>
+
+<a class="back-link" href="index.html">← Back to topics</a>
+<h1>Оценка методов объяснения: три уровня, неполнота и нестабильность</h1>
+<div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 13 · тема 11</div>
+<div class="badges">
+  <span class="badge core" style="background:#2F6F6D;">🟢 Страховка</span>
+</div>
+
+<nav class="toc">
+  Оглавление —
+  <ol>
+    <li><a href="#setup">Постановка: спрашивают не метод, а критерий</a></li>
+    <li><a href="#def">Определение интерпретируемости и когда она НЕ нужна</a></li>
+    <li><a href="#incomplete">Incompleteness ≠ uncertainty</a></li>
+    <li><a href="#levels">Таксономия оценки — три уровня</a></li>
+    <li><a href="#human">Три формата human-grounded экспериментов</a></li>
+    <li><a href="#which">Когда какой уровень уместен и три вопроса для дизайна</a></li>
+    <li><a href="#audit">Сквозная таблица: как оценивали каждый метод курса</a></li>
+    <li><a href="#uncert">Неопределённость в методах объяснения</a></li>
+    <li><a href="#taxonomy">Замыкание курса: пять осей таксономии объяснений</a></li>
+    <li><a href="#summary">Сводка и карточки для экзамена</a></li>
+  </ol>
+</nav>
+
+<!-- ============ ПОСТАНОВКА ============ -->
+<section class="step" id="setup">
+  <h2>Постановка: спрашивают не метод, а критерий</h2>
+  <div class="src">src: master_conspect.md, л. 13; course_map.md, л. 13; study_plan.md, тема 11</div>
+
+  <p class="lead">До сих пор вопрос звучал «<b>как</b> объяснить модель», и каждый ответ был методом.
+  Здесь вопрос меняется на «<b>как понять, что объяснение хорошее</b>», и ответом будет не метод,
+  а критерий. Разница существеннее, чем кажется: у метода объяснения нет метки, с которой можно
+  сверить его выход. Нет «истинной важности признака», записанной в данных, — а значит, и обычная
+  схема «посчитать ошибку на отложенной выборке» здесь не работает вовсе. Придётся строить оценку
+  как-то иначе, и вся тема — про то, какие «иначе» бывают и чего каждое стоит.</p>
+
+  <div class="trap"><b>⛔ Прямой запрет из плана подготовки.</b> <b>Confident Feature Ranking</b>
+  (Neuhof &amp; Benjamini) и <b>неопределённость в ранжировании важности</b> — <b>вне экзамена</b>,
+  время на них не тратить. Речь идёт об одновременных доверительных интервалах для рангов,
+  процедурах на основе family-wise error control над частичными ранжированиями, попарных тестах
+  и подсчёте отвержений. Всё это в §8 <b>не разбирается</b> — там только то, что осталось в программе.</div>
+</section>
+
+<!-- ============ ОПРЕДЕЛЕНИЕ ============ -->
+<section class="step" id="def">
+  <h2>1. Определение интерпретируемости и когда она НЕ нужна</h2>
+  <div class="src">src: master_conspect.md, л. 13 — «Определение и мотивация»; Doshi-Velez &amp; Kim 2017, §2</div>
+
+  <p><b>Определение (Doshi-Velez &amp; Kim):</b> интерпретируемость — «<b>способность объяснить
+  или представить в понятных человеку терминах</b>».</p>
+
+  <p><b>Немедленная оговорка, которую надо произнести следом:</b> <b>формального определения
+  объяснения не существует</b>. Отсюда и вся проблематика статьи: нельзя оптимизировать то,
+  что не определено, — можно только измерять косвенно.</p>
+
+  <p><b>К чему стремимся</b> — четыре цели, к которым интерпретируемость служит средством:</p>
+  <ul>
+    <li><b>scientific understanding</b> — понять устройство явления;</li>
+    <li><b>safety</b> — безопасность;</li>
+    <li><b>ethics</b> — этичность;</li>
+    <li><b>matched objectives</b> — соответствие заявленных и реальных целей системы.</li>
+  </ul>
+
+  <h3>Когда интерпретируемость НЕ нужна — важный тезис статьи</h3>
+  <table class="contrast">
+    <tr><th>Случай</th><th>Почему</th><th>Пример</th></tr>
+    <tr>
+      <td><b>1. Неприемлемый результат не имеет значимых последствий</b></td>
+      <td>цена ошибки мала, объяснение не окупает своей стоимости</td>
+      <td>рекомендация фильма</td>
+    </tr>
+    <tr>
+      <td><b>2. Задача хорошо изучена и провалидирована в реальных приложениях</b></td>
+      <td>системе <b>доверяют</b> на основании накопленного опыта, а не объяснений</td>
+      <td>оптическое распознавание символов, зрелые промышленные системы</td>
+    </tr>
+  </table>
+
+  <div class="trap"><b>Это любимый подпункт «на понимание».</b> Ответ «интерпретируемость нужна
+  всегда» — ошибка: статья прямо перечисляет два случая, когда она не нужна, и это её осознанная
+  позиция. Правильная рамка: интерпретируемость — <b>не</b> самоцель, а инструмент против
+  <b>неполноты</b> формализации задачи (следующий параграф).</div>
+</section>
+
+<!-- ============ INCOMPLETENESS ============ -->
+<section class="step" id="incomplete">
+  <h2>2. Incompleteness ≠ uncertainty</h2>
+  <div class="src">src: master_conspect.md, л. 13 — «Когда нужна — из-за incompleteness»; Doshi-Velez §2</div>
+
+  <p class="lead">Центральное понятие статьи и самый вероятный «терминологический» подпункт.</p>
+
+  <p>Интерпретируемость нужна из-за <b>incompleteness</b> — <b>неполноты формализации задачи</b>,
+  которая создаёт <b>фундаментальный барьер</b> для оптимизации и оценки. Мы не можем записать
+  в функционал всё, что нам важно: «не быть дискриминационным», «быть безопасным»,
+  «делать выводы, соответствующие физике» — это не пишется как loss.</p>
+
+  <table class="contrast">
+    <tr><th></th><th>Uncertainty (неопределённость)</th><th>Incompleteness (неполнота)</th></tr>
+    <tr><td><b>Что это</b></td><td>мы знаем, чего не знаем, и можем это измерить</td>
+        <td>задача сформулирована не полностью — часть требований не попала в постановку</td></tr>
+    <tr><td><b>Измеримость</b></td><td><b>количественно измерима</b> (дисперсия, доверительный интервал)</td>
+        <td><b>порождает неквантифицированное смещение</b> — измерить нечем</td></tr>
+    <tr><td><b>Чем лечится</b></td><td>больше данных, статистические процедуры</td>
+        <td><b>объяснения</b> — способ проконтролировать последствия этих пробелов</td></tr>
+  </table>
+
+  <p><b>Формулировка на один балл:</b> «объяснения нужны не потому, что модель неточна, а потому,
+  что <b>сама постановка задачи неполна</b>: то, чего нет в функционале, нельзя ни оптимизировать,
+  ни проверить — остаётся только смотреть на модель глазами человека».</p>
+
+  <div class="fig"><div id="svg-incomp" style="padding:10px 0;"></div></div>
+  <div class="fig-cap illustr">Рис. 1. Два разных зазора: между моделью и истиной (uncertainty —
+  измерим) и между функционалом и тем, что нам на самом деле нужно (incompleteness — неизмерим).
+  <b>Что здесь важно заметить:</b> увеличение данных сужает первый зазор и <b>никак не влияет</b>
+  на второй. Именно поэтому «просто обучим модель получше» не заменяет объяснений.</div>
+</section>
+
+<!-- ============ ТРИ УРОВНЯ ============ -->
+<section class="step" id="levels">
+  <h2>3. Таксономия оценки — три уровня</h2>
+  <div class="src">src: master_conspect.md, л. 13 — «Таксономия оценки»; Doshi-Velez &amp; Kim §3.1–3.3; слайды л. 13, сл. 4–7</div>
+
+  <p class="lead">Ядро темы. Две оси различения: <b>участвуют ли реальные люди</b> и
+  <b>реальная ли задача</b>.</p>
+
+  <table class="contrast">
+    <tr><th>Уровень</th><th>Кто оценивает</th><th>Что за задача</th><th>Примеры из статьи</th></tr>
+    <tr>
+      <td><b>1 · Application-grounded</b></td>
+      <td><b>реальные люди</b> — доменные эксперты</td>
+      <td><b>реальная задача</b></td>
+      <td>врачи ставят диагнозы; учителя выявляют bias; доменные эксперты работают с точным
+      приложением — или с упрощённой / частичной версией задачи</td>
+    </tr>
+    <tr>
+      <td><b>2 · Human-grounded</b></td>
+      <td><b>реальные люди</b>, но <b>не эксперты</b>; сегодня — и LLM</td>
+      <td><b>упрощённая</b> задача, сохраняющая суть</td>
+      <td>дешевле и больший пул испытуемых; проверяют <b>общие</b> свойства качества объяснения</td>
+    </tr>
+    <tr>
+      <td><b>3 · Functionally-grounded</b></td>
+      <td><b>людей нет</b></td>
+      <td><b>прокси-задача</b> / формальное определение как прокси</td>
+      <td>добавлять/удалять признаки по одному и смотреть изменение точности; генерировать пример
+      с изменённым признаком и мерить эффект вмешательства</td>
+    </tr>
+  </table>
+
+  <div class="fig"><div id="svg-levels" style="padding:10px 0;"></div></div>
+  <div class="fig-cap">Рис. 2. Три уровня как обмен: чем выше уровень, тем убедительнее вывод
+  и тем дороже эксперимент. <b>Что здесь важно заметить:</b> уровни не «лучше» и «хуже» —
+  functionally-grounded оценка уместна, когда она уже <b>провалидирована</b> человеческим
+  экспериментом; без такой валидации это просто дешёвое число.</div>
+
+  <div class="trap"><b>Мнемоника, чтобы не путать 1 и 2.</b> Различаются они <b>не по людям</b>
+  (люди есть в обоих), а <b>по задаче</b>: application-grounded — <b>та самая</b> задача с
+  <b>теми самыми</b> экспертами; human-grounded — <b>упрощённая</b> задача с <b>кем угодно</b>.
+  А третий уровень отличается от первых двух тем, что <b>людей нет вовсе</b>.</div>
+
+  <div class="trap"><b>Современная оговорка из лекции.</b> В human-grounded экспериментах сегодня
+  людей всё чаще заменяют <b>LLM</b>. Это стоит упомянуть — но и отметить, что тогда «человеческая»
+  проверка становится ещё одним прокси, то есть уровень сползает к functionally-grounded.</div>
+</section>
+
+<!-- ============ HUMAN-GROUNDED ============ -->
+<section class="step" id="human">
+  <h2>4. Три формата human-grounded экспериментов</h2>
+  <div class="src">src: master_conspect.md, л. 13 — «Конкретные форматы human-grounded экспериментов»; Doshi-Velez §3.2</div>
+
+  <p>Статья перечисляет три конкретных дизайна. Их спрашивают списком, поэтому важно помнить,
+  чем каждый отличается по <b>тому, что дают испытуемому и что просят вернуть</b>.</p>
+
+  <table class="plain">
+    <tr><th>Формат</th><th>Что дают человеку</th><th>Что просят</th><th>Что измеряет</th></tr>
+    <tr>
+      <td><b>Binary forced choice</b></td>
+      <td><b>два объяснения</b></td>
+      <td>выбрать, какое лучше</td>
+      <td>превращает <b>face-validity</b> («выглядит убедительно») в <b>количественную</b> метрику —
+      это и есть его смысл</td>
+    </tr>
+    <tr>
+      <td><b>Forward simulation / prediction</b></td>
+      <td>объяснение <b>+ вход</b></td>
+      <td><b>предсказать выход модели</b> — независимо от того, каков истинный ответ</td>
+      <td>насколько объяснение позволяет <b>воспроизвести рассуждение модели</b>.
+      Классический пример — <b>intrusion-detection тест</b> в тематических моделях
+      (найти «чужое» слово в теме)</td>
+    </tr>
+    <tr>
+      <td><b>Counterfactual simulation</b></td>
+      <td>объяснение <b>+ вход + выход</b></td>
+      <td>сказать, <b>что нужно изменить</b>, чтобы получить желаемый выход</td>
+      <td>позволяет ли объяснение <b>действовать</b>, а не только понимать</td>
+    </tr>
+  </table>
+
+  <div class="trap"><b>Ловушка forward simulation.</b> Человек должен предсказать <b>выход модели</b>,
+  а <b>не правильный ответ</b>. Если испытуемый угадывает истину, но не то, что скажет модель, —
+  объяснение <b>плохое</b>, каким бы разумным оно ни выглядело. Это прямое следствие того,
+  что объяснения в курсе почти всегда <b>true-to-the-model</b>.</div>
+
+  <div class="trap"><b>Связь с темой 10.</b> Counterfactual simulation — почти дословно то, что
+  делает <b>test-time intervention</b> в Concept Bottleneck Models: человеку показывают
+  предсказанные концепты и он меняет их, чтобы получить правильный выход. Разница в том, что
+  в CBM вмешательство — <b>часть работы модели</b>, а здесь — <b>эксперимент по оценке</b>.</div>
+</section>
+
+<!-- ============ КОГДА КАКОЙ ============ -->
+<section class="step" id="which">
+  <h2>5. Когда какой уровень уместен и три вопроса для дизайна</h2>
+  <div class="src">src: master_conspect.md, л. 13 — «Когда какой уровень уместен», «Три вопроса для дизайна оценки»</div>
+
+  <table class="contrast">
+    <tr><th>Уровень</th><th>Когда его выбирают</th></tr>
+    <tr><td><b>Application-grounded</b></td>
+        <td>когда есть <b>конкретная задача</b> и <b>доступ к экспертам</b></td></tr>
+    <tr><td><b>Human-grounded</b></td>
+        <td>когда эксперименты с <b>целевым сообществом затруднены</b> и нас интересуют
+        <b>общие свойства</b> объяснений</td></tr>
+    <tr><td><b>Functionally-grounded</b></td>
+        <td>(1) когда класс моделей / регуляризаторов <b>уже провалидирован</b> через
+        human-grounded эксперименты; (2) когда метод <b>ещё незрел</b>; (3) когда эксперименты
+        с людьми <b>неэтичны</b></td></tr>
+  </table>
+
+  <p><b>Главная трудность functionally-grounded оценки:</b> <b>какой прокси выбрать</b>.
+  И обычно требуется <b>показать, что прокси согласуется с человеческими экспериментами</b>.
+  Это ключевая фраза: functionally-grounded метрика без такой привязки — не оценка, а число.</p>
+
+  <h3>Три вопроса для дизайна оценки</h3>
+  <ol>
+    <li><b>Какие релевантные факторы задачи?</b> — global vs local, серьёзность incompleteness,
+    уровень пользователя;</li>
+    <li><b>Какие факторы метода?</b> — что именно объясняет, чем ограничен;</li>
+    <li><b>Какой уровень оценки им соответствует?</b></li>
+  </ol>
+</section>
+
+<!-- ============ АУДИТ КУРСА ============ -->
+<section class="step" id="audit">
+  <h2>6. Сквозная таблица: как оценивали каждый метод курса</h2>
+  <div class="src">src: master_conspect.md, л. 6b–7 (RISE), л. 9 (Adebayo), л. 10–11 (прототипы, Data Shapley), л. 12 (CBM); сведено для этой темы</div>
+
+  <p class="lead">Самая полезная страница блока: таксономия Doshi-Velez &amp; Kim применена ко всем
+  проверкам, которые встречались в курсе. Если вопрос звучит «как оценивают методы объяснения»,
+  общей таксономии мало — нужны примеры, и вот они все.</p>
+
+  <table class="contrast">
+    <tr><th>Проверка</th><th>Откуда</th><th>Уровень</th><th>Почему</th></tr>
+    <tr>
+      <td><b>Deletion / insertion</b> (AUC кривой)</td>
+      <td>RISE, тема 7</td>
+      <td><b>Functionally-grounded</b></td>
+      <td>людей нет; прокси — падение / рост вероятности класса. Авторы называют их
+      <b>causal metrics</b></td>
+    </tr>
+    <tr>
+      <td><b>Pointing game</b></td>
+      <td>RISE, тема 7</td>
+      <td><b>Human-grounded</b></td>
+      <td>используется человеческая разметка (bounding box), но задача упрощена до «попал / не попал»</td>
+    </tr>
+    <tr>
+      <td><b>Sanity checks</b> (рандомизация весов и меток)</td>
+      <td>Adebayo, тема 8</td>
+      <td><b>Functionally-grounded</b></td>
+      <td>чистая проверка свойства метода без людей и без прикладной задачи;
+      <b>необходимое, но не достаточное</b> условие</td>
+    </tr>
+    <tr>
+      <td><b>User study с criticisms</b></td>
+      <td>MMD-critic, тема 9</td>
+      <td><b>Human-grounded</b></td>
+      <td>реальные люди, упрощённая задача на понимание распределения</td>
+    </tr>
+    <tr>
+      <td><b>Model distillation</b> (nearest-prototype)</td>
+      <td>MMD-critic, тема 9</td>
+      <td><b>Functionally-grounded</b></td>
+      <td>прокси — качество модели, обученной только на прототипах</td>
+    </tr>
+    <tr>
+      <td><b>Сравнение со случайной выборкой</b></td>
+      <td>прототипы, тема 9</td>
+      <td><b>Functionally-grounded</b></td>
+      <td>минимальный контроль: если не лучше случайного — метод бесполезен</td>
+    </tr>
+    <tr>
+      <td><b>Графики удаления примеров</b></td>
+      <td>Data Shapley, тема 9</td>
+      <td><b>Functionally-grounded</b></td>
+      <td>прокси — изменение accuracy при удалении точек по рангу ценности;
+      контроль — случайное удаление</td>
+    </tr>
+    <tr>
+      <td><b>Test-time intervention</b></td>
+      <td>CBM, тема 10</td>
+      <td>ближе к <b>Application-grounded</b></td>
+      <td>человек реально вмешивается в работу модели и это меняет результат — редчайший случай
+      в курсе, когда объяснение проверяется <b>действием</b></td>
+    </tr>
+    <tr>
+      <td><b>Autointerpretation</b> через LLM</td>
+      <td>SAE, тема 10</td>
+      <td><b>Human-grounded</b> в современной форме</td>
+      <td>роль человека выполняет LLM — со всеми оговорками §3</td>
+    </tr>
+    <tr>
+      <td><b>Completeness score</b>, <b>IoU</b></td>
+      <td>Yeh и Network Dissection, тема 10</td>
+      <td><b>Functionally-grounded</b></td>
+      <td>формальные метрики как прокси интерпретируемости; Yeh сам оговаривает,
+      что completeness <b>не</b> измеряет понятность</td>
+    </tr>
+  </table>
+
+  <div class="calcbox">
+    <b>Вывод, который стоит произнести.</b> Подавляющее большинство проверок в курсе —
+    <b>functionally-grounded</b>. Application-grounded оценок почти нет (единственный близкий
+    пример — вмешательство в CBM). Это <b>системная слабость области</b>, и она прямо соответствует
+    предупреждению Doshi-Velez &amp; Kim: прокси-метрику нужно валидировать человеческими
+    экспериментами, а на практике это делают редко.<br><br>
+    Отсюда же видно главное ограничение самого нижнего уровня. Sanity checks Adebayo (тема 8) —
+    образцовая functionally-grounded проверка, и её собственная формулировка «<b>необходимое,
+    но не достаточное</b> условие» описывает весь уровень целиком: прокси надёжно говорит,
+    когда метод <i>плох</i>, и почти ничего не говорит о том, когда он <i>хорош</i>. Поэтому
+    таблицу выше стоит читать не как рейтинг проверок, а как карту того, чего в области
+    систематически не делают.
+  </div>
+</section>
+
+<!-- ============ НЕОПРЕДЕЛЁННОСТЬ ============ -->
+<section class="step" id="uncert">
+  <h2>7. Неопределённость в методах объяснения</h2>
+  <div class="src">src: master_conspect.md, л. 13 — «Неопределённость в методах объяснения»; слайды л. 13, сл. 8–11. ⛔ Confident Feature Ranking не разбирается</div>
+
+  <h3>Четыре источника нестабильности (со слайда)</h3>
+  <table class="plain">
+    <tr><th>Источник</th><th>Где это встречалось в курсе</th></tr>
+    <tr><td>малые изменения в <b>датасете для объяснения</b></td>
+        <td>PFI и CFI считаются на выборке; фоновая выборка SHAP</td></tr>
+    <tr><td>малые изменения в <b>отдельных примерах</b></td>
+        <td>SmoothGrad (тема 8): градиент скачет между визуально неразличимыми входами</td></tr>
+    <tr><td>малые изменения в <b>самой модели</b></td>
+        <td>Rashomon set и MCR (тема 5): равно хорошие модели с разной опорой на признаки</td></tr>
+    <tr><td><b>методы сэмплирования / приближения внутри самого метода объяснения</b></td>
+        <td>SHAP-перестановки (тема 6), TMC-Shapley (тема 9), сэмплы LIME (тема 7),
+        маски RISE (тема 7)</td></tr>
+  </table>
+
+  <p>Слайд формулирует последний пункт как призыв: «вспомните, сколько вычислений идёт в одну
+  SHAP-перестановку» — то есть источник шума встроен в сам метод, а не приходит извне.</p>
+
+  <p>Стоит заметить, что четвёртый источник в этой серии уже показан трижды, и каждый раз это была
+  одна и та же картинка в разных декорациях: сходимость Монте-Карло у SHAP (тема 6, рис. 5),
+  расхождение объяснений LIME между запусками (тема 7, §7) и усечение перестановки в TMC-Shapley
+  (тема 9, рис. 4). Во всех трёх случаях меняется не оцениваемая величина, а её одноточечная
+  реализация — и без повторных запусков отличить одно от другого невозможно.</p>
+
+  <h3>Как учитывать шум в одном значении FI (со слайда)</h3>
+  <ul>
+    <li><b>рандомизировать вход</b>;</li>
+    <li><b>ансамблевый подход</b> — проверять разные подмножества;</li>
+    <li>для глобального FI — <b>ресемплировать локальные примеры</b>.</li>
+  </ul>
+
+  <div class="fig"><div id="plot-uncert" style="height:340px;"></div></div>
+  <div class="fig-cap illustr">Рис. 3. Шесть признаков, их точечные оценки важности и разброс между
+  повторными запусками. <b>Что здесь важно заметить:</b> порядок первых двух признаков устойчив,
+  а признаки 3–5 при повторном запуске <b>меняются местами</b> — и именно эта часть рейтинга обычно
+  и попадает в отчёт как «топ-5». Точечный столбик выглядит одинаково убедительно и там, и там.</div>
+
+  <h3>Почему это важно на практике</h3>
+  <p>Глобальный FI почти всегда сообщается в <b>относительных терминах</b>: «в топ-5», «самые важные
+  признаки», «график топ-10». А <b>абсолютные значения FI</b> чувствительны к:</p>
+  <ul>
+    <li>выбору <b>ML-алгоритма</b>;</li>
+    <li><b>типу модификации</b> признака (перестановка / условная замена / переобучение);</li>
+    <li>выбору <b>loss или prediction</b> в качестве model behavior;</li>
+    <li><b>методу декорреляции</b>.</li>
+  </ul>
+
+  <div class="trap"><b>Пример со слайда — им хорошо заканчивать ответ.</b> Цитата из
+  <b>Nature Climate Change</b> (Jaxa-Rozen &amp; Trutnevyte 2021), где по SHAP-значениям делается
+  вывод, что политические индикаторы «<b>входят в пятёрку самых влиятельных переменных</b>».
+  Утверждение <b>о ранге</b>, сделанное по методу, точечные значения которого зависят от четырёх
+  перечисленных выборов и от случайного сэмплирования, — и без какой-либо оценки того,
+  насколько устойчив сам ранг.</div>
+
+  <div class="trap"><b>⛔ Граница программы.</b> Дальше в лекции идёт предложение сообщать
+  <b>неопределённость для рангов</b> — одновременные доверительные интервалы, family-wise error
+  control над частичными ранжированиями, попарные тесты. Это содержание статьи Neuhof &amp;
+  Benjamini, помеченной <code class="f">[Not for Exam]</code>. <b>Знать не требуется.</b>
+  Достаточно уметь сказать, что проблема ранговой неопределённости <i>существует</i> — и остановиться.</div>
+</section>
+
+<!-- ============ ТАКСОНОМИЯ ============ -->
+<section class="step" id="taxonomy">
+  <h2>8. Замыкание курса: пять осей таксономии объяснений</h2>
+  <div class="src">src: master_conspect.md, «Сквозная таксономия объяснений» (л. 1, повторена в л. 13); topic_index.md, строка 46</div>
+
+  <p class="lead">Лекция 13 заканчивается тем же, чем началась лекция 1. Эти пять осей —
+  <b>подпункт почти в каждом вопросе экзамена</b>, поэтому таблица ниже стоит того, чтобы знать
+  её наизусть вместе с примерами.</p>
+
+  <table class="contrast">
+    <tr><th>#</th><th>Ось</th><th>Что различает</th><th>Крайние примеры из курса</th></tr>
+    <tr><td>1</td><td><b>TTTM vs TTTD</b></td>
+        <td>объясняем <b>модель</b> (true-to-the-model) или <b>данные / мир</b> (true-to-the-data)</td>
+        <td>TTTM: PFI на train, PDI, LIME, KernelSHAP · TTTD: LOCO, CFI, условный SHAP</td></tr>
+    <tr><td>2</td><td><b>White box vs Black box</b></td>
+        <td>используем ли <b>параметры</b> модели для построения объяснения</td>
+        <td>White: Gini FI, градиенты, Grad-CAM, TreeSHAP · Black: PFI, LIME, <b>RISE</b>, KernelSHAP</td></tr>
+    <tr><td>3</td><td><b>Feature space vs Example space</b></td>
+        <td>объяснение через <b>признаки</b> или через <b>примеры</b></td>
+        <td>Feature: темы 4–8, 10 · Example: тема 9 (прототипы, influence, Data Shapley)</td></tr>
+    <tr><td>4</td><td><b>Global vs Local</b></td>
+        <td>на <b>популяции</b> или на <b>одном примере</b></td>
+        <td>Global: PFI, PD, Network Dissection, TCAV · Local: SHAP, LIME, saliency, counterfactuals</td></tr>
+    <tr><td>5</td><td><b>Computability constraints</b></td>
+        <td>вычислительная стоимость</td>
+        <td>Дёшево: PFI $O(p)$, vanilla gradient · Дорого: точный Shapley $O(2^p)$,
+        Data Shapley $2^n\times$переобучение, MCR</td></tr>
+  </table>
+
+  <p><b>Дополнительная ось для концептов (л. 12):</b>
+  <b>At-Training vs Post-hoc</b> × <b>Supervised vs Unsupervised</b> — см. тему 10, §1.</p>
+
+  <h3>Зачем вообще объясняют модели (л. 1) — три цели</h3>
+  <ol>
+    <li>получить <b>инсайт</b> о модели или о мире;</li>
+    <li><b>отладить / улучшить / проаудировать</b> модель: найти ошибки, направить сбор данных,
+    выявить bias и использование protected attributes;</li>
+    <li>понять и <b>контролировать отдельное решение</b> (counterfactuals).</li>
+  </ol>
+
+  <div class="trap"><b>Связка целей и уровней оценки.</b> Каждой цели соответствует свой уровень
+  проверки: инсайт проверяется <b>human-grounded</b> экспериментом (человек должен что-то понять);
+  отладка — <b>functionally-grounded</b> (нашли ли мы ошибку); контроль решения —
+  <b>application-grounded</b> (изменилось ли действие). Если вопрос просит связать
+  лекцию 1 и лекцию 13 — вот эта связка.</div>
+</section>
+
+<!-- ============ СВОДКА ============ -->
+<section class="step" id="summary">
+  <h2>9. Сводка и карточки для экзамена</h2>
+  <div class="src">src: study_plan.md, тема 11 и п. 4 правил; master_conspect.md, л. 13</div>
+
+  <div class="trap"><b>Как это спрашивают.</b> В Moed A 2026 лекции 13 <b>не было</b> — по логике
+  плана подготовки это повышает вероятность, но тир темы остаётся <b>🟢 Страховка</b>: материала
+  мало, формул нет, и полный ответ помещается в пять предложений. Стратегия по плану: знать
+  таксономию трёх уровней <b>железно</b> (её можно спросить как подпункт в любом вопросе о любом
+  методе) и уметь назвать источники нестабильности.
+  <div class="src" style="margin:8px 0 0;">src: course_map.md, «Чего в Moed A НЕ было»; study_plan.md, тема 11</div></div>
+
+  <h3>Пять вопросов, к которым надо быть готовым</h3>
+  <table class="plain">
+    <tr><th>Вопрос</th><th>Ядро ответа в одну строку</th></tr>
+    <tr><td>Таксономия оценки объяснений</td>
+        <td><b>application-grounded</b> (реальные люди, реальная задача) ·
+        <b>human-grounded</b> (реальные люди, упрощённая задача) ·
+        <b>functionally-grounded</b> (людей нет, прокси-задача)</td></tr>
+    <tr><td>Форматы human-grounded экспериментов</td>
+        <td><b>binary forced choice</b> · <b>forward simulation</b> (предсказать выход модели) ·
+        <b>counterfactual simulation</b> (что изменить)</td></tr>
+    <tr><td>Когда интерпретируемость не нужна</td>
+        <td>когда ошибка не имеет значимых последствий; когда задача изучена и системе уже доверяют</td></tr>
+    <tr><td>Incompleteness vs uncertainty</td>
+        <td>неопределённость <b>измерима</b>; неполнота порождает <b>неквантифицированное смещение</b>,
+        и объяснения — способ её проконтролировать</td></tr>
+    <tr><td>Источники нестабильности объяснений</td>
+        <td>датасет для объяснения · отдельные примеры · сама модель ·
+        <b>сэмплирование внутри метода объяснения</b></td></tr>
+  </table>
+
+  <h3>Как встроить эту тему в ответ на вопрос про <i>любой</i> метод</h3>
+  <p>Формат карточки из плана подготовки (<i>что делает → формула → уровень → TTTM/TTTD →
+  слабость → чем чинят</i>) стоит дополнить <b>шестым полем</b>: «<b>как этот метод проверяли
+  и на каком уровне оценки</b>». Это почти бесплатное добавление в 1–2 предложения, которое
+  показывает знание лекции 13 даже в вопросе, к ней не относящемся.</p>
+
+  <div class="trap"><b>Три вещи, которые на этом блоке теряют баллы чаще всего.</b>
+  (1) Перепутать application- и human-grounded — различие <b>по задаче</b>, а не по людям.
+  (2) Сказать «интерпретируемость нужна всегда» — статья прямо называет два случая, когда нет.
+  (3) Уйти в <b>Confident Feature Ranking</b> — он <b>⛔ вне экзамена</b>, и время потрачено зря.</div>
+</section>
+
+<script>
+const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
+const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
+function randn(){const u=1-Math.random(), v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* ---- Рис.1 incompleteness vs uncertainty (SVG) ---- */
+{
+  document.getElementById('svg-incomp').innerHTML = `
+  <svg viewBox="0 0 660 230" width="100%" style="max-width:660px;display:block;margin:0 auto;">
+    <style>
+      .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
+      .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
+      .hd{font:600 12.5px Georgia,serif;}
+      .ar{stroke:#B9C7C4;stroke-width:1.6;fill:none;marker-end:url(#ah3);}
+    </style>
+    <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+      <path d="M0,0 L7,3.2 L0,6.4 z" fill="#B9C7C4"/></marker></defs>
+
+    <rect x="26" y="60" width="150" height="46" fill="#FFFFFF" stroke="#E3E2DC"/>
+    <text class="t" x="101" y="88" text-anchor="middle">обученная модель</text>
+
+    <rect x="250" y="60" width="150" height="46" fill="#FFFFFF" stroke="#E3E2DC"/>
+    <text class="t" x="325" y="82" text-anchor="middle">функционал,</text>
+    <text class="t" x="325" y="98" text-anchor="middle">который мы записали</text>
+
+    <rect x="474" y="60" width="162" height="46" fill="#FFFFFF" stroke="#B5540B" stroke-width="1.6"/>
+    <text class="t" x="555" y="82" text-anchor="middle">то, что нам</text>
+    <text class="t" x="555" y="98" text-anchor="middle">на самом деле нужно</text>
+
+    <path class="ar" d="M176,83 L244,83"/>
+    <path class="ar" d="M400,83 L468,83"/>
+
+    <text class="hd" x="210" y="140" text-anchor="middle" fill="#2F6F6D">uncertainty</text>
+    <text class="ts" x="210" y="160" text-anchor="middle">измерима:</text>
+    <text class="ts" x="210" y="176" text-anchor="middle">дисперсия, ДИ</text>
+    <text class="ts" x="210" y="196" text-anchor="middle">лечится данными</text>
+
+    <text class="hd" x="440" y="140" text-anchor="middle" fill="#B5540B">incompleteness</text>
+    <text class="ts" x="440" y="160" text-anchor="middle">неизмерима:</text>
+    <text class="ts" x="440" y="176" text-anchor="middle">неквантифицированное смещение</text>
+    <text class="ts" x="440" y="196" text-anchor="middle">лечится только объяснениями</text>
+
+    <line x1="176" y1="112" x2="244" y2="112" stroke="#2F6F6D" stroke-width="2.4"/>
+    <line x1="400" y1="112" x2="468" y2="112" stroke="#B5540B" stroke-width="2.4"/>
+
+    <text class="t" x="26" y="34">данных больше →  сужается только левый зазор</text>
+  </svg>`;
+}
+
+/* ---- Рис.2 три уровня (SVG) ---- */
+{
+  const rows=[
+    {n:'1 · Application-grounded', who:'реальные эксперты', task:'реальная задача',
+      cost:0.92, col:'#C0392B'},
+    {n:'2 · Human-grounded', who:'обычные люди / LLM', task:'упрощённая задача',
+      cost:0.55, col:'#8A5CB8'},
+    {n:'3 · Functionally-grounded', who:'людей нет', task:'прокси-задача',
+      cost:0.16, col:'#2F6F6D'}
+  ];
+  const x0=16, y0=56, rh=54, bx=352, bw=278;
+  let out=`<text class="hd" x="${x0}" y="30">уровень</text>
+    <text class="hd" x="188" y="30">кто / что за задача</text>
+    <text class="hd" x="${bx}" y="30">стоимость и убедительность вывода →</text>`;
+  rows.forEach((r,i)=>{
+    const y=y0+i*rh;
+    out += `<text class="t" x="${x0}" y="${y}" fill="${r.col}">${r.n}</text>
+      <text class="ts" x="188" y="${y-6}">${r.who}</text>
+      <text class="ts" x="188" y="${y+10}">${r.task}</text>
+      <rect x="${bx}" y="${y-14}" width="${bw}" height="20" fill="#F4F3EE" stroke="#E3E2DC"/>
+      <rect x="${bx}" y="${y-14}" width="${(bw*r.cost).toFixed(0)}" height="20"
+        fill="${r.col}" fill-opacity="0.55"/>`;
+  });
+  out += `<text class="ts" x="${x0}" y="222">functionally-grounded уместна, только если прокси уже согласован с человеческим экспериментом</text>`;
+  document.getElementById('svg-levels').innerHTML = `
+  <svg viewBox="0 0 660 236" width="100%" style="max-width:660px;display:block;margin:0 auto;">
+    <style>
+      .hd{font:600 12px Georgia,serif;fill:#5B6472;}
+      .t{font:600 12.5px ui-monospace,Menlo,Consolas,monospace;}
+      .ts{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
+    </style>
+    ${out}
+  </svg>`;
+}
+
+/* ---- Рис.3 нестабильность рейтинга FI ---- */
+{
+  const feats=['x₁','x₂','x₃','x₄','x₅','x₆'];
+  const mu=[0.92,0.71,0.44,0.42,0.40,0.11];
+  const sd=[0.05,0.06,0.11,0.12,0.11,0.03];
+  const runs=[];
+  for(let r=0;r<24;r++){
+    runs.push(mu.map((m,i)=>Math.max(0,m+randn()*sd[i])));
+  }
+  const jitterX=[], jitterY=[];
+  runs.forEach(run=>run.forEach((v,i)=>{jitterX.push(i+(Math.random()-0.5)*0.34); jitterY.push(v);}));
+  Plotly.newPlot('plot-uncert', [
+    {x:feats,y:mu,type:'bar',name:'точечная оценка FI',
+      marker:{color:['#2F6F6D','#2F6F6D','#B5540B','#B5540B','#B5540B','#9AA0A6'],opacity:0.35},
+      hoverinfo:'skip'},
+    {x:jitterX,y:jitterY,mode:'markers',name:'24 повторных запуска',
+      marker:{size:5,color:'rgba(30,36,48,0.45)'},hoverinfo:'skip'}
+  ], {margin:{l:56,r:14,t:14,b:70},
+      xaxis:{title:'признак',tickmode:'array',tickvals:[0,1,2,3,4,5],ticktext:feats,...AXIS},
+      yaxis:{title:'важность признака',range:[0,1.12],...AXIS},
+      shapes:[{type:'rect',x0:1.5,x1:4.5,y0:0,y1:1.12,
+        fillcolor:'rgba(181,84,11,0.07)',line:{width:0}}],
+      annotations:[{x:3,y:1.05,showarrow:false,font:{size:11,color:'#B5540B'},
+        text:'здесь ранги при повторе меняются местами'}],
+      legend:{orientation:'h',y:-0.26,font:{size:10.5}}}, CFG);
+}
+</script>
+
+</body>
+</html>

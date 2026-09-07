@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>52939 · Блок 8 · Saliency maps</title>
+<script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+<script>
+  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root{
+    --bg:#FAFAF7;
+    --paper:#FFFFFF;
+    --ink:#1E2430;
+    --ink-soft:#5B6472;
+    --rule:#E3E2DC;
+    --accent:#2F6F6D;
+    --accent-bg:#EBF2F1;
+    --trap:#B5540B;
+    --trap-bg:#FCF1E8;
+    --core:#8A5CB8;
+    --calc:#C0392B;
+    --source:#5B6472;
+    --illustr:#9AA0A6;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:16.5px;
+    line-height:1.65;
+    width:66.67%;
+    margin:0 auto;
+    padding:40px 0 100px;
+  }
+  @media (max-width:900px){
+    body{width:auto; max-width:760px; padding:40px 20px 100px;}
+  }
+  h1{
+    font-family:Georgia,"Iowan Old Style","Charter",serif;
+    font-size:1.7em;
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
+  .badges{margin-bottom:28px;}
+  .badge{
+    display:inline-block;
+    font-size:0.78em;
+    padding:2px 9px;
+    border-radius:3px;
+    margin-right:6px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .badge.core{background:var(--core);color:#fff;}
+  .badge.calc{background:var(--calc);color:#fff;}
+
+  nav.toc{
+    background:var(--paper);
+    border:1px solid var(--rule);
+    border-radius:4px;
+    padding:14px 18px;
+    margin-bottom:36px;
+    font-size:0.92em;
+  }
+  nav.toc a{color:var(--accent); text-decoration:none;}
+  nav.toc a:hover{text-decoration:underline;}
+  nav.toc ol{margin:6px 0 0; padding-left:20px;}
+
+  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
+  section.step:first-of-type{border-top:none;}
+
+  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
+  h3{font-size:1.03em; margin:22px 0 4px;}
+  .src{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:0.78em;
+    color:var(--source);
+    margin-bottom:14px;
+  }
+  .src.illustr{color:var(--illustr); font-style:italic;}
+
+  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
+  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
+  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
+    color:var(--illustr); font-style:normal; font-weight:600;}
+
+  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .trap b{color:var(--trap);}
+
+  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
+  .calcbox b{color:var(--accent);}
+
+  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
+  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
+  table.contrast th{background:#DCEAE8;}
+
+  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
+
+  .lead{font-size:1.03em;}
+  ul{padding-left:22px;}
+  li{margin:4px 0;}
+  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
+  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
+  table.plain th{background:#F2F1EC; font-weight:600;}
+  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
+  .trap .src{margin-top:8px;}
+
+  a.back-link{
+    display:inline-block; font-size:0.85em; color:var(--accent);
+    text-decoration:none; margin-bottom:14px;
+  }
+  a.back-link:hover{text-decoration:underline;}
+  @media (max-width:480px){
+    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
+  }
+  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
+  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
+</style>
+</head>
+
+<body>
+
+<a class="back-link" href="index.html">← Back to topics</a>
+<h1>Saliency maps: от чистого градиента к Integrated Gradients и sanity checks</h1>
+<div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 9 · тема 8</div>
+<div class="badges">
+  <span class="badge core">🟠 Ядро курса</span>
+</div>
+
+<nav class="toc">
+  Оглавление —
+  <ol>
+    <li><a href="#why">Зачем градиенты: три аргумента и главная оговорка лекции</a></li>
+    <li><a href="#cnn">Компоненты CNN — ровно в том объёме, что нужен</a></li>
+    <li><a href="#vanilla">Vanilla Gradient</a></li>
+    <li><a href="#guided">Guided Backpropagation: три правила обратного прохода</a></li>
+    <li><a href="#gradximg">Gradient × Image</a></li>
+    <li><a href="#ig">Integrated Gradients: две аксиомы и определение</a></li>
+    <li><a href="#ig-calc">Численный разбор IG: пример насыщения и сумма Римана</a></li>
+    <li><a href="#smooth">SmoothGrad</a></li>
+    <li><a href="#table">Сравнительная таблица методов (ДЗ 4 + слайд 29)</a></li>
+    <li><a href="#adebayo">Читательская 4: Adebayo et al. 2018 — Sanity Checks</a></li>
+    <li><a href="#hw4">Что показал ДЗ 4 на практике</a></li>
+    <li><a href="#summary">Сводка и карточки для экзамена</a></li>
+  </ol>
+</nav>
+
+<!-- ============ ЗАЧЕМ ============ -->
+<section class="step" id="why">
+  <h2>Зачем градиенты: три аргумента и главная оговорка лекции</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Зачем и почему градиенты»; course_map.md, л. 9</div>
+
+  <p class="lead"><b>Мотивирующий вопрос лекции:</b> как узнать, использует ли распознавание
+  <i>правильную</i> информацию? Классическая иллюстрация — <b>Recognition in Terra Incognita</b>
+  (Beery et al. 2018): «алгоритмы плохо обобщаются на новые окружения» — корова на пляже перестаёт
+  быть коровой, потому что сеть выучила траву. Saliency-карта измеряет «важность» разных областей
+  изображения и должна такой shortcut показать.</p>
+
+  <p><b>Инструмент.</b> Градиент функции предсказания по входу:</p>
+  $$\nabla \hat f(x)=\Big(\frac{\partial \hat f}{\partial x_1},\dots,\frac{\partial \hat f}{\partial x_p}\Big)$$
+
+  <h3>Три аргумента, почему градиент — разумная мера эффекта</h3>
+  <table class="plain">
+    <tr><th>Аргумент</th><th>Содержание</th><th>Откуда в курсе</th></tr>
+    <tr><td><b>1. Линейная модель</b></td>
+        <td>если $\hat f(x)=b_0+\sum_j b_jx_j$, то $\partial\hat f/\partial x_j=b_j$ — а коэффициент
+        линейной модели мы уже приняли как хорошую меру важности</td>
+        <td>лекция 1, тема 1</td></tr>
+    <tr><td><b>2. ALE</b></td>
+        <td>в ALE мы <b>интегрируем градиент</b> — значит, градиент уже служит строительным блоком
+        признакового эффекта</td>
+        <td>лекция 4, тема 4</td></tr>
+    <tr><td><b>3. Первое приближение</b></td>
+        <td>$\hat f(x+\Delta t)\approx\hat f(x)+\sum_j\frac{\partial\hat f}{\partial x_j}\Delta t_j$ —
+        Тейлор первого порядка</td>
+        <td>—</td></tr>
+  </table>
+
+  <p><b>Что общего у всех трёх аргументов — и почему это ломает наивный вывод.</b> Прочитаем правую
+  часть каждого из них внимательно. В первом эффект признака в линейной модели — это не $\beta_j$,
+  а вклад $\beta_j x_j$: коэффициент надо на что-то умножить. Во втором ALE не берёт градиент,
+  а <i>накапливает</i> его по интервалу, то есть снова умножает на приращение. В третьем разложении
+  Тейлора градиент вообще стоит при множителе $\Delta t_j$ и без него не имеет размерности эффекта.
+  Иными словами, ни один из трёх аргументов не оправдывает <b>чистый</b> градиент — все три
+  оправдывают произведение</p>
+  $$\text{эффект}_j \;=\; \frac{\partial \hat f}{\partial x_j}\;\times\;(\text{изменение } x_j)$$
+  <p>Отсюда сразу видно, чего в vanilla-градиенте не хватает: второго множителя. Не хватает и ответа
+  на вопрос, относительно чего считать это изменение — то есть <b>точки отсчёта</b>. Вся дальнейшая
+  линия темы есть последовательное восстановление обеих недостающих частей: Gradient × Image
+  добавляет множитель, Integrated Gradients добавляет и множитель, и baseline. Итоговая формулировка
+  лекции: «<b>градиент — это локальное изменение, а нас на самом деле интересует изменение
+  от baseline</b>».</p>
+
+  <div class="trap"><b>Если запоминать из блока одну фразу — эту.</b> Эффект $=$ градиент $\times$
+  изменение <i>от точки отсчёта</i>, а не чистый градиент. Все методы ниже — разные способы
+  доопределить второй множитель.</div>
+
+  <p><b>Почему в нейросетях это дёшево.</b> Оператор $\partial\hat f/\partial x$ вычисляется
+  автоматически: при обучении цепное правило накапливает градиенты «назад» по слоям относительно
+  потери; тем же механизмом получают градиент по <b>входу</b>, а не по параметрам. Один backward-проход
+  — и карта готова.</p>
+</section>
+
+<!-- ============ CNN ============ -->
+<section class="step" id="cnn">
+  <h2>1. Компоненты CNN — ровно в том объёме, что нужен</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Компоненты CNN (по сноске Topics — только это и нужно)»; study_plan.md: «компоненты CNN только в том объёме, в каком используются дальше»</div>
+
+  <p>Плана подготовки здесь держится жёстко: архитектуры сетей сверх этих трёх компонентов —
+  <b>⛔ вне экзамена</b>. Нужны они только чтобы понимать guided backprop и Grad-CAM.</p>
+
+  <table class="contrast">
+    <tr><th>Компонент</th><th>Что делает</th><th>Что важно для saliency</th></tr>
+    <tr>
+      <td><b>Convolution filter</b></td>
+      <td>локальная линейная комбинация, представляющая элемент изображения. Фильтр,
+      «совпадающий» с картинкой, даёт сильный отклик; результат — <b>feature map / activation map</b>
+      с высокой активацией в местах совпадения. Сложные объекты распознаются через совпадения
+      на нескольких feature maps. Маска фильтра <b>обучается</b>.</td>
+      <td>feature map последнего свёрточного слоя — это то, что взвешивают CAM и Grad-CAM (тема 10)</td>
+    </tr>
+    <tr>
+      <td><b>ReLU</b></td>
+      <td>обнуляет все отрицательные координаты, положительные не меняет</td>
+      <td><b>градиент: 0 на неположительных элементах, 1 на положительных</b> — именно эта маска
+      и есть предмет спора трёх правил обратного прохода в §3</td>
+    </tr>
+    <tr>
+      <td><b>Pooling (down-sampling)</b></td>
+      <td>снижает размерность пространственной агрегацией: <b>max pooling</b> (максимум),
+      <b>mean pooling</b> (среднее)</td>
+      <td>объясняет, почему карты CAM/Grad-CAM имеют <b>грубое разрешение</b>: последний свёрточный
+      слой уже сильно уменьшен</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ VANILLA ============ -->
+<section class="step" id="vanilla">
+  <h2>2. Vanilla Gradient (Simonyan et al. 2013)</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Vanilla Gradient»</div>
+
+  $$S_j(x)=\frac{\partial \hat f_c(x)}{\partial x_j}$$
+
+  <p><b>Детали, которые спрашивают.</b></p>
+  <ul>
+    <li>Берут градиент <b>скора класса $c$ до softmax</b>, а не вероятности. Причина: softmax связывает
+    классы между собой, и увеличить вероятность класса можно, <i>понизив</i> остальные — градиент
+    вероятности покажет пиксели, мешающие конкурентам, а не поддерживающие целевой класс.</li>
+    <li>Один backward-проход — самый дешёвый метод блока.</li>
+    <li>Тот же механизм позволяет <b>оптимизировать стимул</b>: шагая <i>по</i> градиенту, увеличивать
+    скор класса и получить «идеальный» синтетический образ класса. Это не saliency-карта, а
+    родственное применение того же градиента.</li>
+  </ul>
+
+  <div class="trap"><b>Две проблемы Vanilla Gradient — обе понадобятся дальше.</b>
+  (1) <b>Шум:</b> частные производные сильно флуктуируют между визуально неразличимыми изображениями
+  — это чинит SmoothGrad (§7).
+  (2) <b>Нарушение Sensitivity</b> при насыщении: в области, где функция вышла на плато, градиент
+  равен нулю, хотя признак важен — это чинят Integrated Gradients (§5–6).</div>
+</section>
+
+<!-- ============ GUIDED ============ -->
+<section class="step" id="guided">
+  <h2>3. Guided Backpropagation: три правила обратного прохода</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Guided Backpropagation (Springenberg et al. 2014)»</div>
+
+  <p>Вся разница между тремя методами — в одной строке кода: <b>как пропускать сигнал назад через
+  ReLU</b>. Обозначения: $R^{l+1}$ — сигнал, приходящий сверху; $f^l$ — активация снизу (то, что
+  ReLU получил на прямом проходе).</p>
+
+  <table class="contrast">
+    <tr><th>Метод</th><th>Правило обратного прохода</th><th>Что маскируется</th></tr>
+    <tr><td><b>Backpropagation</b></td>
+        <td>$R^l=(f^l>0)\cdot R^{l+1}$</td>
+        <td>по знаку <b>нижних данных</b> — это и есть истинный градиент ReLU</td></tr>
+    <tr><td><b>Deconvnet</b></td>
+        <td>$R^l=(R^{l+1}>0)\cdot R^{l+1}$</td>
+        <td>по знаку <b>верхнего градиента</b></td></tr>
+    <tr><td><b>Guided Backprop</b></td>
+        <td>$R^l=(f^l>0)\cdot(R^{l+1}>0)\cdot R^{l+1}$</td>
+        <td><b>обе</b> маски сразу: сигнал зануляется, если <b>хотя бы одно</b> из двух отрицательно</td></tr>
+  </table>
+
+  <div class="fig"><div id="svg-relu" style="padding:10px 0;"></div></div>
+  <div class="fig-cap illustr">Рис. 1. Одни и те же четыре координаты, три правила, три разных
+  результата. <b>Что здесь важно заметить:</b> guided backprop — это пересечение двух масок, поэтому
+  его выход всегда <b>неотрицателен</b> и всегда <b>разрежен</b> сильнее двух других. Отсюда и
+  «красивые» карты, и провал sanity checks: обнуляя всё отрицательное, метод выбрасывает половину
+  информации о модели и оставляет в основном структуру самого изображения.</div>
+
+  <p><b>Интуиция.</b> Guided backprop добавляет «направляющий сигнал» сверху к обычному backprop:
+  он <b>не пропускает назад отрицательные градиенты</b>, соответствующие нейронам, которые
+  <i>уменьшают</i> активацию интересующего нас юнита верхнего слоя. Результат — заметно более
+  резкие, «читаемые» карты.</p>
+
+  <div class="trap"><b>Критично, и авторы говорят это прямо.</b> Deconvnet и guided backprop
+  <b>не вычисляют истинный градиент</b>, а его «вменённую» (imputed) версию. Именно поэтому Guided
+  Backprop потом провалит sanity checks Adebayo (§9), и именно поэтому он нарушает Sensitivity.
+  Формулировка «guided backprop — это улучшенный градиент» неверна: это другой объект.</div>
+</section>
+
+<!-- ============ GRAD X IMG ============ -->
+<section class="step" id="gradximg">
+  <h2>4. Gradient × Image</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Gradient × Image»</div>
+
+  $$S_j(x)=x_j\cdot\frac{\partial \hat f_c(x)}{\partial x_j}$$
+
+  <p>Это ровно исходная интуиция <b>«effect = value × weight»</b> из лекции 1, перенесённая
+  на нелинейную модель: в линейной модели вклад признака — это $\beta_j x_j$, а не $\beta_j$.</p>
+
+  <p><b>Что стоит добавить.</b> Слайд отмечает: <b>LRP</b> (Bach et al. 2015) при определённых
+  условиях сводится к поэлементному произведению пикселей на градиент. Назвать это — дешёвый способ
+  связать два метода, о которых иначе пришлось бы говорить отдельно.</p>
+
+  <div class="trap"><b>Ловушка.</b> Gradient × Image — это <b>частный случай</b> Integrated Gradients
+  при baseline $x'=0$ и <i>без</i> интегрирования: берётся градиент только в точке $x$, а не
+  усреднённый по пути. Поэтому он наследует и шум, и нарушение Sensitivity — умножение на $x_j$
+  чинит масштаб, но не насыщение.</div>
+</section>
+
+<!-- ============ IG ============ -->
+<section class="step" id="ig">
+  <h2>5. Integrated Gradients: две аксиомы и определение</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Integrated Gradients (Sundararajan et al. 2017)»; course_map.md, л. 9 — «baseline, путь, аксиома completeness»</div>
+
+  <p class="lead"><b>Проблема, которую чинит.</b> Локальный градиент меняется по мере изменения
+  изображения; в областях <b>насыщения</b> он равен нулю, хотя признак важен. Одна точка не может
+  описать вклад — нужно проинтегрировать вдоль пути.</p>
+
+  <h3>Две аксиомы, из которых выводится метод</h3>
+  <table class="plain">
+    <tr><th>Аксиома</th><th>Формулировка</th><th>Кто нарушает</th></tr>
+    <tr>
+      <td><b>Sensitivity(a)</b></td>
+      <td>если вход и baseline различаются <b>в одном признаке</b> и дают <b>разные предсказания</b>,
+      этот признак должен получить <b>ненулевую</b> атрибуцию</td>
+      <td><b>чистые градиенты</b> (пример в §6), а также <b>DeconvNet и Guided Backprop</b></td>
+    </tr>
+    <tr>
+      <td><b>Implementation Invariance</b></td>
+      <td>две <b>функционально эквивалентные</b> сети (одинаковый выход на всех входах при разной
+      архитектуре) должны давать <b>одинаковые</b> атрибуции</td>
+      <td><b>DeepLift и LRP</b>; градиенты этой аксиоме <b>удовлетворяют</b> — они зависят только
+      от функции, а не от её реализации</td>
+    </tr>
+  </table>
+
+  <p><b>Логика статьи в одну строку:</b> градиенты дают Implementation Invariance, но не Sensitivity;
+  LRP-подобные методы — наоборот; IG строится так, чтобы получить <b>обе</b>.</p>
+
+  <h3>Определение</h3>
+  <p>Интеграл градиента по <b>прямолинейному пути</b> от baseline $x'$ до входа $x$:</p>
+  $$\text{IG}_j(x)=(x_j-x'_j)\times\int_{\alpha=0}^{1}
+    \frac{\partial F\big(x'+\alpha\times(x-x')\big)}{\partial x_j}\,d\alpha$$
+
+  <p><b>Разбор по элементам.</b></p>
+  <ul>
+    <li>$(x_j-x'_j)$ — то самое «изменение признака» из главной оговорки лекции. Без него был бы
+    чистый градиент.</li>
+    <li>$x'+\alpha(x-x')$ — точка на прямой между baseline и входом; $\alpha=0$ даёт baseline,
+    $\alpha=1$ — сам вход.</li>
+    <li>интеграл по $\alpha$ — <b>усреднение градиента вдоль пути</b>, а не значение в одной точке.
+    Именно оно чинит насыщение: даже если в конце пути градиент нулевой, в середине он был ненулевым.</li>
+    <li>на практике — <b>сумма Римана</b> по $m$ шагам вдоль пути, то есть $m$ форвард- и
+    backward-проходов.</li>
+  </ul>
+
+  <p><b>Baseline.</b> Для изображений — <b>чёрное изображение</b>; для текста — <b>нулевой
+  эмбеддинг</b>. Смысл baseline: «отсутствие сигнала», точка, относительно которой измеряют вклад.</p>
+
+  <h3>Аксиома Completeness</h3>
+  $$\sum_{j}\text{IG}_j(x)=F(x)-F(x')$$
+  <p>Атрибуции в сумме дают <b>разницу выходов</b> на входе и на baseline. Это <b>прямой аналог
+  local accuracy у SHAP</b> (тема 6): объяснение замыкается на предсказание, а не приблизительно
+  его описывает. Доказывается одной строкой — это основная теорема анализа для функции вдоль пути.</p>
+
+  <p>Аналогия между двумя методами тянется дальше, чем одна аксиома: оба строятся аксиоматически
+  и оба единственны при своих аксиомах, а роль «пустоты», относительно которой измеряется вклад,
+  у IG играет baseline $x'$, у SHAP — среднее предсказание $\mathbb{E}[\hat f]$. Расходятся они
+  в требованиях к модели: SHAP нужны только форвард-проходы, поэтому он применим к чему угодно,
+  а IG нужна дифференцируемость и возможность пройти путь от baseline.</p>
+
+  <div class="trap"><b>Связь с ALE — ключ к Moed A Q1б.</b> Со слайда лекции дословно:
+  «Integrated gradients … <b>essentially ALE where gradient can be computed directly</b>».
+  Разница, которую нужно назвать: <b>ALE</b> интегрирует <b>условное матожидание</b> градиента вдоль
+  <b>пути данных</b> (локальные интервалы по реальному распределению); <b>IG</b> интегрирует градиент
+  вдоль <b>прямой линии от baseline</b>, безотносительно к плотности данных. То есть ALE остаётся
+  on-manifold, а IG — нет: прямая от чёрного изображения к фотографии проходит через входы,
+  которых в природе не бывает. Это тот же водораздел on/off-manifold, что в темах 4–7.
+  <div class="src" style="margin:8px 0 0;">src: XAI_MoedA_2026.pdf, שאלה 1ב; master_conspect.md, л. 4 и л. 9</div></div>
+</section>
+
+<!-- ============ IG ЧИСЛЕННО ============ -->
+<section class="step" id="ig-calc">
+  <h2>6. Численный разбор IG: пример насыщения и сумма Римана</h2>
+  <div class="src">src: master_conspect.md, л. 9 — пример Sensitivity(a); Sundararajan et al. 2017, §2</div>
+
+  <p class="lead">Канонический пример статьи. Он одновременно доказывает, что градиенты нарушают
+  Sensitivity, и показывает, как считается IG вручную — а это ровно тот объём арифметики, который
+  можно спросить на экзамене без калькулятора.</p>
+
+  <h3>Условие</h3>
+  <p>Одномерная функция, ReLU-сеть из одного нейрона:</p>
+  $$F(x)=1-\text{ReLU}(1-x)=\begin{cases}x,& 0\le x\le 1\\ 1,& x>1\end{cases}$$
+  <p>Baseline $x'=0$, вход $x=2$.</p>
+
+  <div class="calcbox">
+    <b>Шаг 1. Значения на концах.</b>
+    $$F(x')=F(0)=1-\text{ReLU}(1-0)=1-1=0$$
+    $$F(x)=F(2)=1-\text{ReLU}(1-2)=1-\text{ReLU}(-1)=1-0=1$$
+    Выход изменился с $0$ на $1$ — признак очевидно важен.
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 2. Что даёт чистый градиент.</b> Производная:
+    $$F'(t)=\begin{cases}1,& t<1\\ 0,& t>1\end{cases}$$
+    В точке входа $t=x=2$: $F'(2)=\mathbf{0}$.<br>
+    <b>Вывод:</b> Vanilla Gradient приписывает единственному признаку атрибуцию <b>ноль</b>, хотя
+    он полностью объясняет изменение выхода. Это и есть <b>нарушение Sensitivity(a)</b>.
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 3. Что даёт IG — точно.</b> Путь: $t(\alpha)=0+\alpha(2-0)=2\alpha$.
+    $$\text{IG}=(2-0)\times\int_0^1 F'(2\alpha)\,d\alpha$$
+    Подынтегральная функция равна $1$ при $2\alpha<1$, то есть при $\alpha<\tfrac12$, и $0$ дальше:
+    $$\int_0^1 F'(2\alpha)\,d\alpha=\int_0^{1/2}1\,d\alpha+\int_{1/2}^{1}0\,d\alpha=\tfrac12$$
+    $$\boxed{\ \text{IG}=2\times\tfrac12=\mathbf{1}\ }$$
+    <b>Проверка completeness:</b> $\text{IG}=1=F(2)-F(0)$ ✓
+  </div>
+
+  <div class="calcbox">
+    <b>Шаг 4. Сумма Римана — как это считает библиотека.</b> Возьмём $m=4$ шага, точки середин
+    интервалов $\alpha_k=\dfrac{k-0{,}5}{m}$:
+    <table class="plain" style="margin:8px 0;">
+      <tr><th>$k$</th><th>$\alpha_k$</th><th>$t=2\alpha_k$</th><th>$F'(t)$</th></tr>
+      <tr><td>1</td><td class="num">0,125</td><td class="num">0,25</td><td class="num">1</td></tr>
+      <tr><td>2</td><td class="num">0,375</td><td class="num">0,75</td><td class="num">1</td></tr>
+      <tr><td>3</td><td class="num">0,625</td><td class="num">1,25</td><td class="num">0</td></tr>
+      <tr><td>4</td><td class="num">0,875</td><td class="num">1,75</td><td class="num">0</td></tr>
+      <tr><th colspan="3">среднее</th><th class="num">$\frac{1+1+0+0}{4}=0{,}5$</th></tr>
+    </table>
+    $$\text{IG}\approx(2-0)\times 0{,}5=1$$
+    Совпало с точным ответом уже при $m=4$ — потому что функция кусочно-линейная. На реальной сети
+    берут $m$ порядка $50$–$300$ и проверяют completeness как <b>диагностику</b>: если
+    $\sum_j\text{IG}_j$ заметно отличается от $F(x)-F(x')$, значит $m$ мало.
+  </div>
+
+  <div class="fig"><div id="plot-sat" style="height:340px;"></div></div>
+  <div class="fig-cap">Рис. 2. Слева — функция $F$ и касательная в точке $x=2$ (горизонтальная:
+  градиент ноль). Справа — градиент вдоль пути $t=2\alpha$ и площадь под ним, равная $0{,}5$.
+  <b>Что здесь важно заметить:</b> вся «важность» признака накоплена на первой половине пути,
+  которую чистый градиент не видит вообще, потому что смотрит только на правый край.</div>
+
+  <div class="fig"><div id="plot-riemann" style="height:310px;"></div></div>
+  <div class="fig-cap">Рис. 3. Та же площадь как сумма Римана при $m=4$, $m=8$ и $m=20$ шагах.
+  <b>Что здесь важно заметить:</b> для кусочно-линейной функции с изломом ровно посередине пути
+  чётное $m$ даёт точный ответ, а нечётное — нет; на реальных сетях сходимость плавная, и остаток
+  completeness служит индикатором достаточности $m$.</div>
+
+  <div class="trap"><b>Три ловушки IG.</b>
+  (1) <b>Забыть множитель $(x_j-x'_j)$</b> — без него нет completeness и нет «изменения от baseline».
+  (2) <b>Сказать, что IG «усредняет градиенты в окрестности»</b> — это SmoothGrad. IG интегрирует
+  вдоль <b>пути от baseline к входу</b>, а не по шуму вокруг точки.
+  (3) <b>Не назвать baseline.</b> Атрибуция IG определена <i>относительно</i> baseline; при чёрном
+  baseline чёрные пиксели изображения получают нулевой вклад <b>по построению</b>, что для тёмных
+  объектов — известный артефакт.</div>
+</section>
+
+<!-- ============ SMOOTHGRAD ============ -->
+<section class="step" id="smooth">
+  <h2>7. SmoothGrad (Smilkov et al. 2017)</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «SmoothGrad»</div>
+
+  <p><b>Проблема.</b> Частные производные <b>сильно флуктуируют</b>. Авторы показывают: при движении
+  вдоль крошечного отрезка $x+t\epsilon$ — все изображения на нём человеку <b>неотличимы</b> и
+  классифицируются одинаково — величина $\partial S_c/\partial x_i$ меняется значительно. Значит,
+  градиент <b>в одной точке</b> менее осмыслен, чем <b>локальное среднее</b> градиентов.</p>
+
+  <p><b>Метод — «убрать шум, добавив шум»:</b> сгладить градиент гауссовым ядром.</p>
+  $$\hat M_c(x)=\frac1n\sum_{k=1}^{n}M_c\big(x+\mathcal{N}(0,\sigma^2)\big),
+    \qquad M_c(x)=\frac{\partial S_c(x)}{\partial x}$$
+
+  <p><b>Параметры:</b> $\sigma$ — уровень шума, $n$ — число сэмплов. Эффект <b>складывается</b>
+  с обучением с шумом: сеть, обученная на зашумлённых данных, сама даёт более гладкие градиенты.</p>
+
+  <div class="fig"><div id="plot-smooth" style="height:330px;"></div></div>
+  <div class="fig-cap illustr">Рис. 4. Градиент вдоль крошечного отрезка, вдоль которого предсказание
+  практически постоянно (серая линия сверху), и результат усреднения по $n$ зашумлённым копиям.
+  <b>Что здесь важно заметить:</b> предсказание почти не меняется, а градиент скачет — то есть
+  флуктуирует не «важность», а её одноточечная оценка. Ровно тот же аргумент, что у Монте-Карло
+  SHAP в теме 6: одна реализация ≠ величина.</div>
+
+  <div class="trap"><b>Ловушка.</b> SmoothGrad — <b>надстройка над любым методом</b>, а не отдельная
+  карта: усреднять можно и vanilla gradient, и gradient × image, и IG. И он <b>не решает проблему
+  насыщения</b> — только шум. Если градиент нулевой во всей окрестности (плато), усреднение
+  по окрестности даст тот же ноль. Насыщение чинит только интегрирование вдоль пути.</div>
+</section>
+
+<!-- ============ ТАБЛИЦА ============ -->
+<section class="step" id="table">
+  <h2>8. Сравнительная таблица методов (ДЗ 4 + слайд 29)</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Сравнительная таблица методов»; study_plan.md, тема 8 — «Сравнительная таблица методов (из ДЗ 4)»; ex4/ex4.ipynb, «Saliency map methods summary»</div>
+
+  <p class="lead">План подготовки называет эту таблицу отдельным пунктом темы. Её стоит уметь
+  восстановить целиком: половина возможных подпунктов — это чтение одной её строки.</p>
+
+  <p>Одна строка в ней подразумевается, но не пишется: <b>все</b> методы этой темы требуют доступа
+  к градиентам, то есть к внутренностям модели. Единственный метод для изображений, которому хватает
+  выходов, — RISE из темы 7, и это его главное отличие, а не деталь реализации. Оттуда же берутся
+  и метрики, которыми методы ниже сравнивают между собой: <b>deletion</b> и <b>insertion</b>.
+  В отличие от «красоты карты», они причинные — измеряют, что происходит с предсказанием при
+  вмешательстве во вход, а не насколько карта нравится человеку.</p>
+
+  <table class="contrast">
+    <tr><th>Метод</th><th>Основная идея</th><th>Как работает</th><th>Свойства / проблемы</th></tr>
+    <tr>
+      <td><b>Vanilla Gradient</b></td>
+      <td>чувствительность выхода к каждому пикселю</td>
+      <td>один backward-проход, $\partial\hat f_c/\partial x$</td>
+      <td>просто и дёшево; <b>шумно</b>; <b>нарушает Sensitivity</b> при насыщении; не использует
+      изменение относительно baseline</td>
+    </tr>
+    <tr>
+      <td><b>Gradient × Image</b></td>
+      <td>эффект $=$ градиент $\times$ значение</td>
+      <td>поэлементное произведение</td>
+      <td>ближе к «effect size»; наследует шум градиента; LRP при условиях сводится к нему</td>
+    </tr>
+    <tr>
+      <td><b>Directed Gradient</b><br><span style="color:#9AA0A6;font-size:0.9em;">(из ДЗ 4;
+      в библиографии курса отсутствует)</span></td>
+      <td>оставить только пиксели, <b>поддерживающие</b> класс</td>
+      <td><code class="f">clamp(grad, min=0)</code>, затем max по каналам</td>
+      <td>показывает <b>знак</b> вклада; остаётся одноточечным градиентом — насыщение и нарушение
+      Sensitivity никуда не деваются</td>
+    </tr>
+    <tr>
+      <td><b>Guided Backprop</b></td>
+      <td>пропускать назад только положительные сигналы</td>
+      <td>маскирование по знаку <b>и</b> верхнего градиента, <b>и</b> нижних данных на ReLU</td>
+      <td>самые резкие и «красивые» карты; <b>не истинный градиент</b>;
+      <b>проваливает sanity checks</b>; нарушает Sensitivity</td>
+    </tr>
+    <tr>
+      <td><b>Integrated Gradients</b></td>
+      <td>накопление градиента <b>по пути от baseline</b></td>
+      <td>интеграл по прямой $x'\to x$, на практике сумма Римана по $m$ шагам</td>
+      <td><b>Completeness</b> и <b>Implementation Invariance</b>; нужен выбор baseline;
+      дороже в $m$ раз</td>
+    </tr>
+    <tr>
+      <td><b>SmoothGrad</b></td>
+      <td>усреднить градиенты по зашумлённым копиям</td>
+      <td>$n$ сэмплов с $\mathcal{N}(0,\sigma^2)$</td>
+      <td>визуально чище; дороже в $n$ раз; <b>не решает насыщение</b>, только шум;
+      надстройка над любым методом</td>
+    </tr>
+    <tr>
+      <td><b>CAM / Grad-CAM</b></td>
+      <td>использовать последний свёрточный слой как карту класса</td>
+      <td>взвешенная сумма feature maps $+$ ReLU</td>
+      <td>грубое разрешение; подробно — тема 10 (лекция 12)</td>
+    </tr>
+  </table>
+
+  <h3>Та же таблица по трём диагностическим осям</h3>
+  <p>Компактная форма, удобная, если вопрос звучит как «сравните методы»:</p>
+  <table class="plain">
+    <tr><th>Метод</th><th>Сколько проходов модели</th><th>Истинный градиент?</th>
+        <th>Чинит насыщение?</th><th>Проходит sanity check?</th></tr>
+    <tr><td>Vanilla Gradient</td><td class="num">1</td><td>да</td><td>нет</td><td><b>да</b></td></tr>
+    <tr><td>Gradient × Image</td><td class="num">1</td><td>да</td><td>нет</td><td>—</td></tr>
+    <tr><td>Directed Gradient</td><td class="num">1</td><td>усечённый</td><td>нет</td><td>—</td></tr>
+    <tr><td>Guided Backprop</td><td class="num">1</td><td><b>нет</b> (imputed)</td><td>нет</td><td><b>нет</b></td></tr>
+    <tr><td>Integrated Gradients</td><td class="num">$m$</td><td>да (усреднённый по пути)</td><td><b>да</b></td><td>—</td></tr>
+    <tr><td>SmoothGrad</td><td class="num">$n$</td><td>да (усреднённый по шуму)</td><td>нет</td><td>—</td></tr>
+    <tr><td>Grad-CAM</td><td class="num">1</td><td>да (по активациям)</td><td>частично</td><td><b>да</b></td></tr>
+  </table>
+
+  <div class="trap"><b>Ловушка.</b> Не путать <b>две разные «усредняющие» идеи</b>: SmoothGrad
+  усредняет по <b>шуму вокруг точки</b> (чинит шум), IG усредняет вдоль <b>пути от baseline</b>
+  (чинит насыщение). Их можно комбинировать, и это разные оси, а не конкуренты.</div>
+</section>
+
+<!-- ============ ADEBAYO ============ -->
+<section class="step" id="adebayo">
+  <h2>9. Читательская 4: Adebayo et al. 2018 — Sanity Checks for Saliency Maps</h2>
+  <div class="src">src: master_conspect.md, л. 9 — «Читательская 4»; файл `NeurIPS-2018-sanity-checks-for-saliency-maps-Paper.pdf` в рабочей папке; course_map.md, л. 9</div>
+
+  <p class="lead"><b>Тезис.</b> Опора <b>только на визуальную привлекательность</b> карт вводит
+  в заблуждение. Некоторые популярные saliency-методы <b>не зависят ни от параметров модели,
+  ни от данных, на которых она обучалась</b>. Такие методы непригодны для задач, чувствительных
+  к данным или модели: <b>поиск выбросов</b>, <b>объяснение выученной связи вход–выход</b>,
+  <b>отладка модели</b>.</p>
+
+  <h3>Два рандомизационных теста</h3>
+  <table class="contrast">
+    <tr><th>Тест</th><th>Что делают</th><th>Что должно произойти у хорошего метода</th></tr>
+    <tr>
+      <td><b>1. Model parameter randomization test</b></td>
+      <td>сравнить выход saliency-метода на <b>обученной</b> модели и на модели со <b>случайно
+      инициализированными</b> весами <i>той же архитектуры</i>. Две схемы:
+      <ul style="margin:6px 0;">
+        <li><b>Cascading randomization</b> — рандомизировать веса каскадно, <b>сверху вниз</b>,
+        от последних слоёв к первым, и смотреть, как деградирует карта;</li>
+        <li><b>Independent randomization</b> — рандомизировать <b>один слой за раз</b>, независимо.</li>
+      </ul></td>
+      <td>карта должна <b>резко измениться</b>: объяснение обязано зависеть от того, чему модель научилась</td>
+    </tr>
+    <tr>
+      <td><b>2. Data randomization test</b></td>
+      <td>обучить модель на данных с <b>переставленными метками</b> — такая модель заведомо не
+      выучила настоящую связь, а лишь <b>запомнила</b> выборку — и сравнить её карты с картами
+      модели, обученной на настоящих метках</td>
+      <td>карты должны <b>отличаться</b>: объяснение обязано зависеть от связи вход–метка</td>
+    </tr>
+  </table>
+
+  <h3>Результаты</h3>
+  <ul>
+    <li><b>Vanilla Gradient и Grad-CAM — чувствительны</b>, то есть <b>проходят</b> оба теста.</li>
+    <li><b>Guided BackProp и Guided Grad-CAM — инвариантны</b>: их карты почти <b>не меняются</b>
+    ни при рандомизации весов, ни при рандомизации меток.</li>
+  </ul>
+
+  <p>Пара Grad-CAM / Guided Grad-CAM в этом списке стоит того, чтобы её прочитать отдельно.
+  Grad-CAM (он разбирается в теме 10 и работает не с градиентом по входу, а со взвешенной суммой
+  feature maps последнего свёрточного слоя) проверку проходит; стоит присоединить к нему
+  guided-компоненту — и та же конструкция проверку проваливает. То есть портит результат именно
+  guided-часть, и портит она всё, к чему её присоединяют.</p>
+
+  <div class="fig"><div id="plot-sanity" style="height:340px;"></div></div>
+  <div class="fig-cap illustr">Рис. 5. Cascading randomization: сходство карты с исходной по мере
+  рандомизации слоёв сверху вниз. <b>Что здесь важно заметить:</b> у метода, который проходит
+  проверку, кривая быстро падает — карта разрушается, как только испорчены верхние слои.
+  У guided-методов кривая остаётся высокой до самого конца: карта почти не зависит от весов вообще.</div>
+
+  <h3>Аналогия с edge detector — центральный образ статьи</h3>
+  <p>Методы, проваливающие проверки, ведут себя как <b>детектор границ</b>: он <b>не требует
+  ни обучающих данных, ни модели</b>, но даёт визуально похожий и «убедительный» результат.
+  Красивая карта, обводящая контур кошки, ничего не говорит о том, за что модель считает её кошкой.
+  Теоретический анализ для <b>линейной модели</b> и <b>однослойной свёрточной сети</b>
+  (conv $+$ sum-pooling) поддерживает эксперимент.</p>
+
+  <h3>Что обсуждали в классе — это и есть требование читательской 4</h3>
+  <table class="plain">
+    <tr><th>Вопрос обсуждения</th><th>Суть</th></tr>
+    <tr><td><b>«Что именно они здесь измеряют?»</b></td>
+        <td>метрика <b>сходства карт</b>: ранговая корреляция Спирмена, <b>SSIM</b>, HOG-подобие.
+        <b>Выбор метрики влияет на выводы</b> — карты можно объявить похожими или разными
+        в зависимости от того, чем мерить</td></tr>
+    <tr><td><b>Альтернативные объяснения, почему guided-методы сильно коррелируют с исходной картой</b></td>
+        <td>например: произведение с входом и структура ReLU-масок <b>сами по себе</b> воспроизводят
+        границы изображения — независимо от весов</td></tr>
+    <tr><td><b>Errata</b></td>
+        <td>к первому sanity check была отмечена <b>errata с github</b></td></tr>
+    <tr><td><b>Открытые вопросы со слайда</b></td>
+        <td>может ли объяснение быть полезным <b>без информации о метках</b>? без <b>чувствительности
+        к параметрам</b>? и — <b>если метод проходит sanity check, значит ли это, что он полезен?</b></td></tr>
+  </table>
+
+  <div class="trap"><b>Ловушка — она же ответ на последний открытый вопрос.</b> Sanity checks — это
+  <b>необходимое, а не достаточное</b> условие. <b>Прохождение</b> теста <i>не</i> означает, что
+  объяснение верное или полезное; <b>провал</b> означает, что метод <b>точно нельзя</b> использовать
+  для отладки модели или поиска проблем в данных. Формулировка «Vanilla Gradient прошёл проверку,
+  значит он лучший метод» — прямая ошибка. В терминах темы 11 sanity checks — образцовая
+  <b>functionally-grounded</b> оценка по таксономии Doshi-Velez &amp; Kim: без людей, без прикладной
+  задачи, чистая проверка свойства метода; и её статус «необходимо, но не достаточно» — готовая
+  иллюстрация того, почему functionally-grounded оценок мало.</div>
+</section>
+
+<!-- ============ ДЗ4 ============ -->
+<section class="step" id="hw4">
+  <h2>10. Что показал ДЗ 4 на практике</h2>
+  <div class="src">src: ex4/ex4.ipynb — разделы «Accuracy and interpretability», «Misclassified examples», «Saliency maps results and interpretation»</div>
+
+  <p>В ДЗ 4 обучены две CNN на задаче «кошки vs собаки» и на них сравниваются четыре карты:
+  vanilla, directed gradients, SmoothGrad, Integrated Gradients. Ценность для экзамена — готовые
+  формулировки о том, <b>зачем</b> вообще смотреть карты, если есть accuracy.</p>
+
+  <div class="calcbox">
+    <b>Аргумент «accuracy недостаточно», по пунктам ДЗ.</b>
+    <ul style="margin:6px 0;">
+      <li>Model 1 лучше Model 2 ($0{,}858$ против $0{,}819$), но accuracy <b>не показывает, почему</b>
+      модель права или неправа.</li>
+      <li>Accuracy не говорит, <b>какие визуальные признаки</b> модель использовала.</li>
+      <li>Две модели с <b>близкой</b> accuracy могут опираться на <b>разные</b> части изображения —
+      части животного или фон.</li>
+      <li>Поэтому дополнительно смотрят <b>ошибки</b> и <b>saliency-карты</b>, чтобы проверить,
+      на какие свидетельства модель опирается.</li>
+    </ul>
+  </div>
+
+  <h3>Наблюдения по картам</h3>
+  <ul>
+    <li>На <b>ошибочных</b> примерах карты Model 1 сильнее привязаны к <b>области животного</b>
+    (тело, голова), а Integrated Gradients иногда показывает слабую, но узнаваемую структуру
+    шерсти или силуэта.</li>
+    <li>Карты Model 2 на тех же примерах выглядят <b>решётчатыми</b> и разбросанными — реакция
+    скорее на текстурные паттерны всего изображения, чем на части животного.</li>
+    <li><b>SmoothGrad помогает сравнить стабильность:</b> у Model 1 карта становится глаже
+    и центрируется на объекте, у Model 2 остаётся решётчатая текстура — сигнал <b>не устойчив</b>
+    вокруг одной чёткой области. Это практическая демонстрация того, зачем нужен §7.</li>
+    <li>Если saliency лежит <b>вне животного</b>, модель, возможно, идёт по <b>shortcut</b>
+    и сломается при смене фона — та самая «корова на пляже» из §0.</li>
+  </ul>
+
+  <div class="trap"><b>Оговорка, которую ДЗ формулирует прямо, и она же — мост к Adebayo.</b>
+  Saliency-карты могут вести себя как <b>детектор границ</b>: обводить контуры и высококонтрастные
+  края, не выучив ни «кошку», ни «собаку». Поэтому <b>красивый силуэт на карте не доказывает,
+  что модель обучена хорошо</b>. Карты используются как <b>диагностический</b> сигнал —
+  повод для дальнейших проверок, а не окончательная истина.</div>
+</section>
+
+<!-- ============ СВОДКА ============ -->
+<section class="step" id="summary">
+  <h2>11. Сводка и карточки для экзамена</h2>
+  <div class="src">src: study_plan.md, тема 8 и п. 4 правил; master_conspect.md, л. 9</div>
+
+  <h3>Линия развития методов — скелет любого ответа</h3>
+  <p>Курс подаёт тему как <b>цепочку исправлений</b>, и отвечать удобно по ней:</p>
+  <table class="contrast">
+    <tr><th>Шаг</th><th>Что не так у предыдущего</th><th>Как чинят</th></tr>
+    <tr><td>Vanilla Gradient</td><td>—</td><td>базовая идея: $\partial\hat f_c/\partial x$</td></tr>
+    <tr><td>Guided Backprop</td><td>карты шумные и нечитаемые</td>
+        <td>резать отрицательные сигналы на ReLU — <b>ценой того, что это уже не градиент</b></td></tr>
+    <tr><td>Gradient × Image</td><td>градиент — не эффект, эффект $=$ градиент $\times$ изменение</td>
+        <td>домножить на значение пикселя</td></tr>
+    <tr><td>Integrated Gradients</td><td>одна точка не видит насыщения; неясно, относительно чего мерить</td>
+        <td>интегрировать вдоль пути <b>от baseline</b> $\Rightarrow$ Sensitivity $+$ Completeness</td></tr>
+    <tr><td>SmoothGrad</td><td>градиент флуктуирует между неразличимыми входами</td>
+        <td>усреднить по шуму вокруг точки</td></tr>
+    <tr><td>Sanity checks</td><td>красота карты ничего не гарантирует</td>
+        <td>проверить зависимость карты от весов и от меток</td></tr>
+  </table>
+
+  <h3>Шесть вопросов, к которым надо быть готовым</h3>
+  <table class="plain">
+    <tr><th>Вопрос</th><th>Ядро ответа в одну строку</th></tr>
+    <tr><td>Почему градиент — мера эффекта?</td>
+        <td>три аргумента: коэффициент линейной модели · подынтегральное выражение ALE · Тейлор
+        первого порядка; <b>но</b> эффект всюду $=$ градиент $\times$ изменение, а не градиент</td></tr>
+    <tr><td>Чем guided backprop отличается от backprop?</td>
+        <td>маскирует и по знаку нижних активаций, <b>и</b> по знаку верхнего градиента;
+        результат — не истинный градиент, а вменённая версия</td></tr>
+    <tr><td>Что чинит IG и как?</td>
+        <td>нарушение Sensitivity при насыщении; интегралом градиента вдоль прямой от baseline,
+        с множителем $(x_j-x'_j)$</td></tr>
+    <tr><td>Что такое completeness?</td>
+        <td>$\sum_j\text{IG}_j=F(x)-F(x')$ — аналог local accuracy у SHAP</td></tr>
+    <tr><td>Связь IG и ALE</td>
+        <td>IG $\approx$ ALE, когда градиент можно вычислить напрямую; ALE интегрирует условное
+        матожидание вдоль <b>пути данных</b>, IG — вдоль <b>прямой от baseline</b></td></tr>
+    <tr><td>Sanity checks: что, как, вывод</td>
+        <td>рандомизация <b>весов</b> (каскадная / независимая) и рандомизация <b>меток</b>;
+        Vanilla Gradient и Grad-CAM проходят, Guided BackProp и Guided Grad-CAM — нет,
+        ведут себя как edge detector; тест <b>необходим, но не достаточен</b></td></tr>
+  </table>
+
+  <div class="trap"><b>Четыре вещи, которые на этом блоке теряют баллы чаще всего.</b>
+  (1) Написать «IG усредняет градиенты» без слов «<b>вдоль пути от baseline</b>» — это описание SmoothGrad.
+  (2) Назвать Guided Backprop улучшенным градиентом — авторы прямо говорят, что это <b>не</b> градиент.
+  (3) На вопрос про sanity checks назвать только тест на веса, забыв <b>data randomization</b>.
+  (4) Сказать «Guided Backprop плохой, потому что карты некрасивые» — наоборот: его карты <b>самые
+  красивые</b>, и в этом вся мораль статьи Adebayo.</div>
+</section>
+
+<script>
+const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
+const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
+function randn(){const u=1-Math.random(), v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+/* ---- Рис.1 три правила обратного прохода через ReLU (SVG) ---- */
+{
+  const f  = [2,-1,3,-4];
+  const R  = [1, 2,-3,-5];
+  const bp = f.map((v,i)=> v>0 ? R[i] : 0);
+  const dc = R.map(v=> v>0 ? v : 0);
+  const gb = f.map((v,i)=> (v>0 && R[i]>0) ? R[i] : 0);
+  const rows=[
+    {t:'f ˡ  (активации снизу)', a:f,  c:'#5B6472'},
+    {t:'R ˡ⁺¹  (градиент сверху)', a:R, c:'#5B6472'},
+    {t:'Backprop:  (f ˡ>0)·R', a:bp, c:'#2F6F6D'},
+    {t:'Deconvnet:  (R>0)·R', a:dc, c:'#8A5CB8'},
+    {t:'Guided:  (f ˡ>0)(R>0)·R', a:gb, c:'#C0392B'}
+  ];
+  const x0=268, cw=62, y0=36, rh=40;
+  let out='';
+  rows.forEach((r,ri)=>{
+    const yy=y0+ri*rh;
+    out += `<text class="lb" x="10" y="${yy+4}" fill="${r.c}">${r.t}</text>`;
+    r.a.forEach((v,ci)=>{
+      const zero = (ri>=2 && v===0);
+      out += `<rect x="${x0+ci*cw}" y="${yy-15}" width="${cw-8}" height="26"
+        fill="${zero?'#F4F3EE':'#FFFFFF'}" stroke="${ri>=2?r.c:'#E3E2DC'}" stroke-width="${ri>=2?1.4:1}"/>
+        <text class="vl" x="${x0+ci*cw+(cw-8)/2}" y="${yy+3}" text-anchor="middle"
+          fill="${zero?'#B7B6B0':'#1E2430'}">${v}</text>`;
+    });
+    if(ri===1) out += `<line x1="10" y1="${yy+21}" x2="530" y2="${yy+21}" stroke="#E3E2DC"/>`;
+  });
+  document.getElementById('svg-relu').innerHTML = `
+  <svg viewBox="0 0 560 240" width="100%" style="max-width:560px;display:block;margin:0 auto;">
+    <style>
+      .lb{font:11.5px ui-monospace,Menlo,Consolas,monospace;}
+      .vl{font:600 12.5px ui-monospace,Menlo,Consolas,monospace;}
+    </style>
+    ${out}
+  </svg>`;
+}
+
+/* ---- Рис.2 насыщение: F и градиент вдоль пути ---- */
+{
+  const xs=[], Fv=[];
+  for(let i=0;i<=200;i++){const t=2.4*i/200; xs.push(t); Fv.push(Math.min(t,1));}
+  const al=[], gr=[];
+  for(let i=0;i<=200;i++){const a=i/200; al.push(a); gr.push(2*a<1?1:0);}
+  Plotly.newPlot('plot-sat', [
+    {x:xs,y:Fv,mode:'lines',name:'F(x) = 1 − ReLU(1−x)',
+      line:{color:'#1E2430',width:2.8},xaxis:'x',yaxis:'y'},
+    {x:[1.4,2.4],y:[1,1],mode:'lines',name:"касательная в x=2:  F′(2)=0",
+      line:{color:'#C0392B',width:2.6,dash:'dash'},xaxis:'x',yaxis:'y'},
+    {x:[0,2],y:[0,1],mode:'markers',name:'baseline x′=0  и  вход x=2',
+      marker:{size:12,color:['#9AA0A6','#B5540B'],symbol:['circle','x'],line:{width:2.4}},
+      xaxis:'x',yaxis:'y'},
+    {x:al,y:gr,mode:'lines',name:'F′ вдоль пути t = 2α',
+      line:{color:'#2F6F6D',width:2.8},fill:'tozeroy',fillcolor:'rgba(47,111,109,0.16)',
+      xaxis:'x2',yaxis:'y2'}
+  ], {margin:{l:48,r:14,t:30,b:78},
+      grid:{rows:1,columns:2,pattern:'independent'},
+      xaxis:{title:'x',domain:[0,0.46],...AXIS}, yaxis:{title:'F(x)',range:[-0.08,1.25],...AXIS},
+      xaxis2:{title:'α (доля пути от baseline)',domain:[0.56,1],...AXIS},
+      yaxis2:{title:'∂F/∂x',range:[-0.08,1.25],...AXIS},
+      annotations:[
+        {x:0.2,y:1.1,xref:'paper',yref:'paper',showarrow:false,font:{size:12},
+         text:'<b>Градиент в точке</b> — ноль'},
+        {x:0.85,y:1.1,xref:'paper',yref:'paper',showarrow:false,font:{size:12},
+         text:'<b>Интеграл по пути</b> = 0.5 → IG = 2·0.5 = 1'}
+      ],
+      legend:{orientation:'h',y:-0.3,font:{size:10.5}}}, CFG);
+}
+
+/* ---- Рис.3 сумма Римана ---- */
+{
+  const al=[], gr=[];
+  for(let i=0;i<=400;i++){const a=i/400; al.push(a); gr.push(2*a<1?1:0);}
+  const traces=[{x:al,y:gr,mode:'lines',name:'F′(2α)',line:{color:'#1E2430',width:2.4}}];
+  const setup=[{m:4,c:'#2F6F6D',off:0},{m:8,c:'#8A5CB8',off:0},{m:20,c:'#C0392B',off:0}];
+  setup.forEach(s=>{
+    const bx=[], by=[]; let acc=0;
+    for(let k=1;k<=s.m;k++){const a=(k-0.5)/s.m; const g=(2*a<1?1:0);
+      bx.push(a); by.push(g); acc+=g;}
+    const est=2*acc/s.m;
+    traces.push({x:bx,y:by,type:'bar',name:'m = '+s.m+' → IG ≈ '+est.toFixed(3),
+      marker:{color:s.c,opacity:0.42,line:{color:s.c,width:1}},width:1/s.m});
+  });
+  Plotly.newPlot('plot-riemann', traces,
+    {barmode:'overlay', margin:{l:52,r:14,t:14,b:58},
+     xaxis:{title:'α',range:[0,1],...AXIS},
+     yaxis:{title:'F′(2α)',range:[0,1.28],...AXIS},
+     legend:{orientation:'h',y:-0.26,font:{size:10.5}}}, CFG);
+}
+
+/* ---- Рис.4 SmoothGrad ---- */
+{
+  const ts=[], g=[], pred=[];
+  for(let i=0;i<=240;i++){
+    const t=i/240;
+    ts.push(t);
+    g.push(1.0 + 0.72*Math.sin(41*t) + 0.42*Math.sin(97*t+1.1) + 0.22*randn());
+    pred.push(0.905 + 0.004*Math.sin(9*t));
+  }
+  const sm=[];
+  const win=26;
+  for(let i=0;i<g.length;i++){
+    let s=0,n=0;
+    for(let k=-win;k<=win;k++){const j=i+k; if(j>=0&&j<g.length){s+=g[j]; n++;}}
+    sm.push(s/n);
+  }
+  Plotly.newPlot('plot-smooth', [
+    {x:ts,y:g,mode:'lines',name:'∂S_c/∂xᵢ в одной точке',line:{color:'#C0392B',width:1.5}},
+    {x:ts,y:sm,mode:'lines',name:'SmoothGrad: среднее по n зашумлённым копиям',
+      line:{color:'#2F6F6D',width:3}},
+    {x:ts,y:pred,mode:'lines',name:'предсказание S_c (почти постоянно)',
+      line:{color:'#9AA0A6',width:2,dash:'dot'},yaxis:'y2'}
+  ], {margin:{l:54,r:56,t:14,b:62},
+      xaxis:{title:'сдвиг t вдоль крошечного отрезка x + t·ε',...AXIS},
+      yaxis:{title:'величина градиента',...AXIS},
+      yaxis2:{title:'S_c',overlaying:'y',side:'right',range:[0.5,1.05],
+        showgrid:false,zeroline:false},
+      legend:{orientation:'h',y:-0.28,font:{size:10.5}}}, CFG);
+}
+
+/* ---- Рис.5 cascading randomization ---- */
+{
+  const layers=['обучен-<br>ная','fc2','fc1','conv5','conv4','conv3','conv2','conv1'];
+  Plotly.newPlot('plot-sanity', [
+    {x:layers,y:[1.0,0.34,0.21,0.14,0.09,0.06,0.04,0.03],mode:'lines+markers',
+      name:'Vanilla Gradient — проходит',line:{color:'#2F6F6D',width:2.8},marker:{size:9}},
+    {x:layers,y:[1.0,0.41,0.30,0.22,0.16,0.12,0.09,0.07],mode:'lines+markers',
+      name:'Grad-CAM — проходит',line:{color:'#8A5CB8',width:2.4,dash:'dot'},marker:{size:8}},
+    {x:layers,y:[1.0,0.96,0.94,0.92,0.90,0.88,0.86,0.84],mode:'lines+markers',
+      name:'Guided BackProp — ПРОВАЛ',line:{color:'#C0392B',width:2.8},marker:{size:9}},
+    {x:layers,y:[1.0,0.95,0.93,0.91,0.89,0.87,0.85,0.83],mode:'lines+markers',
+      name:'Guided Grad-CAM — ПРОВАЛ',line:{color:'#B5540B',width:2.4,dash:'dot'},marker:{size:8}}
+  ], {margin:{l:58,r:14,t:14,b:86},
+      xaxis:{title:'слои рандомизованы каскадно, сверху вниз →',...AXIS},
+      yaxis:{title:'сходство с исходной картой',range:[0,1.08],...AXIS},
+      shapes:[{type:'rect',xref:'paper',x0:0,x1:1,y0:0.7,y1:1.08,
+        fillcolor:'rgba(192,57,43,0.06)',line:{width:0}}],
+      annotations:[{xref:'paper',x:0.02,y:1.03,xanchor:'left',showarrow:false,
+        text:'зона «карта не зависит от весов» — метод не проходит проверку',
+        font:{size:11,color:'#C0392B'}}],
+      legend:{orientation:'h',y:-0.34,font:{size:10.5}}}, CFG);
+}
+</script>
+
+</body>
+</html>
