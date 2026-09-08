@@ -1,0 +1,53 @@
+# ---------------------------------------------------------------------------
+# Source-material archive (~500 MB of lecture PDFs, PPTX, notebooks, datasets,
+# model weights and a 159 MB sourses.zip). Read-only input to the book; never
+# part of the published site.
+# ---------------------------------------------------------------------------
+Statistical Perspectives on Machine Learning Interpretability/
+
+# ---------------------------------------------------------------------------
+# Canonical academic illustrations (Phase 5b).
+# These are copyrighted figures from published papers. The book ships citation
+# cards, not the images. A personally obtained copy may be dropped here for
+# local reading, but must never be committed or redistributed.
+# ---------------------------------------------------------------------------
+assets/figures/canonical/*
+!assets/figures/canonical/.gitkeep
+!assets/figures/canonical/README.md
+
+# ---------------------------------------------------------------------------
+# Build / QA output
+# ---------------------------------------------------------------------------
+# NB: tools/baseline.json is deliberately NOT ignored — it is the pre-refactor
+# content snapshot that `inventory.py --compare` checks every later phase against.
+tools/*.report.txt
+dist/
+vnu.jar
+
+# ---------------------------------------------------------------------------
+# Python (figure generation scripts under assets/figures/src)
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# ---------------------------------------------------------------------------
+# Node (only ever used ad hoc for npx html-validate)
+# ---------------------------------------------------------------------------
+node_modules/
+package-lock.json
+
+# ---------------------------------------------------------------------------
+# OS / editor cruft
+# ---------------------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
