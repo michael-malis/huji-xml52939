@@ -164,12 +164,29 @@ def compare(inv: dict, baseline_path: Path) -> int:
     print(f"{'metric':<16}{'baseline':>10}{'now':>10}{'delta':>10}")
     print("-" * 46)
 
+    # Deliberate removals are declared in tools/removals.json with a reason,
+    # so an *unexplained* decrease still fails.
+    allowed = {}
+    rem_path = baseline_path.parent / "removals.json"
+    if rem_path.exists():
+        allowed = {
+            k: v["count"]
+            for k, v in json.loads(rem_path.read_text(encoding="utf-8")).items()
+            if isinstance(v, dict) and "count" in v
+        }
+
     failed = False
     for key in sorted(k for k in was if k != "exam_terms"):
         d = now.get(key, 0) - was[key]
-        lost = key in CONTENT_METRICS and d < 0
+        ok_drop = allowed.get(key, 0)
+        lost = key in CONTENT_METRICS and d < -ok_drop
         failed |= lost
-        mark = "  CONTENT LOST" if lost else ""
+        if lost:
+            mark = "  CONTENT LOST"
+        elif d < 0 and ok_drop:
+            mark = f"  (declared: -{ok_drop})"
+        else:
+            mark = ""
         print(f"{key:<16}{was[key]:>10}{now.get(key, 0):>10}{d:>+10}{mark}")
 
     print(f"\n{'exam term':<16}{'baseline':>10}{'now':>10}{'delta':>10}")

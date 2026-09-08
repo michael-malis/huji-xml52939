@@ -50,8 +50,8 @@ SUBS: list[tuple[str, str, str]] = [
 
 # Left for the manual pass; reported, never rewritten.
 LEFTOVERS = {
-    "Moed / иврит": r"Moed|מועד|שאלה|מבחן",
-    "«экзамен»": r"экзамен",
+    "Moed / иврит": r"(?i)Moed|מועד|שאלה|מבחן",
+    "«экзамен»": r"(?i)экзамен",
     "«ДЗ N»": r"\bДЗ\s*\d",
     "«Читательская»": r"Читательск",
     "«Счётная задача»": r"[Сс]чётн\w+ задач",

@@ -1,0 +1,33 @@
+{
+  "_comment": "Deliberate content removals, subtracted before inventory.py flags a decrease. Every entry must name what was removed and why. An unexplained decrease still fails the check.",
+
+  "pitfall": {
+    "count": 20,
+    "reason": "7 exam-metadata callouts deleted in Phase 3 rather than reworded — «Как это спрашивают» (which exam question covered this section) x5 and «Почему тема заслуживает часа» (tier justification) x2; each was scaffolding with no content under the framing. Plus 13 from topic-12.html, whose pitfalls travelled with their tasks into the destination chapters (chs. 3-6, 10) or were found already present there."
+  },
+
+  "calcbox": {
+    "count": 40,
+    "reason": "topic-12.html deleted at the end of Phase 3. Its 40 calcboxes were a condensed re-run of calculations that live in the chapters: t1/t2 merged into ch. 3's warm-up practicum, t3/t4 moved to ch. 4 (net new there), t5/t6 found already present in ch. 5 in fuller form, t7/t8/t9 already present in ch. 6, t10 split into ch. 10's #tmc and its practicum. Every destination was verified before deletion; site-wide calcbox count is still ABOVE baseline."
+  },
+
+  "fig": {
+    "count": 1,
+    "reason": "topic-12's tree SVG duplicated ch. 3's tree figure, which is richer (real 14-observation data vs a constructed 4-node sketch). Its other figure — the accumulated-vs-centred ALE curve — was migrated to ch. 4 as #plot-ale-accum."
+  },
+
+  "display_math": {
+    "count": 57,
+    "reason": "topic-12.html deleted; its display math was the same derivations as the chapters', re-run in condensed form. Site-wide display_math remains above baseline."
+  },
+
+  "tables": {
+    "count": 8,
+    "reason": "topic-12.html deleted: 1 routing table (now appendix A's map), 1 arithmetic checklist (now appendix A §2), and 6 tables restating chapter content."
+  },
+
+  "sections": {
+    "count": 12,
+    "reason": "topic-12.html's 12 sections: #how and #checklist became appendix A, and the ten task sections were dissolved into the chapters that derive their theory."
+  }
+}
