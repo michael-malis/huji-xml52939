@@ -33,7 +33,15 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT_METRICS = ("calcbox", "fig", "display_math", "pitfall", "tables", "sections")
 
 PATTERNS = {
-    "sections": re.compile(r"""<section\b[^>]*class\s*=\s*["'][^"']*\bstep\b""", re.I),
+    # Counts every chapter section, whatever its class. Phase 3 reclassifies
+    # some `step` sections as `practicum` or `summary`; counting only `step`
+    # would read that as content loss.
+    "sections": re.compile(
+        r"""<section\b[^>]*class\s*=\s*["'][^"']*\b(?:step|practicum|summary)\b""", re.I
+    ),
+    "summaries": re.compile(
+        r"""<section\b[^>]*class\s*=\s*["'][^"']*\bsummary\b""", re.I
+    ),
     "practicums": re.compile(
         r"""<section\b[^>]*class\s*=\s*["'][^"']*\bpracticum\b""", re.I
     ),
