@@ -3,246 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Statistical Perspectives on ML Interpretability</title>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px; line-height:1.6;
-    max-width:900px; margin:0 auto; padding:32px 18px 80px;
-  }
-  header{margin-bottom:28px;}
-  h1{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.6em; font-weight:600; margin:0 0 8px;}
-  .sub{color:var(--ink-soft); font-size:0.92em; margin-bottom:14px;}
-  header p{font-size:1em; max-width:65ch;}
-
-  .cards{display:grid; grid-template-columns:1fr; gap:14px;}
-  @media (min-width:640px){ .cards{grid-template-columns:repeat(2,1fr);} }
-
-  .card{
-    display:block; text-decoration:none; color:inherit;
-    background:var(--paper); border:1px solid var(--rule); border-radius:6px;
-    padding:16px 18px 18px;
-  }
-  .card:hover, .card:focus-visible{border-color:var(--accent);}
-  .card-n{font-size:0.74em; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);}
-  .card h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.08em; margin:4px 0 8px; color:var(--ink);}
-  .card-badges{margin-bottom:8px;}
-  .card-badges .badge{
-    display:inline-block; font-size:0.72em; padding:2px 8px; border-radius:3px; margin:0 5px 4px 0;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:#fff;
-  }
-  .card-badges .badge.core{background:#8A5CB8;}
-  .card-badges .badge.calc{background:#C0392B;}
-  .card-badges .badge.safe{background:#2F6F6D;}
-  .card-lead{font-size:0.9em; color:var(--ink-soft); margin:0 0 10px; line-height:1.5;}
-  .card-toc{margin:0; padding-left:18px; font-size:0.82em; color:var(--ink-soft);}
-  .card-toc li{margin:2px 0;}
-  .card-toc li.more{list-style:none; margin-left:-18px; font-style:italic;}
-
-  footer{margin-top:36px; font-size:0.8em; color:var(--ink-soft);}
-</style>
+<title>Статистические перспективы интерпретируемости машинного обучения</title>
+<meta name="description" content="Справочник по методам объяснимого ИИ: интерпретируемые модели, кривые эффекта, важность признаков, Shapley и SHAP, LIME, saliency maps, концепты, объяснения через примеры и оценка самих объяснений.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<script src="assets/book.js"></script>
 </head>
 
-<body>
+<body class="book-index">
 
-<header>
-  <h1>Statistical Perspectives on ML Interpretability</h1>
-  <div class="sub">Курс 52939 · конспект по темам</div>
-  <p>Материал курса разбит на 12 самостоятельных тем. Каждая тема открывается на своей
-  странице — с формулами, графиками и разборами примеров — и содержит собственное
-  оглавление по разделам. Нажмите на карточку, чтобы открыть тему.</p>
+<header class="book-header">
+  <p class="eyebrow">Курс 52939 · Еврейский университет в Иерусалиме</p>
+  <h1>Статистические перспективы интерпретируемости машинного обучения</h1>
+  <p class="subtitle">Справочник по методам объяснимого ИИ: от линейной модели,
+  где эффект признака — это один коэффициент, до концептов, объяснений через
+  примеры и вопроса о том, как проверять сами объяснения.</p>
+  <nav class="quick-links" aria-label="Быстрые ссылки">
+    <a href="#part-1">К оглавлению</a>
+    <a href="appendix-a-practicums.html">Численные практикумы</a>
+    <a href="references.html">Литература</a>
+  </nav>
 </header>
 
-<div class="cards">
-  <a class="card" href="01-linear-models.html">
-    <div class="card-n">Тема 1 · Линейная модель</div>
-    <h2>Модель, объяснение, эффект: линейная модель как точка отсчёта</h2>
-    <div class="card-badges"><span class="badge safe">🟢 Страховка</span></div>
-    <p class="card-lead">Весь курс вращается вокруг одного вопроса: каков эффект признака на предсказание модели. Начинать с линейной модели удобно не потому, что она проста, а потому, что это единственный случай…</p>
-    <ul class="card-toc">
-        <li>Постановка: что значит «эффект признака»</li>
-        <li>Что такое модель</li>
-        <li>Зачем объясняют модели — три причины</li>
-        <li>Таксономия объяснений: пять осей (карточка + ссылка)</li>
-        <li>Линейная модель и интерпретация весов</li>
-        <li class="more">+ 6 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="02-glm-gam-interactions.html">
-    <div class="card-n">Тема 2 · За пределами линейной</div>
-    <h2>За пределами линейной модели: логит, сплайны, GAM, интеракции</h2>
-    <div class="card-badges"><span class="badge safe">🟢 Страховка</span>
-  <span class="badge calc">🔴 счётный разбор odds / OR</span></div>
-    <p class="card-lead">В линейной модели эффект признака — это β_j, число в тех же единицах, что и отклик. Как только модель отходит от линейной, ломается одно из двух: либо коэффициент перестаёт быть в единицах…</p>
-    <ul class="card-toc">
-        <li>Постановка: что ломается за пределами линейной модели</li>
-        <li>GLM: функция связи и цена для интерпретации</li>
-        <li>Логистическая модель: логит, odds, odds ratio</li>
-        <li>Счётный разбор 1: odds и OR по таблице, сверка с коэффициентами GLM</li>
-        <li>Что произошло с коэффициентами сезона в полной модели</li>
-        <li class="more">+ 6 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="03-trees-ensembles-gini.html">
-    <div class="card-n">Тема 3 · Деревья и Gini</div>
-    <h2>Деревья, ансамбли и мера Gini</h2>
-    <div class="card-badges"><span class="badge safe">🟢 Механика</span>
-  <span class="badge calc">🔴 Gini: счётные задачи 1 и 2</span></div>
-    <p class="card-lead">Лекция 3 закрывает «часть 1» курса — модели, интерпретируемые по построению. Дерево — последняя такая модель, и одновременно первая, у которой понятие «эффект признака как производная»…</p>
-    <ul class="card-toc">
-        <li>Постановка: последняя интерпретируемая по построению модель</li>
-        <li>Дерево как кусочно-постоянная функция</li>
-        <li>Жадный рост и его четыре последствия</li>
-        <li>Gini impurity: определение, доказательство, экстремумы</li>
-        <li>Правило разбиения Θ(s,t)</li>
-        <li class="more">+ 7 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="04-pd-mplot-ale-fanova.html">
-    <div class="card-n">Тема 4 · PD, M-plot, ALE</div>
-    <h2>PD → M-plot → ALE → Functional ANOVA</h2>
-    <div class="card-badges"><span class="badge core">🟠 Ядро курса</span>
-  <span class="badge calc">🔴 Счётные задачи</span></div>
-    <p class="card-lead">У линейной модели эффект признака — одно число β_j, читаемое прямо из параметров. Как только модель перестаёт быть линейной, такого числа больше нет: наклон меняется от точки к точке…</p>
-    <ul class="card-toc">
-        <li>Ceteris Paribus: кривая одного наблюдения</li>
-        <li>ICE и Partial Dependence</li>
-        <li>Centered ICE и Derivative ICE</li>
-        <li>Где ломается PD: off-manifold экстраполяция</li>
-        <li>M-plot и omitted variable bias</li>
-        <li class="more">+ 6 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="05-feature-importance.html">
-    <div class="card-n">Тема 5 · PFI и родственники</div>
-    <h2>PFI и его родственники: CFI · LOCO · PDI · MCR</h2>
-    <div class="card-badges"><span class="badge core">🟠 Ядро курса</span>
-  <span class="badge calc">🔴 Счётные задачи</span></div>
-    <p class="card-lead">Тема 4 отвечала на вопрос «как выглядит эффект признака» и выдавала кривую. Здесь вопрос другой: «насколько признак важен» — и ответом должно быть одно число, иначе признаки не…</p>
-    <ul class="card-toc">
-        <li>Три трактовки «важности переменной»</li>
-        <li>PFI: определение, оценщик, три свойства</li>
-        <li>🔴 Счётная задача: точный PFI по всем 6 перестановкам</li>
-        <li>Читательская 3 — Hooker: перестановка вынуждает экстраполяцию</li>
-        <li>CFI — условная важность</li>
-        <li class="more">+ 6 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="06-shapley-shap.html">
-    <div class="card-n">Тема 6 · Shapley и SHAP</div>
-    <h2>Shapley values и SHAP: единственная честная атрибуция</h2>
-    <div class="card-badges"><span class="badge core">🟠 Ядро курса</span>
-  <span class="badge calc">🔴 Счётные задачи</span></div>
-    <p class="card-lead">Все методы важности предыдущего блока меряют вклад признака относительно одной-единственной коалиции — полного набора всех остальных признаков. У LOCO это записано буквально…</p>
-    <ul class="card-toc">
-        <li>Постановка задачи: почему «поодиночке» недостаточно</li>
-        <li>Кооперативная игра и определение Shapley value</li>
-        <li>Откуда берётся вес frac|S|!(p-|S|-1)!p!</li>
-        <li>Аксиомы: классические 4 и переформулировка SHAP</li>
-        <li>🔴 Счётная задача 1: Shapley для 3 признаков через все 6 порядков</li>
-        <li class="more">+ 9 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="07-local-surrogates.html">
-    <div class="card-n">Тема 7 · Локальные объяснения</div>
-    <h2>Локальные объяснения: Explaining by Removing · RISE · LIME · Laugel</h2>
-    <div class="card-badges"><span class="badge core" style="background:#B5540B;">🟡 Повышенная вероятность</span></div>
-    <p class="card-lead">Глобальная важность — это одно число на признак для всей популяции. Здесь мы показываем, что для целого класса задач такого числа принципиально не существует, и разбираем методы, которые…</p>
-    <ul class="card-toc">
-        <li>Зачем нужны локальные объяснения (и что говорит GDPR)</li>
-        <li>Explaining by Removing: полная классификационная система</li>
-        <li>Размещение всех методов курса по трём осям</li>
-        <li>RISE: как устроен</li>
-        <li>RISE: как в статье делали валидацию</li>
-        <li class="more">+ 6 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="08-saliency-maps.html">
-    <div class="card-n">Тема 8 · Saliency maps</div>
-    <h2>Saliency maps: от чистого градиента к Integrated Gradients и sanity checks</h2>
-    <div class="card-badges"><span class="badge core">🟠 Ядро курса</span></div>
-    <p class="card-lead">Мотивирующий вопрос лекции: как узнать, использует ли распознавание правильную информацию? Классическая иллюстрация — Recognition in Terra Incognita (Beery et al. 2018): «алгоритмы плохо…</p>
-    <ul class="card-toc">
-        <li>Зачем градиенты: три аргумента и главная оговорка лекции</li>
-        <li>Компоненты CNN — ровно в том объёме, что нужен</li>
-        <li>Vanilla Gradient</li>
-        <li>Guided Backpropagation: три правила обратного прохода</li>
-        <li>Gradient × Image</li>
-        <li class="more">+ 7 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="10-example-based.html">
-    <div class="card-n">Тема 9 · Пространство примеров</div>
-    <h2>Пространство примеров: прототипы · influence functions · Data Shapley</h2>
-    <div class="card-badges"><span class="badge core" style="background:#B5540B;">🟡 Повышенная вероятность</span>
-  <span class="badge calc">🔴 Счётная задача (чтение графика)</span></div>
-    <p class="card-lead">До сих пор единицей объяснения был признак — его эффект, его важность, его вклад в предсказание. Здесь единица меняется на пример: отдельную строку обучающей выборки. Это не косметическая…</p>
-    <ul class="card-toc">
-        <li>Постановка: смена единицы объяснения</li>
-        <li>Прототипы: требования и K-medoids</li>
-        <li>MMD², witness function и criticisms</li>
-        <li>Численный разбор MMD² и witness</li>
-        <li>Как оценивают методы прототипов</li>
-        <li class="more">+ 7 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="09-concept-explanations.html">
-    <div class="card-n">Тема 10 · Концепты</div>
-    <h2>Концепты: CAM · Network Dissection · TCAV · Completeness · CBM · SAE</h2>
-    <div class="card-badges"><span class="badge core" style="background:#B5540B;">🟡 Повышенная вероятность</span>
-  <span class="badge core">🟠 частично в Moed A (Q3)</span></div>
-    <p class="card-lead">Схема модели глубокого обучения: Input → Features(Input) → Prediction(Features). Тема 8 объясняла первую стрелку — какие пиксели важны. Здесь тезис лекции: для изображений и текста вход…</p>
-    <ul class="card-toc">
-        <li>Постановка: почему пиксель — неправильная единица объяснения</li>
-        <li>Что такое концепт и таксономия C-XAI</li>
-        <li>CAM — Class Activation Mapping</li>
-        <li>Grad-CAM</li>
-        <li>Network Dissection: порог, бинаризация, IoU</li>
-        <li class="more">+ 7 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="11-evaluation.html">
-    <div class="card-n">Тема 11 · Оценка объяснений</div>
-    <h2>Оценка методов объяснения: три уровня, неполнота и нестабильность</h2>
-    <div class="card-badges"><span class="badge core" style="background:#2F6F6D;">🟢 Страховка</span></div>
-    <p class="card-lead">До сих пор вопрос звучал «как объяснить модель», и каждый ответ был методом. Здесь вопрос меняется на «как понять, что объяснение хорошее», и ответом будет не метод, а критерий. Разница…</p>
-    <ul class="card-toc">
-        <li>Постановка: спрашивают не метод, а критерий</li>
-        <li>Определение интерпретируемости и когда она НЕ нужна</li>
-        <li>Incompleteness ≠ uncertainty</li>
-        <li>Таксономия оценки — три уровня</li>
-        <li>Три формата human-grounded экспериментов</li>
-        <li class="more">+ 5 ещё</li>
-    </ul>
-  </a>
-  <a class="card" href="topic-12.html">
-    <div class="card-n">Тема 12 · Счётные задачи</div>
-    <h2>Сквозной прогон счётных задач: только арифметика</h2>
-    <div class="card-badges"><span class="badge calc">🔴 Счётные задачи</span></div>
-    <p class="card-lead">По плану подготовки это последний блок и в нём нет нового материала: повторный проход по ключевым шагам всех десяти счётных задач — только логика и арифметика, уже разобранные ранее.</p>
-    <ul class="card-toc">
-        <li>Как пользоваться этим файлом</li>
-        <li>Gini impurity и выбор сплита</li>
-        <li>Gini feature importance по дереву</li>
-        <li>ALE по K бинам</li>
-        <li>ANOVA decomposition простой функции</li>
-        <li class="more">+ 7 ещё</li>
-    </ul>
-  </a>
-</div>
+<main class="toc-book">
 
-<footer>52939 · Statistical Perspectives on ML Interpretability</footer>
+<section class="part" id="how-to-read">
+  <div class="part-head">
+    <h2>Как читать эту книгу</h2>
+    <p class="part-blurb">Одиннадцать глав выстроены вокруг одного вопроса, который
+    возвращается на каждом уровне: <b>что считать единицей объяснения</b> — параметр
+    модели, признак, пиксель, концепт или обучающий пример. Части идут по возрастанию
+    этой единицы, и каждая следующая появляется потому, что предыдущая упирается
+    в свой предел.</p>
+  </div>
+  <p>Книгу можно читать подряд: главы ссылаются назад, но не вперёд, и каждая
+  начинается с постановки задачи, а заканчивается ключевыми выводами. Можно и
+  выборочно — оглавление внутри каждой главы позволяет войти в нужный раздел.</p>
+  <p>По ходу текста встречаются два вида врезок. <b>Частая ошибка</b> — место, где
+  формулировка метода регулярно понимается неверно, с разбором, почему именно.
+  <b>Численный практикум</b> — полный расчёт на маленьких числах, который читатель
+  может воспроизвести на бумаге; такие главы отмечены в оглавлении ниже, а полный
+  их список собран в <a href="appendix-a-practicums.html">приложении A</a>.</p>
+</section>
+
+<section class="part" id="part-1">
+  <div class="part-head">
+    <p class="part-n">Часть I</p>
+    <h2>Модели, интерпретируемые по построению</h2>
+    <p class="part-blurb">Единица объяснения — параметр модели. Три класса моделей,
+    у которых объяснение читается прямо из обученных весов, и точка, в которой
+    этот приём перестаёт работать.</p>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="01-linear-models.html">
+      <span class="ch-n">Глава 1</span>
+      <span class="ch-title">Модель, объяснение, эффект: линейная модель как точка отсчёта</span>
+      <span class="ch-meta"><span class="ch-topics">что такое модель · три причины объяснять · пять осей таксономии · интерпретация весов · weight plot и effect plot · две культуры Бреймана</span></span>
+    </a></li>
+    <li><a href="02-glm-gam-interactions.html">
+      <span class="ch-n">Глава 2</span>
+      <span class="ch-title">За пределами линейной модели: логит, сплайны, GAM, интеракции</span>
+      <span class="ch-meta"><span class="ch-topics">функция связи · логит, odds и odds ratio · нелинейности одной переменной · обобщённые аддитивные модели · кодирование интеракций</span></span>
+    </a></li>
+    <li><a href="03-trees-ensembles-gini.html">
+      <span class="ch-n">Глава 3</span>
+      <span class="ch-title">Деревья, ансамбли и мера Gini</span>
+      <span class="ch-meta"><span class="ch-topics">кусочно-постоянная функция · жадный рост · Gini impurity · правило разбиения · MDI · Random Forest против бустинга</span><span class="ch-practicum" title="Содержит численные практикумы">2 практикума</span></span>
+    </a></li>
+  </ol>
+</section>
+
+<section class="part" id="part-2">
+  <div class="part-head">
+    <p class="part-n">Часть II</p>
+    <h2>Эффект признака: глобальные агностические методы</h2>
+    <p class="part-blurb">Модель больше не вскрывают — её зондируют. Единица объяснения
+    остаётся признаком, но ответом становится сначала кривая, а затем одно число.
+    Здесь же возникает сквозная трудность всей книги: зависимые признаки.</p>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="04-pd-mplot-ale-fanova.html">
+      <span class="ch-n">Глава 4</span>
+      <span class="ch-title">Кривые эффекта: PD → M-plot → ALE → Functional ANOVA</span>
+      <span class="ch-meta"><span class="ch-topics">ceteris paribus · ICE и partial dependence · off-manifold экстраполяция · M-plot и omitted variable bias · ALE · функциональный ANOVA</span><span class="ch-practicum" title="Содержит численные практикумы">2 практикума</span></span>
+    </a></li>
+    <li><a href="05-feature-importance.html">
+      <span class="ch-n">Глава 5</span>
+      <span class="ch-title">Важность признака: PFI · CFI · LOCO · PDI · MCR</span>
+      <span class="ch-meta"><span class="ch-topics">три трактовки важности · перестановочная важность · условная важность · LOCO и minipatch · разложение дисперсии · Model Class Reliance</span><span class="ch-practicum" title="Содержит численный практикум">1 практикум</span></span>
+    </a></li>
+  </ol>
+</section>
+
+<section class="part" id="part-3">
+  <div class="part-head">
+    <p class="part-n">Часть III</p>
+    <h2>Локальные объяснения и атрибуция</h2>
+    <p class="part-blurb">Одного числа на признак для всей популяции может не
+    существовать. Единица объяснения сжимается до отдельного предсказания, и вместе
+    с ней меняется вопрос: не «насколько признак важен вообще», а «что он сделал
+    вот здесь».</p>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="06-shapley-shap.html">
+      <span class="ch-n">Глава 6</span>
+      <span class="ch-title">Shapley values и SHAP: аксиоматическая атрибуция</span>
+      <span class="ch-meta"><span class="ch-topics">кооперативная игра · четыре аксиомы · происхождение весов · KernelSHAP · waterfall и beeswarm · агрегация в глобальную важность</span><span class="ch-practicum" title="Содержит численные практикумы">3 практикума</span></span>
+    </a></li>
+    <li><a href="07-local-surrogates.html">
+      <span class="ch-n">Глава 7</span>
+      <span class="ch-title">Локальные суррогаты и контрфактуалы: Explaining by Removing · RISE · LIME</span>
+      <span class="ch-meta"><span class="ch-topics">три оси удаления признака · RISE и маски · LIME и штрафная функция · SP-LIME · две корневые критики · контрфактуальные объяснения</span></span>
+    </a></li>
+  </ol>
+</section>
+
+<section class="part" id="part-4">
+  <div class="part-head">
+    <p class="part-n">Часть IV</p>
+    <h2>Глубокие модели: от пикселей к концептам</h2>
+    <p class="part-blurb">У изображений и текста вход не состоит из осмысленных
+    признаков: отдельный пиксель не значит ничего. Сначала единицей объяснения
+    становится пиксель — и упирается в свой предел, — а затем концепт.</p>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="08-saliency-maps.html">
+      <span class="ch-n">Глава 8</span>
+      <span class="ch-title">Saliency maps: от чистого градиента к Integrated Gradients</span>
+      <span class="ch-meta"><span class="ch-topics">компоненты CNN · vanilla gradient · guided backpropagation · gradient × image · Integrated Gradients · SmoothGrad · sanity checks</span></span>
+    </a></li>
+    <li><a href="09-concept-explanations.html">
+      <span class="ch-n">Глава 9</span>
+      <span class="ch-title">Концепты: CAM · Network Dissection · TCAV · Completeness · CBM · SAE</span>
+      <span class="ch-meta"><span class="ch-topics">таксономия C-XAI · CAM и Grad-CAM · Network Dissection и IoU · TCAV · completeness · concept bottleneck models · разреженные автокодировщики</span></span>
+    </a></li>
+  </ol>
+</section>
+
+<section class="part" id="part-5">
+  <div class="part-head">
+    <p class="part-n">Часть V</p>
+    <h2>Данные как единица объяснения</h2>
+    <p class="part-blurb">Смена единицы с признака на пример: объяснением становится
+    не «какой признак повлиял», а «какие строки обучающей выборки за это отвечают».
+    Отсюда растут прототипы, influence functions и оценка стоимости данных.</p>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="10-example-based.html">
+      <span class="ch-n">Глава 10</span>
+      <span class="ch-title">Пространство примеров: прототипы · influence functions · Data Shapley</span>
+      <span class="ch-meta"><span class="ch-topics">прототипы и K-medoids · MMD² и witness function · criticisms · расстояния от алгоритма предсказания · deletion distance · influence functions · Data Shapley</span><span class="ch-practicum" title="Содержит численный практикум">1 практикум</span></span>
+    </a></li>
+  </ol>
+</section>
+
+<section class="part" id="part-6">
+  <div class="part-head">
+    <p class="part-n">Часть VI</p>
+    <h2>Оценка объяснений</h2>
+    <p class="part-blurb">Последняя смена единицы: объясняемым объектом становится
+    само объяснение. Вопрос меняется с «как объяснить модель» на «как понять, что
+    объяснение хорошее», и ответом оказывается не метод, а критерий.</p>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="11-evaluation.html">
+      <span class="ch-n">Глава 11</span>
+      <span class="ch-title">Оценка методов объяснения: три уровня, неполнота и нестабильность</span>
+      <span class="ch-meta"><span class="ch-topics">определение интерпретируемости · неполнота против неопределённости · три уровня оценки · human-grounded эксперименты · нестабильность объяснений</span></span>
+    </a></li>
+  </ol>
+</section>
+
+<section class="part back-matter" id="back-matter">
+  <div class="part-head">
+    <p class="part-n">Справочный аппарат</p>
+    <h2>Приложения</h2>
+  </div>
+  <ol class="chapter-list">
+    <li><a href="appendix-a-practicums.html">
+      <span class="ch-n">Приложение A</span>
+      <span class="ch-title">Указатель численных практикумов</span>
+      <span class="ch-meta"><span class="ch-topics">все расчётные разборы книги в одном списке · чек-лист проверки численных выкладок</span></span>
+    </a></li>
+    <li><a href="references.html">
+      <span class="ch-n">Приложение B</span>
+      <span class="ch-title">Литература</span>
+      <span class="ch-meta"><span class="ch-topics">работы, на которые опирается изложение, со ссылками на DOI и arXiv</span></span>
+    </a></li>
+  </ol>
+</section>
+
+</main>
+
+<footer class="book-footer">
+  Статистические перспективы интерпретируемости машинного обучения · курс 52939
+</footer>
 
 </body>
 </html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Приложение B · Литература — Интерпретируемость ML</title>
+<meta name="description" content="Библиография книги: работы по интерпретируемости машинного обучения, на которые опирается изложение, со ссылками на DOI и arXiv.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<script src="assets/book.js"></script>
+</head>
+
+<body class="chapter">
+
+<a class="back-link" href="index.html">← Оглавление</a>
+<h1>Приложение B · Литература</h1>
+<div class="meta">Статистические перспективы интерпретируемости машинного обучения</div>
+
+<p class="chapter-abstract">Работы, на которых построено изложение. Список алфавитный;
+в скобках после каждой записи — главы, где она разбирается или используется. Идентификаторы
+даны так, чтобы работу можно было найти: DOI для журнальных публикаций, arXiv для препринтов
+и материалов конференций.</p>
+
+<nav class="toc">
+  Содержание
+  <ol>
+    <li><a href="#books">Книги и обзоры</a></li>
+    <li><a href="#papers">Статьи</a></li>
+    <li><a href="#pending">Упомянуто в тексте, требует сверки</a></li>
+  </ol>
+</nav>
+
+<section class="step" id="books">
+  <h2>1. Книги и обзоры</h2>
+
+  <table class="plain" data-label="Книги и обзоры">
+    <tr><th>Работа</th><th>Где</th></tr>
+
+    <tr><td><b>Molnar, C.</b> <i>Interpretable Machine Learning: A Guide for Making Black Box
+        Models Explainable.</i> Свободно доступна:
+        <a href="https://christophm.github.io/interpretable-ml-book/">christophm.github.io/interpretable-ml-book</a>.
+        Сквозной справочник по большинству методов книги.</td>
+        <td>гл. 1–7</td></tr>
+
+    <tr><td><b>Covert, I., Lundberg, S., Lee, S.-I.</b> (2021). Explaining by Removing:
+        A Unified Framework for Model Explanation. <i>JMLR</i> 22(209).
+        <a href="https://arxiv.org/abs/2011.14878">arXiv:2011.14878</a>.
+        Рамка «удаления признака» по трём осям, в которую укладываются PFI, LIME, SHAP и RISE.</td>
+        <td>гл. 5, 7</td></tr>
+
+    <tr><td><b>Doshi-Velez, F., Kim, B.</b> (2017). Towards A Rigorous Science of Interpretable
+        Machine Learning. <a href="https://arxiv.org/abs/1702.08608">arXiv:1702.08608</a>.
+        Таксономия оценки объяснений: три уровня и понятие неполноты.</td>
+        <td>гл. 11</td></tr>
+
+    <tr><td><b>Poeta, E., Ciravegna, G., Pastor, E., Cerquitelli, T., Baralis, E.</b> (2023).
+        Concept-based Explainable Artificial Intelligence: A Survey.
+        <a href="https://arxiv.org/abs/2312.12936">arXiv:2312.12936</a>.
+        Обзор и таксономия концепт-ориентированных методов.</td>
+        <td>гл. 9</td></tr>
+  </table>
+</section>
+
+<section class="step" id="papers">
+  <h2>2. Статьи</h2>
+
+  <table class="plain" data-label="Статьи">
+    <tr><th>Работа</th><th>Где</th></tr>
+
+    <tr><td><b>Adebayo, J., Gilmer, J., Muelly, M., Goodfellow, I., Hardt, M., Kim, B.</b> (2018).
+        Sanity Checks for Saliency Maps. <i>NeurIPS</i>.
+        <a href="https://arxiv.org/abs/1810.03292">arXiv:1810.03292</a>.</td>
+        <td>гл. 8, 11</td></tr>
+
+    <tr><td><b>Apley, D. W., Zhu, J.</b> (2020). Visualizing the Effects of Predictor Variables
+        in Black Box Supervised Learning Models. <i>Journal of the Royal Statistical Society: Series B</i>
+        82(4), 1059–1086. <a href="https://arxiv.org/abs/1612.08468">arXiv:1612.08468</a>.
+        Первоисточник ALE.</td>
+        <td>гл. 4</td></tr>
+
+    <tr><td><b>Bach, S., Binder, A., Montavon, G., Klauschen, F., Müller, K.-R., Samek, W.</b> (2015).
+        On Pixel-Wise Explanations for Non-Linear Classifier Decisions by Layer-Wise Relevance
+        Propagation. <i>PLoS ONE</i> 10(7): e0130140.</td>
+        <td>гл. 8</td></tr>
+
+    <tr><td><b>Bau, D., Zhou, B., Khosla, A., Oliva, A., Torralba, A.</b> (2017).
+        Network Dissection: Quantifying Interpretability of Deep Visual Representations.
+        <i>CVPR</i>. <a href="https://arxiv.org/abs/1704.05796">arXiv:1704.05796</a>.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Beery, S., Van Horn, G., Perona, P.</b> (2018). Recognition in Terra Incognita.
+        <i>ECCV</i>. <a href="https://arxiv.org/abs/1807.04975">arXiv:1807.04975</a>.
+        Источник хрестоматийного примера про фон вместо объекта.</td>
+        <td>гл. 8</td></tr>
+
+    <tr><td><b>Bills, S., Cammarata, N., Mossing, D., Tillman, H., Gao, L., Goh, G.,
+        Sutskever, I., Leike, J., Wu, J., Saunders, W.</b> (2023).
+        Language models can explain neurons in language models. OpenAI.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Breiman, L.</b> (2001). Random Forests. <i>Machine Learning</i> 45(1), 5–32.</td>
+        <td>гл. 3, 5</td></tr>
+
+    <tr><td><b>Breiman, L.</b> (2001). Statistical Modeling: The Two Cultures.
+        <i>Statistical Science</i> 16(3), 199–231. Программная статья о двух культурах
+        моделирования, к которой книга возвращается несколько раз.</td>
+        <td>гл. 1, 3</td></tr>
+
+    <tr><td><b>Cunningham, H., Ewart, A., Riggs, L., Huben, R., Sharkey, L.</b> (2023).
+        Sparse Autoencoders Find Highly Interpretable Features in Language Models.
+        <a href="https://arxiv.org/abs/2309.08600">arXiv:2309.08600</a>.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Fisher, A., Rudin, C., Dominici, F.</b> (2019). All Models are Wrong, but Many
+        are Useful: Learning a Variable's Importance by Studying an Entire Class of Prediction
+        Models Simultaneously. <i>JMLR</i> 20(177).
+        <a href="https://arxiv.org/abs/1801.01489">arXiv:1801.01489</a>.
+        Model Class Reliance.</td>
+        <td>гл. 5</td></tr>
+
+    <tr><td><b>Friedman, J. H.</b> (2001). Greedy Function Approximation: A Gradient Boosting
+        Machine. <i>Annals of Statistics</i> 29(5), 1189–1232. Здесь вводится partial dependence.</td>
+        <td>гл. 3, 4</td></tr>
+
+    <tr><td><b>Ghorbani, A., Zou, J.</b> (2019). Data Shapley: Equitable Valuation of Data for
+        Machine Learning. <i>ICML</i>.
+        <a href="https://arxiv.org/abs/1904.02868">arXiv:1904.02868</a>.</td>
+        <td>гл. 10</td></tr>
+
+    <tr><td><b>Goldstein, A., Kapelner, A., Bleich, J., Pitkin, E.</b> (2015). Peeking Inside
+        the Black Box: Visualizing Statistical Learning with Plots of Individual Conditional
+        Expectation. <i>Journal of Computational and Graphical Statistics</i> 24(1), 44–65.
+        <a href="https://arxiv.org/abs/1309.6392">arXiv:1309.6392</a>. Первоисточник ICE.</td>
+        <td>гл. 4</td></tr>
+
+    <tr><td><b>Hooker, G.</b> (2004). Discovering additive structure in black box functions.
+        <i>KDD</i>.</td>
+        <td>гл. 4</td></tr>
+
+    <tr><td><b>Hooker, G.</b> (2007). Generalized Functional ANOVA Diagnostics for
+        High-Dimensional Functions of Dependent Variables. <i>Journal of Computational and
+        Graphical Statistics</i> 16(3), 709–732.</td>
+        <td>гл. 4</td></tr>
+
+    <tr><td><b>Hooker, G., Mentch, L., Zhou, S.</b> (2021). Unrestricted permutation forces
+        extrapolation: variable importance requires at least one more model, or there is no free
+        variable importance. <i>Statistics and Computing</i> 31(82).
+        <a href="https://arxiv.org/abs/1905.03151">arXiv:1905.03151</a>.</td>
+        <td>гл. 5</td></tr>
+
+    <tr><td><b>Kim, B., Khanna, R., Koyejo, O.</b> (2016). Examples are not Enough, Learn to
+        Criticize! Criticism for Interpretability. <i>NeurIPS</i>. MMD-critic: прототипы
+        и criticisms.</td>
+        <td>гл. 10</td></tr>
+
+    <tr><td><b>Kim, B., Wattenberg, M., Gilmer, J., Cai, C., Wexler, J., Viégas, F.,
+        Sayres, R.</b> (2018). Interpretability Beyond Feature Attribution: Quantitative Testing
+        with Concept Activation Vectors (TCAV). <i>ICML</i>.
+        <a href="https://arxiv.org/abs/1711.11279">arXiv:1711.11279</a>.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Koh, P. W., Liang, P.</b> (2017). Understanding Black-box Predictions via
+        Influence Functions. <i>ICML</i>.
+        <a href="https://arxiv.org/abs/1703.04730">arXiv:1703.04730</a>.</td>
+        <td>гл. 10</td></tr>
+
+    <tr><td><b>Koh, P. W., Nguyen, T., Tang, Y. S., Mussmann, S., Pierson, E., Kim, B.,
+        Liang, P.</b> (2020). Concept Bottleneck Models. <i>ICML</i>.
+        <a href="https://arxiv.org/abs/2007.04612">arXiv:2007.04612</a>.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Laugel, T., Lesot, M.-J., Marsala, C., Renard, X., Detyniecki, M.</b> (2019).
+        The Dangers of Post-hoc Interpretability: Unjustified Counterfactual Explanations.
+        <i>IJCAI</i>. <a href="https://arxiv.org/abs/1907.09294">arXiv:1907.09294</a>.</td>
+        <td>гл. 7</td></tr>
+
+    <tr><td><b>Lei, J., G'Sell, M., Rinaldo, A., Tibshirani, R. J., Wasserman, L.</b> (2018).
+        Distribution-Free Predictive Inference for Regression. <i>JASA</i> 113(523), 1094–1111.
+        <a href="https://arxiv.org/abs/1604.04173">arXiv:1604.04173</a>. Источник LOCO.</td>
+        <td>гл. 5</td></tr>
+
+    <tr><td><b>Lundberg, S. M., Lee, S.-I.</b> (2017). A Unified Approach to Interpreting Model
+        Predictions. <i>NeurIPS</i>.
+        <a href="https://arxiv.org/abs/1705.07874">arXiv:1705.07874</a>. SHAP и KernelSHAP.</td>
+        <td>гл. 6</td></tr>
+
+    <tr><td><b>Mentch, L., Hooker, G.</b> (2016). Quantifying Uncertainty in Random Forests via
+        Confidence Intervals and Hypothesis Tests. <i>JMLR</i> 17(26).
+        <a href="https://arxiv.org/abs/1404.6473">arXiv:1404.6473</a>.</td>
+        <td>гл. 5</td></tr>
+
+    <tr><td><b>Petsiuk, V., Das, A., Saenko, K.</b> (2018). RISE: Randomized Input Sampling for
+        Explanation of Black-box Models. <i>BMVC</i>.
+        <a href="https://arxiv.org/abs/1806.07421">arXiv:1806.07421</a>.</td>
+        <td>гл. 7</td></tr>
+
+    <tr><td><b>Ribeiro, M. T., Singh, S., Guestrin, C.</b> (2016). «Why Should I Trust You?»:
+        Explaining the Predictions of Any Classifier. <i>KDD</i>.
+        <a href="https://arxiv.org/abs/1602.04938">arXiv:1602.04938</a>. LIME и SP-LIME.</td>
+        <td>гл. 6, 7</td></tr>
+
+    <tr><td><b>Russakovsky, O., Deng, J., Su, H., et al.</b> (2015). ImageNet Large Scale Visual
+        Recognition Challenge. <i>International Journal of Computer Vision</i> 115(3), 211–252.
+        <a href="https://arxiv.org/abs/1409.0575">arXiv:1409.0575</a>.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Selvaraju, R. R., Cogswell, M., Das, A., Vedantam, R., Parikh, D., Batra, D.</b>
+        (2017). Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization.
+        <i>ICCV</i>. <a href="https://arxiv.org/abs/1610.02391">arXiv:1610.02391</a>.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Shapley, L. S.</b> (1953). A Value for n-Person Games. В сб.: <i>Contributions to
+        the Theory of Games II</i>, Princeton University Press, 307–317. Исходная
+        теоретико-игровая работа.</td>
+        <td>гл. 6</td></tr>
+
+    <tr><td><b>Simonyan, K., Vedaldi, A., Zisserman, A.</b> (2013). Deep Inside Convolutional
+        Networks: Visualising Image Classification Models and Saliency Maps.
+        <a href="https://arxiv.org/abs/1312.6034">arXiv:1312.6034</a>. Vanilla gradient.</td>
+        <td>гл. 8</td></tr>
+
+    <tr><td><b>Smilkov, D., Thorat, N., Kim, B., Viégas, F., Wattenberg, M.</b> (2017).
+        SmoothGrad: removing noise by adding noise.
+        <a href="https://arxiv.org/abs/1706.03825">arXiv:1706.03825</a>.</td>
+        <td>гл. 8</td></tr>
+
+    <tr><td><b>Springenberg, J. T., Dosovitskiy, A., Brox, T., Riedmiller, M.</b> (2014).
+        Striving for Simplicity: The All Convolutional Net.
+        <a href="https://arxiv.org/abs/1412.6806">arXiv:1412.6806</a>.
+        Guided backpropagation.</td>
+        <td>гл. 8</td></tr>
+
+    <tr><td><b>Strobl, C., Boulesteix, A.-L., Kneib, T., Augustin, T., Zeileis, A.</b> (2008).
+        Conditional variable importance for random forests. <i>BMC Bioinformatics</i> 9:307.</td>
+        <td>гл. 5</td></tr>
+
+    <tr><td><b>Sundararajan, M., Taly, A., Yan, Q.</b> (2017). Axiomatic Attribution for Deep
+        Networks. <i>ICML</i>. <a href="https://arxiv.org/abs/1703.01365">arXiv:1703.01365</a>.
+        Integrated Gradients.</td>
+        <td>гл. 8</td></tr>
+
+    <tr><td><b>Wachter, S., Mittelstadt, B., Russell, C.</b> (2017). Counterfactual Explanations
+        without Opening the Black Box: Automated Decisions and the GDPR. <i>Harvard Journal of
+        Law &amp; Technology</i> 31(2).
+        <a href="https://arxiv.org/abs/1711.00399">arXiv:1711.00399</a>.</td>
+        <td>гл. 7</td></tr>
+
+    <tr><td><b>Yeh, C.-K., Kim, B., Arik, S., Li, C.-L., Pfister, T., Ravikumar, P.</b> (2020).
+        On Completeness-aware Concept-Based Explanations in Deep Neural Networks. <i>NeurIPS</i>.
+        <a href="https://arxiv.org/abs/1910.07969">arXiv:1910.07969</a>. Completeness
+        и ConceptSHAP.</td>
+        <td>гл. 9</td></tr>
+
+    <tr><td><b>Zhou, B., Khosla, A., Lapedriza, A., Oliva, A., Torralba, A.</b> (2016).
+        Learning Deep Features for Discriminative Localization. <i>CVPR</i>.
+        <a href="https://arxiv.org/abs/1512.04150">arXiv:1512.04150</a>. CAM.</td>
+        <td>гл. 9</td></tr>
+  </table>
+</section>
+
+<section class="step" id="pending">
+  <h2>3. Упомянуто в тексте, требует сверки</h2>
+
+  <p>Две работы упоминаются в книге вскользь — как иллюстрация, а не как разбираемый источник, —
+  и их выходные данные ещё не выверены. Они перечислены здесь отдельно, чтобы список выше
+  содержал только проверенные записи.</p>
+
+  <table class="plain" data-label="Требует сверки">
+    <tr><th>Упоминание в тексте</th><th>Где</th><th>Что нужно уточнить</th></tr>
+    <tr><td><b>Deng et al.</b> (2021), local elasticity — в связи с influence functions</td>
+        <td>гл. 10</td>
+        <td>Точное название и место публикации.</td></tr>
+    <tr><td><b>Jaxa-Rozen &amp; Trutnevyte</b> (2021), <i>Nature Climate Change</i> — пример
+        прикладного вывода по SHAP-значениям</td>
+        <td>гл. 6</td>
+        <td>Точное название статьи, том и DOI.</td></tr>
+  </table>
+</section>
+
+<footer class="book-footer">
+  Статистические перспективы интерпретируемости машинного обучения · курс 52939
+</footer>
+
+</body>
+</html>
