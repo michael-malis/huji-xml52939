@@ -3,128 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 10 · Объяснения на основе концептов</title>
+<title>Глава 9 · Концепты: CAM, TCAV, CBM, SAE — Интерпретируемость ML</title>
+<meta name="description" content="Почему пиксель — неправильная единица объяснения. CAM и Grad-CAM, Network Dissection, TCAV, completeness, concept bottleneck models.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;
-    --calc:#C0392B;
-    --source:#5B6472;
-    --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    width:66.67%;
-    margin:0 auto;
-    padding:40px 0 100px;
-  }
-  @media (max-width:900px){
-    body{width:auto; max-width:760px; padding:40px 20px 100px;}
-  }
-  h1{
-    font-family:Georgia,"Iowan Old Style","Charter",serif;
-    font-size:1.7em;
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block;
-    font-size:0.78em;
-    padding:2px 9px;
-    border-radius:3px;
-    margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-
-  nav.toc{
-    background:var(--paper);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:14px 18px;
-    margin-bottom:36px;
-    font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-size:1.03em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em;
-    color:var(--source);
-    margin-bottom:14px;
-  }
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="09">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Концепты: CAM · Network Dissection · TCAV · Completeness · CBM · SAE</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 12 · тема 10</div>
 <div class="badges">
@@ -868,12 +761,14 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-function randn(){const u=1-Math.random(), v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(900000);
+function randn(){ return XAI.randn(rand); }
 
 /* ---- Рис.1 таксономия 2×2 (SVG) ---- */
+rand = XAI.rng(900001);
 {
   const cells=[
     {r:0,c:0,items:['— (квадрант почти пуст:','нужна разметка и обучение)'],col:'#9AA0A6'},
@@ -897,16 +792,14 @@ function randn(){const u=1-Math.random(), v=Math.random();
   });
   document.getElementById('svg-tax').innerHTML = `
   <svg viewBox="0 0 640 274" width="100%" style="max-width:640px;display:block;margin:0 auto;">
-    <style>
-      .hd{font:600 12.5px Georgia,serif;fill:#2F6F6D;}
-      .ax{font:italic 11.5px Georgia,serif;fill:#5B6472;}
-      .it{font:12px ui-monospace,Menlo,Consolas,monospace;}
+    <style>#svg-tax .hd{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-tax .ax{font:italic 11.5px Georgia,serif;fill:#5B6472;}#svg-tax .it{font:12px ui-monospace,Menlo,Consolas,monospace;}
     </style>
     ${out}
   </svg>`;
 }
 
 /* ---- Рис.2 CAM (SVG) ---- */
+rand = XAI.rng(900002);
 {
   const maps=[
     {w:'w₁ = 1.8', c:'#2F6F6D', hot:[[1,1],[1,2],[2,1]]},
@@ -942,22 +835,18 @@ function randn(){const u=1-Math.random(), v=Math.random();
   out += `<text class="lb" x="${ox}" y="${y0+4*g+20}">взвешенная сумма → апсемплинг</text>`;
   document.getElementById('svg-cam').innerHTML = `
   <svg viewBox="0 0 640 176" width="100%" style="max-width:640px;display:block;margin:0 auto;">
-    <style>
-      .lb{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .op{font:600 20px Georgia,serif;fill:#5B6472;}
+    <style>#svg-cam .lb{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-cam .op{font:600 20px Georgia,serif;fill:#5B6472;}
     </style>
     ${out}
   </svg>`;
 }
 
 /* ---- Рис.3 конвейер Network Dissection (SVG) ---- */
+rand = XAI.rng(900003);
 {
   document.getElementById('svg-nd').innerHTML = `
   <svg viewBox="0 0 660 210" width="100%" style="max-width:660px;display:block;margin:0 auto;">
-    <style>
-      .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .ts{font:10.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
-      .ar{stroke:#B9C7C4;stroke-width:1.8;fill:none;marker-end:url(#ah2);}
+    <style>#svg-nd .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-nd .ts{font:10.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-nd .ar{stroke:#B9C7C4;stroke-width:1.8;fill:none;marker-end:url(#ah2);}
     </style>
     <defs><marker id="ah2" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
       <path d="M0,0 L7,3.2 L0,6.4 z" fill="#B9C7C4"/></marker></defs>
@@ -1003,6 +892,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.4 IoU наглядно (SVG) ---- */
+rand = XAI.rng(900004);
 {
   const g=26, x0=40, y0=44;
   /* M_k: 12 клеток; L_c: 15 клеток; пересечение 9 */
@@ -1030,15 +920,14 @@ function randn(){const u=1-Math.random(), v=Math.random();
     <text class="t2" x="234" y="176" fill="#2F6F6D">IoU = 9 / 18 = 0.5  &gt;  0.04  →  детектор</text>`;
   document.getElementById('svg-iou').innerHTML = `
   <svg viewBox="0 0 660 210" width="100%" style="max-width:660px;display:block;margin:0 auto;">
-    <style>
-      .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .t2{font:600 12.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
+    <style>#svg-iou .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-iou .t2{font:600 12.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
     </style>
     ${out}
   </svg>`;
 }
 
 /* ---- Рис.5 TCAV ---- */
+rand = XAI.rng(900005);
 {
   const cx=[],cy=[],rx=[],ry=[];
   for(let i=0;i<90;i++){cx.push(1.35+randn()*0.62); cy.push(1.05+randn()*0.62);}
@@ -1088,6 +977,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.6 completeness ---- */
+rand = XAI.rng(900006);
 {
   const ms=[]; for(let m=1;m<=14;m++) ms.push(m);
   const good = ms.map(m=>Math.min(0.98, 1-Math.exp(-m/2.6)));
@@ -1110,6 +1000,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.7 CBM: точность vs intervenability ---- */
+rand = XAI.rng(900007);
 {
   const strat=['standard<br>(black-box)','independent','sequential','joint (λ мал.)'];
   const errNoInt=[0.198,0.242,0.230,0.191];
@@ -1142,6 +1033,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
       ],
       legend:{orientation:'h',y:-0.34,font:{size:10}}}, CFG);
 }
+})();
 </script>
 
 </body>

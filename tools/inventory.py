@@ -71,21 +71,37 @@ EXAM_TERMS = {
 }
 
 
+STYLE_BLOCK_RE = re.compile(r"<style>.*?</style>", re.S)
+SCRIPT_BLOCK_RE = re.compile(r"<script\b[^>]*>.*?</script>", re.S)
+
+
 def scan(path: Path) -> dict:
     text = path.read_text(encoding="utf-8")
     row = {"lines": text.count("\n") + 1, "bytes": len(text.encode("utf-8"))}
     for key, pat in PATTERNS.items():
         row[key] = len(pat.findall(text))
-    # $$ delimiters come in pairs; report display blocks, not delimiters.
-    row["display_math"] = text.count("$$") // 2
-    row["exam_terms"] = {k: len(p.findall(text)) for k, p in EXAM_TERMS.items()}
+
+    # Prose metrics ignore CSS. Before Phase 1 the inlined stylesheets carried
+    # `content:"...не цитировать на экзамене."` and a `/* экзаменационная
+    # ловушка */` comment, and the inlined MathJax config carried a literal
+    # '$$','$$' — all of which read as content when they are not.
+    prose = STYLE_BLOCK_RE.sub("", text)
+
+    # Display math is never written inside a <script>. The pre-Phase-1 pages
+    # inlined `displayMath: [['$$','$$']]` into every head, which the naive
+    # count read as one display block per page.
+    row["display_math"] = SCRIPT_BLOCK_RE.sub("", prose).count("$$") // 2
+
+    # Exam vocabulary is still counted inside scripts: SVG figures are built
+    # from template literals whose text labels are real prose.
+    row["exam_terms"] = {k: len(p.findall(prose)) for k, p in EXAM_TERMS.items()}
     return row
 
 
-def collect() -> dict:
-    pages = sorted(p for p in ROOT.glob("*.html"))
+def collect(root: Path = ROOT) -> dict:
+    pages = sorted(p for p in root.glob("*.html"))
     if not pages:
-        sys.exit(f"no .html files found in {ROOT}")
+        sys.exit(f"no .html files found in {root}")
     return {p.name: scan(p) for p in pages}
 
 
@@ -170,9 +186,15 @@ def main() -> int:
     ap.add_argument("--save", metavar="PATH", help="write inventory as JSON")
     ap.add_argument("--compare", metavar="PATH", help="diff against a saved baseline")
     ap.add_argument("--json", action="store_true", help="emit JSON to stdout")
+    ap.add_argument(
+        "--root",
+        metavar="DIR",
+        help="scan this directory instead of the repo root "
+        "(used to re-derive the baseline from a pristine checkout)",
+    )
     args = ap.parse_args()
 
-    inv = collect()
+    inv = collect(Path(args.root) if args.root else ROOT)
 
     if args.save:
         out = Path(args.save)

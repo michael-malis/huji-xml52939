@@ -3,111 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 1 · Модель, зачем её объясняют, эффекты в линейной модели</title>
+<title>Глава 1 · Линейная модель как точка отсчёта — Интерпретируемость ML</title>
+<meta name="description" content="Что такое модель, зачем её объясняют и что значит «эффект признака». Интерпретация весов линейной модели, weight plot и effect plot.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;
-    --calc:#C0392B;
-    --safe:#2F6F6D;
-    --source:#5B6472;
-    --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px; line-height:1.65;
-    width:66.67%; margin:0 auto; padding:40px 0 100px;
-  }
-  @media (max-width:900px){ body{width:auto; max-width:760px; padding:40px 20px 100px;} }
-  h1{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.7em; font-weight:600; margin:0 0 6px;}
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block; font-size:0.78em; padding:2px 9px; border-radius:3px; margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-  .badge.safe{background:var(--safe);color:#fff;}
-
-  nav.toc{
-    background:var(--paper); border:1px solid var(--rule); border-radius:4px;
-    padding:14px 18px; margin-bottom:36px; font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.06em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em; color:var(--source); margin-bottom:14px;
-  }
-  .src a{color:var(--accent);}
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-  a{color:var(--accent);}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="01">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Модель, объяснение, эффект: линейная модель как точка отсчёта</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 1 · тема 1</div>
 <div class="badges">
@@ -215,15 +125,15 @@
       и <i>сбор данных</i>;<br>
       (в) <b>выявить bias</b> и использование защищённых признаков (protected information),
       особенно в решениях с высокой ценой ошибки</td>
-      <td>sanity checks (<a href="topic-08.html">тема 8</a>),
-      COMPAS у Fisher (<a href="topic-05.html">тема 5</a>),
-      оценка методов (<a href="topic-11.html">тема 11</a>)</td>
+      <td>sanity checks (<a href="08-saliency-maps.html">тема 8</a>),
+      COMPAS у Fisher (<a href="05-feature-importance.html">тема 5</a>),
+      оценка методов (<a href="11-evaluation.html">тема 11</a>)</td>
     </tr>
     <tr>
       <td><b>3</b></td><td><b>Понять и контролировать отдельное решение</b></td>
       <td>counterfactual-примеры показывают, как изменить решение <b>минимальным</b> изменением входа</td>
-      <td>counterfactuals (<a href="topic-07.html">тема 7</a>,
-      <a href="topic-09.html">тема 9</a>)</td>
+      <td>counterfactuals (<a href="07-local-surrogates.html">тема 7</a>,
+      <a href="10-example-based.html">тема 9</a>)</td>
     </tr>
   </table>
 
@@ -231,7 +141,7 @@
   почти никогда. Зато это <b>первое предложение хорошего ответа</b> на любой вопрос вида
   «зачем нужен метод X»: сначала назвать, к какой из трёх целей метод относится
   (аудит модели? контроль отдельного решения?), потом описывать механику. Обратная сторона —
-  в <a href="topic-11.html">теме 11</a>: Doshi-Velez отдельно разбирает,
+  в <a href="11-evaluation.html">теме 11</a>: Doshi-Velez отдельно разбирает,
   <b>когда объяснения НЕ нужны</b>.</div>
 </section>
 
@@ -239,7 +149,7 @@
 <section class="step" id="taxonomy">
   <h2>3. Таксономия объяснений: пять осей</h2>
   <div class="src">src: слайды л. 1 (сл. 9), повторено в л. 13 (сл. 14) — полный разбор с полюсами и примерами:
-  <a href="topic-04.html#taxonomy">тема 4, §«Таксономия объяснений»</a></div>
+  <a href="04-pd-mplot-ale-fanova.html#taxonomy">тема 4, §«Таксономия объяснений»</a></div>
 
   <p><b>Таксономия разобрана подробно в теме 4</b> (там же — что означают полюса каждой оси и куда
   попадают методы лекций 2–4). Здесь — только сама пятёрка в том виде, в каком она дана на слайде
@@ -273,7 +183,7 @@
   </table>
 
   <p>Дополнительная ось, которая появится в л. 12 для концептов: <b>at-training vs post-hoc</b> ×
-  <b>supervised vs unsupervised</b> (<a href="topic-10.html">тема 10</a>).</p>
+  <b>supervised vs unsupervised</b> (<a href="09-concept-explanations.html">тема 10</a>).</p>
 </section>
 
 <!-- ============ ЛИНЕЙНАЯ МОДЕЛЬ ============ -->
@@ -285,8 +195,8 @@
 
   <p><b>Что означает вес.</b> $\beta_j$ — изменение предсказания при изменении $x_j$ на единицу,
   <b>при фиксированных остальных признаках</b>. Эта оговорка «при фиксированных остальных» —
-  и есть <i>ceteris paribus</i>; в <a href="topic-02.html">теме 2</a> из неё
-  вырастет целый график, а в <a href="topic-04.html#pd-problem">теме 4</a>
+  и есть <i>ceteris paribus</i>; в <a href="02-glm-gam-interactions.html">теме 2</a> из неё
+  вырастет целый график, а в <a href="04-pd-mplot-ale-fanova.html#pd-problem">теме 4</a>
   выяснится, что «зафиксировать остальные» не всегда физически возможно.</p>
 
   <p><b>Как обучается.</b> Классический метод — обычный МНК (ordinary least squares):</p>
@@ -412,7 +322,7 @@
   это одно и то же</b>, поэтому вопрос «стандартизованы ли признаки» здесь не придирка, а суть.
   (2) Effect plot <b>вообще не смотрит на $y$</b>: он строится только из модели и распределения $X$.
   Это роднит его с <b>PD Importance</b>, а не с PFI, который считается по <i>ошибке</i> и потому
-  требует меток (<a href="topic-05.html">тема 5</a>).
+  требует меток (<a href="05-feature-importance.html">тема 5</a>).
   (3) Оборотная сторона: effect plot — <b>white-box</b> метод, он существует только потому,
   что модель линейна и её параметры доступны.</div>
 
@@ -422,7 +332,7 @@
   а у <code class="f">holiday</code> одна. Мера, которая суммирует по уровням, автоматически
   награждает признаки с большим числом уровней. <b>Это ровно тот же дефект, что у Gini FI</b>
   (смещение к признакам с многими возможными разбиениями) — см.
-  <a href="topic-03.html">тему 3</a>.
+  <a href="03-trees-ensembles-gini.html">тему 3</a>.
   <div class="src" style="margin:8px 0 0;">src: ex1/Ex1.ipynb, Q3г — таблица ranking (mnth 3421 · windspeed 2944 · season 2718 · … · hum 218)</div></div>
 </section>
 
@@ -446,15 +356,15 @@
     То есть SHAP для линейной модели — это <b>тот же effect $\beta_jx_j$, только отсчитанный
     от среднего значения признака, а не от нуля</b>. Именно центрирование даёт нужное свойство:
     $\sum_j\phi_j(x)=\hat f(x)-\mathbb{E}[\hat f(X)]$ (аксиома efficiency / local accuracy).
-    Разбор — <a href="topic-06.html">тема 6</a>.
+    Разбор — <a href="06-shapley-shap.html">тема 6</a>.
   </div>
 
   <div class="trap"><b>Почему «от нуля» — плохая база.</b> Если у признака нет осмысленного нуля
   (температура в °C, год), эффект $\beta_jx_j$ можно сдвинуть на любую константу, перенеся её
   в свободный член. Абсолютное значение эффекта тогда ничего не значит — значим только <b>разброс</b>.
   Отсюда и практика центрировать кривые эффекта, которая дальше встретится трижды:
-  centered ICE (<a href="topic-02.html">тема 2</a>), центрирование ALE
-  и центрирование компонент fANOVA (<a href="topic-04.html">тема 4</a>).</div>
+  centered ICE (<a href="02-glm-gam-interactions.html">тема 2</a>), центрирование ALE
+  и центрирование компонент fANOVA (<a href="04-pd-mplot-ale-fanova.html">тема 4</a>).</div>
 </section>
 
 <!-- ============ GLM ============ -->
@@ -474,7 +384,7 @@
   <p><b>Цена для интерпретации</b> — та, что разбирается в следующей теме: коэффициент теперь
   аддитивен <i>на шкале $g$</i>, а не на шкале $Y$. Для логистической модели это означает, что
   $\beta_j$ складывается в логите и <b>умножается</b> в odds. Полный разбор с числами —
-  <a href="topic-02.html#logistic">тема 2, §2–3</a>.</p>
+  <a href="02-glm-gam-interactions.html#logistic">тема 2, §2–3</a>.</p>
 
   <p><b>Часть 1 курса целиком</b> (слайд 13) — «inherently interpretable models»: линейная модель →
   логистическая регрессия → GAM → правиловые модели → деревья. То есть лекции 1–3 это один блок:
@@ -486,7 +396,7 @@
 <section class="step" id="breiman">
   <h2>9. Breiman, «Two Cultures» — три тезиса</h2>
   <div class="src">src: study_plan.md, тема 1 («3 тезиса, не больше»); слайд л. 1 (сл. 11) — статья задана как чтение к следующей лекции.
-  <b>Полный разбор с таблицей культур и Rashomon-эффектом — <a href="topic-03.html#breiman">тема 3</a></b></div>
+  <b>Полный разбор с таблицей культур и Rashomon-эффектом — <a href="03-trees-ensembles-gini.html#breiman">тема 3</a></b></div>
 
   <p>Статья задана на лекции 1 («For next week: Statistical Modeling: The Two Cultures, Breiman 2001»),
   а обсуждалась в классе на лекции 2 и относится к блоку деревьев. Поэтому здесь — только
@@ -550,18 +460,21 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(100000);
+function randn(){ return XAI.randn(rand); }
 /* ---- Рис.1: weight plot vs effect plot ---- */
+rand = XAI.rng(100001);
 {
   // temp ~ N(15,8) усечённая, holiday ~ Bernoulli(0.04)
-  function randn(){const u=1-Math.random(), v=Math.random();
+  function randn(){const u=1-rand(), v=rand();
     return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
   const n=400, temp=[], hol=[];
   for(let i=0;i<n;i++){
     temp.push(15+8*randn());
-    hol.push(Math.random()<0.04?1:0);
+    hol.push(rand()<0.04?1:0);
   }
   const effTemp = temp.map(v=>2*v);
   const effHol  = hol.map(v=>50*v);
@@ -592,6 +505,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
     yaxis2:{title:'effect_j = β_j·x_j', ...AXIS}
   }, CFG);
 }
+})();
 </script>
 
 </body>

@@ -1,0 +1,647 @@
+/* ==========================================================================
+   Статистические перспективы интерпретируемости машинного обучения
+   book.css — единственная таблица стилей книги.
+
+   Заменяет 13 инлайновых <style>-блоков, разошедшихся к моменту рефакторинга
+   на 6 несовместимых вариантов. Сводка расхождений, которые здесь закрыты:
+
+     * --safe / .badge.safe существовали только в темах 01–03, из-за чего
+       5 мест подделывали цвет через инлайновый style="background:…";
+     * .calcbox отсутствовал в теме 04, .src a и общий a{color} — в темах 04–12;
+     * h3 был засечным (Georgia) в темах 01–03 и рубленым 1.03em в темах 05–12;
+     * tr.best td и table.plain td.num жили каждый в одном файле.
+
+   Здесь взято объединение всех вариантов; расхождения разрешены в пользу
+   книжной типографики (засечные заголовки всех уровней).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Токены
+   Светлая палитра определяется на голом :root. Тёмная — только переопределение
+   тех же имён, поэтому ни один цвет не имеет единственного определения внутри
+   media-блока.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Поверхности и текст */
+  --bg:          #FAFAF7;
+  --paper:       #FFFFFF;
+  --ink:         #1E2430;
+  --ink-soft:    #5B6472;
+  --rule:        #E3E2DC;
+
+  /* Структурный акцент */
+  --accent:      #2F6F6D;
+  --accent-bg:   #EBF2F1;
+  --accent-rule: #CFE0DD;
+  --accent-th:   #DCEAE8;
+
+  /* Врезка «частая ошибка» (бывш. .trap) */
+  --pitfall:     #B5540B;
+  --pitfall-bg:  #FCF1E8;
+
+  /* Врезка «численный практикум» */
+  --practicum:      #8A5CB8;
+  --practicum-bg:   #F4EFF9;
+  --practicum-rule: #DFD2ED;
+
+  /* Служебное */
+  --source:      #5B6472;
+  --illustr:     #9AA0A6;
+  --th-bg:       #F2F1EC;
+
+  /* Наследие: бейджи. Сохранены как токены, но на страницах книги
+     употребляется только .badge.practicum. */
+  --core:        #8A5CB8;
+  --calc:        #C0392B;
+  --safe:        #2F6F6D;
+
+  /* Типографика */
+  --serif: Georgia, "Iowan Old Style", "Charter", "Times New Roman", serif;
+  --sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono:  ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Мера строки. Прежнее body{width:66.67%} давало на мониторе 1920px
+     строку ~1280px — около 160 знаков. */
+  --measure: 72ch;
+  --gutter:  1.5rem;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:          #14171C;
+    --paper:       #1B1F26;
+    --ink:         #E6E8EC;
+    --ink-soft:    #A2ABB8;
+    --rule:        #2E343E;
+
+    --accent:      #7FC6C2;
+    --accent-bg:   #1A2A29;
+    --accent-rule: #2C4442;
+    --accent-th:   #223634;
+
+    --pitfall:     #E8A46A;
+    --pitfall-bg:  #2A2119;
+
+    --practicum:      #B99BE0;
+    --practicum-bg:   #221C2B;
+    --practicum-rule: #3A2F49;
+
+    --source:      #A2ABB8;
+    --illustr:     #7C838D;
+    --th-bg:       #232830;
+
+    --core:        #B99BE0;
+    --calc:        #E08A7E;
+    --safe:        #7FC6C2;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg:          #14171C;
+  --paper:       #1B1F26;
+  --ink:         #E6E8EC;
+  --ink-soft:    #A2ABB8;
+  --rule:        #2E343E;
+
+  --accent:      #7FC6C2;
+  --accent-bg:   #1A2A29;
+  --accent-rule: #2C4442;
+  --accent-th:   #223634;
+
+  --pitfall:     #E8A46A;
+  --pitfall-bg:  #2A2119;
+
+  --practicum:      #B99BE0;
+  --practicum-bg:   #221C2B;
+  --practicum-rule: #3A2F49;
+
+  --source:      #A2ABB8;
+  --illustr:     #7C838D;
+  --th-bg:       #232830;
+
+  --core:        #B99BE0;
+  --calc:        #E08A7E;
+  --safe:        #7FC6C2;
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   2. Каркас страницы
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  /* 16.5px как раньше, но в rem — масштабирование браузера теперь работает. */
+  font-size: 103.125%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin: 0 auto;
+  padding: 2.5rem var(--gutter) 6rem;
+  max-width: min(var(--measure), 100%);
+  overflow-wrap: break-word;
+}
+
+/* Оглавление книги шире: это сетка частей, а не текст для чтения. */
+body.book-index { max-width: min(60rem, 100%); }
+
+/* --------------------------------------------------------------------------
+   3. Заголовки и текст
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+h1 { font-size: 1.7rem;  margin: 0 0 .375rem; }
+h2 { font-size: 1.28rem; margin: 0 0 .25rem; }
+h3 { font-size: 1.06rem; margin: 1.375rem 0 .25rem; }
+h4 { font-size: 1rem;    margin: 1.125rem 0 .25rem; }
+
+p { margin: 0 0 .9rem; }
+ul, ol { padding-left: 1.375rem; margin: 0 0 .9rem; }
+li { margin: .25rem 0; }
+
+.lead { font-size: 1.03rem; }
+
+a { color: var(--accent); }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+code, code.f, .mono { font-family: var(--mono); }
+code { font-size: .92em; }
+
+b, strong { font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   4. Шапка главы: хлебные крошки, метаданные, аннотация
+   -------------------------------------------------------------------------- */
+.breadcrumb {
+  font-size: .82rem;
+  color: var(--ink-soft);
+  margin: 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  align-items: baseline;
+}
+.breadcrumb a { color: var(--accent); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep { color: var(--illustr); }
+
+.meta {
+  color: var(--ink-soft);
+  font-size: .92rem;
+  margin-bottom: .5rem;
+}
+
+.chapter-abstract {
+  font-size: 1.03rem;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--rule);
+  padding-left: 1rem;
+  margin: 1rem 0 1.75rem;
+}
+
+.badges { margin-bottom: 1.75rem; }
+.badge {
+  display: inline-block;
+  font-size: .78rem;
+  padding: .125rem .5625rem;
+  border-radius: 3px;
+  margin: 0 .375rem .25rem 0;
+  font-family: var(--mono);
+  color: #fff;
+}
+.badge.core      { background: var(--core); }
+.badge.calc      { background: var(--calc); }
+.badge.safe      { background: var(--safe); }
+.badge.practicum { background: var(--practicum); }
+
+:root[data-theme="dark"] .badge,
+:root:not([data-theme="light"]) .badge { color: #14171C; }
+
+/* --------------------------------------------------------------------------
+   5. Навигация
+   -------------------------------------------------------------------------- */
+a.back-link {
+  display: inline-block;
+  font-size: .85rem;
+  color: var(--accent);
+  text-decoration: none;
+  margin-bottom: .875rem;
+}
+a.back-link:hover { text-decoration: underline; }
+
+nav.toc {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: .875rem 1.125rem;
+  margin-bottom: 2.25rem;
+  font-size: .92rem;
+}
+nav.toc a { color: var(--accent); text-decoration: none; }
+nav.toc a:hover { text-decoration: underline; }
+nav.toc ol { margin: .375rem 0 0; padding-left: 1.25rem; }
+
+/* Подсветка текущего раздела (scroll-spy из book.js). */
+nav.toc a[aria-current="true"] {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* На узких экранах оглавление главы сворачивается. */
+nav.toc > summary {
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+}
+nav.toc > summary::-webkit-details-marker { display: none; }
+nav.toc > summary::before {
+  content: "▸ ";
+  color: var(--accent);
+  display: inline-block;
+  transition: transform .15s ease;
+}
+nav.toc[open] > summary::before { content: "▾ "; }
+
+.chapter-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: stretch;
+  margin: 3rem 0 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-size: .9rem;
+}
+.chapter-nav a {
+  flex: 1 1 14rem;
+  min-height: 2.75rem;              /* цель для касания >= 44px */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .15rem;
+  padding: .625rem .875rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper);
+  color: inherit;
+  text-decoration: none;
+}
+.chapter-nav a:hover { border-color: var(--accent); }
+.chapter-nav .dir { font-size: .78rem; color: var(--ink-soft); }
+.chapter-nav .name { font-family: var(--serif); }
+.chapter-nav .next { text-align: right; }
+
+.to-top {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--accent);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease;
+}
+.to-top.visible { opacity: .95; visibility: visible; }
+
+.theme-toggle {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: .35rem .6rem;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink-soft);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* --------------------------------------------------------------------------
+   6. Разделы главы
+   -------------------------------------------------------------------------- */
+section.step,
+section.practicum,
+section.summary {
+  margin: 0 0 .5rem;
+  padding-top: 2.125rem;
+  border-top: 1px solid var(--rule);
+  scroll-margin-top: 1rem;
+}
+section.step:first-of-type { border-top: none; }
+
+/* Численный практикум — материал, переехавший из бывшей темы 12. */
+section.practicum {
+  border-top: 2px solid var(--practicum-rule);
+}
+section.practicum > h2::before {
+  content: "Практикум · ";
+  color: var(--practicum);
+  font-family: var(--sans);
+  font-size: .7em;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.src {
+  font-family: var(--mono);
+  font-size: .78rem;
+  color: var(--source);
+  margin-bottom: .875rem;
+}
+.src a { color: var(--accent); }
+.src.illustr { color: var(--illustr); font-style: italic; }
+
+/* --------------------------------------------------------------------------
+   7. Врезки
+   .trap — историческое имя, оставлено псевдонимом, пока фаза 3 не переименует
+   все 144 вхождения в .pitfall. После неё правило .trap можно удалить.
+   -------------------------------------------------------------------------- */
+.pitfall, .trap {
+  background: var(--pitfall-bg);
+  border-left: 3px solid var(--pitfall);
+  padding: .75rem 1rem;
+  margin: 1.125rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.pitfall > b:first-child, .trap > b:first-child,
+.pitfall b, .trap b { color: var(--pitfall); }
+.pitfall .src, .trap .src { margin-top: .5rem; }
+
+.calcbox {
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  padding: .75rem 1rem;
+  margin: 1.125rem 0;
+  border-radius: 0 4px 4px 0;
+}
+.calcbox b { color: var(--accent); }
+
+/* Внутри практикума расчётные шаги окрашены в цвет практикума. */
+section.practicum .calcbox {
+  background: var(--practicum-bg);
+  border-left-color: var(--practicum);
+}
+section.practicum .calcbox b { color: var(--practicum); }
+
+/* --------------------------------------------------------------------------
+   8. Таблицы
+   Прежнее правило делало @media(max-width:480px){table{display:block;
+   overflow-x:auto; white-space:nowrap}} — то есть отбирало у таблицы
+   табличную семантику и запрещало перенос в текстовых ячейках.
+   Теперь прокручивается обёртка, таблица остаётся таблицей.
+   -------------------------------------------------------------------------- */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.125rem 0;
+  border-radius: 4px;
+}
+.table-wrap:focus-visible { outline: 2px solid var(--accent); }
+.table-wrap > table { margin: 0; }
+
+table.plain, table.contrast {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.125rem 0;
+  font-size: .9rem;
+}
+table.plain { background: var(--paper); }
+table.contrast { background: var(--accent-bg); font-size: .93rem; }
+
+table.plain th, table.plain td {
+  border: 1px solid var(--rule);
+  padding: .4375rem .625rem;
+  text-align: left;
+  vertical-align: top;
+}
+table.plain th { background: var(--th-bg); font-weight: 600; }
+table.plain td.num {
+  text-align: right;
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+
+table.contrast th, table.contrast td {
+  border: 1px solid var(--accent-rule);
+  padding: .4375rem .625rem;
+  text-align: left;
+  vertical-align: top;
+}
+table.contrast th { background: var(--accent-th); }
+
+tr.best td { background: var(--accent-bg); font-weight: 600; }
+
+/* --------------------------------------------------------------------------
+   9. Иллюстрации
+   -------------------------------------------------------------------------- */
+.fig {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: .625rem .625rem .25rem;
+  margin: 1rem 0 .375rem;
+}
+.fig > div { max-width: 100%; }
+.fig img, .fig svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+.fig-cap {
+  font-size: .85rem;
+  color: var(--ink-soft);
+  font-style: italic;
+  margin: .375rem .125rem .875rem;
+}
+.fig-cap.illustr::before {
+  content: "Схематическая иллюстрация; числовые значения синтетические. ";
+  color: var(--illustr);
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* Карточка канонической иллюстрации из статьи (фаза 5b).
+   Книга публикует ссылку и описание, а не сам защищённый авторским правом
+   рисунок. Локально положенный файл, если он есть, подхватывается как <img>. */
+figure.canonical {
+  margin: 1.25rem 0;
+  padding: 1rem 1.125rem;
+  background: var(--paper);
+  border: 1px dashed var(--rule);
+  border-radius: 4px;
+}
+figure.canonical .what { font-weight: 600; margin-bottom: .35rem; }
+figure.canonical .cite {
+  font-size: .85rem;
+  color: var(--ink-soft);
+  font-style: normal;
+}
+figure.canonical .cite a { color: var(--accent); }
+figure.canonical figcaption { font-size: .85rem; color: var(--ink-soft); margin-top: .5rem; }
+
+/* --------------------------------------------------------------------------
+   10. Математика (MathJax 3)
+   -------------------------------------------------------------------------- */
+mjx-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+mjx-container:not([display="true"]) {
+  display: inline-block;
+  vertical-align: middle;
+}
+mjx-container[display="true"] { padding: .15rem 0; }
+
+/* --------------------------------------------------------------------------
+   11. Оглавление книги (index.html)
+   -------------------------------------------------------------------------- */
+.book-header { margin-bottom: 2.5rem; }
+.book-header .eyebrow {
+  font-size: .78rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: .5rem;
+}
+.book-header .subtitle {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 60ch;
+}
+.quick-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; font-size: .9rem; }
+
+.part { margin-bottom: 2.75rem; }
+.part-head { margin-bottom: 1rem; }
+.part-n {
+  font-size: .78rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 .2rem;
+}
+.part-head h2 { font-size: 1.35rem; margin: 0 0 .4rem; }
+.part-blurb { color: var(--ink-soft); max-width: 62ch; margin: 0; }
+
+.chapter-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .625rem; }
+.chapter-list > li { margin: 0; }
+.chapter-list a {
+  display: block;
+  padding: .875rem 1.125rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+.chapter-list a:hover { border-color: var(--accent); }
+.ch-n {
+  display: block;
+  font-size: .74rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.ch-title { display: block; font-family: var(--serif); font-size: 1.08rem; margin: .25rem 0 .4rem; }
+.ch-meta { display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
+.ch-topics { font-size: .84rem; color: var(--ink-soft); }
+.ch-practicum {
+  font-size: .72rem;
+  font-family: var(--mono);
+  padding: .1rem .45rem;
+  border-radius: 3px;
+  background: var(--practicum-bg);
+  color: var(--practicum);
+  border: 1px solid var(--practicum-rule);
+  white-space: nowrap;
+}
+
+.book-footer {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-size: .8rem;
+  color: var(--ink-soft);
+}
+
+/* --------------------------------------------------------------------------
+   12. Адаптивность
+   Ширина тела задана через max-width + min(), поэтому отдельная точка
+   останова под неё не нужна: на узких экранах остаются только те правила,
+   которые действительно меняют раскладку.
+   -------------------------------------------------------------------------- */
+@media (min-width: 45rem) {
+  body { padding-left: 2rem; padding-right: 2rem; }
+}
+
+@media (min-width: 68rem) {
+  .book-index .chapter-list { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 34rem) {
+  :root { --gutter: 1rem; }
+  html { font-size: 100%; }
+  h1 { font-size: 1.45rem; }
+  h2 { font-size: 1.18rem; }
+  .chapter-nav a { flex-basis: 100%; }
+  .chapter-nav .next { text-align: left; }
+  .theme-toggle { top: auto; bottom: 1rem; right: 4.25rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   13. Печать
+   -------------------------------------------------------------------------- */
+@media print {
+  :root {
+    --bg: #fff; --paper: #fff; --ink: #000; --ink-soft: #333;
+    --rule: #bbb; --accent: #000; --accent-bg: #f4f4f4; --th-bg: #eee;
+  }
+  body { max-width: none; padding: 0; font-size: 10.5pt; }
+  .to-top, .theme-toggle, .chapter-nav, a.back-link, .quick-links { display: none !important; }
+  nav.toc { break-inside: avoid; }
+  section.step, section.practicum, section.summary { break-inside: auto; }
+  h1, h2, h3 { break-after: avoid; }
+  .fig, .calcbox, .pitfall, .trap, figure.canonical, .table-wrap { break-inside: avoid; }
+  /* Ссылки в печати бесполезны как ссылки — раскрываем адрес. */
+  main a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; color: #555; }
+}

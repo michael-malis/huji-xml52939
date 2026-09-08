@@ -3,128 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 12 · Сквозной прогон счётных задач</title>
+<title>Численные практикумы (переходная страница) — Интерпретируемость ML</title>
+<meta name="description" content="Переходная страница: десять численных разборов, которые в фазе 3 переезжают в соответствующие главы книги.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;
-    --calc:#C0392B;
-    --source:#5B6472;
-    --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    width:66.67%;
-    margin:0 auto;
-    padding:40px 0 100px;
-  }
-  @media (max-width:900px){
-    body{width:auto; max-width:760px; padding:40px 20px 100px;}
-  }
-  h1{
-    font-family:Georgia,"Iowan Old Style","Charter",serif;
-    font-size:1.7em;
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block;
-    font-size:0.78em;
-    padding:2px 9px;
-    border-radius:3px;
-    margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-
-  nav.toc{
-    background:var(--paper);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:14px 18px;
-    margin-bottom:36px;
-    font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-size:1.03em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em;
-    color:var(--source);
-    margin-bottom:14px;
-  }
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Сквозной прогон счётных задач: только арифметика</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · финальный блок · тема 12</div>
 <div class="badges">
@@ -161,25 +54,25 @@
   <table class="plain">
     <tr><th>Задача</th><th>Тема</th><th>Где полный разбор с выводом</th></tr>
     <tr><td>1 · Gini impurity split</td><td>3 (Л. 3)</td>
-        <td><a href="topic-03.html">тема 3</a>, §5</td></tr>
+        <td><a href="03-trees-ensembles-gini.html">тема 3</a>, §5</td></tr>
     <tr><td>2 · Gini FI по дереву</td><td>3 (Л. 3)</td>
-        <td><a href="topic-03.html">тема 3</a>, §6</td></tr>
+        <td><a href="03-trees-ensembles-gini.html">тема 3</a>, §6</td></tr>
     <tr><td>3 · ALE по $K$ бинам</td><td>4 (Л. 4)</td>
-        <td><a href="topic-04.html">тема 4</a></td></tr>
+        <td><a href="04-pd-mplot-ale-fanova.html">тема 4</a></td></tr>
     <tr><td>4 · ANOVA decomposition</td><td>4 (Л. 4)</td>
         <td><b>здесь</b> — единственный пункт темы 4, вынесенный в этот блок</td></tr>
     <tr><td>5 · Точный PFI по 6 перестановкам</td><td>5 (Л. 5+6a)</td>
-        <td><a href="topic-05.html">тема 5</a>, §3</td></tr>
+        <td><a href="05-feature-importance.html">тема 5</a>, §3</td></tr>
     <tr><td>6 · Minipatch LOCO</td><td>5 (Л. 5+6a)</td>
-        <td><a href="topic-05.html">тема 5</a>, §6</td></tr>
+        <td><a href="05-feature-importance.html">тема 5</a>, §6</td></tr>
     <tr><td>7 · Shapley через 6 порядков</td><td>6 (Л. 6b+7)</td>
-        <td><a href="topic-06.html">тема 6</a>, §4–5</td></tr>
+        <td><a href="06-shapley-shap.html">тема 6</a>, §4–5</td></tr>
     <tr><td>8 · Веса KernelSHAP</td><td>6 (Л. 6b+7)</td>
-        <td><a href="topic-06.html">тема 6</a>, §7</td></tr>
+        <td><a href="06-shapley-shap.html">тема 6</a>, §7</td></tr>
     <tr><td>9 · Чтение waterfall</td><td>6 (Л. 6b+7)</td>
-        <td><a href="topic-06.html">тема 6</a>, §10</td></tr>
+        <td><a href="06-shapley-shap.html">тема 6</a>, §10</td></tr>
     <tr><td>10 · График удаления примеров</td><td>9 (Л. 10–11)</td>
-        <td><a href="topic-09.html">тема 9</a>, §10(г)</td></tr>
+        <td><a href="10-example-based.html">тема 9</a>, §10(г)</td></tr>
   </table>
 
   <div class="trap"><b>Почему эти задачи в высшем тире 🔴.</b> Gini FI, ANOVA decomposition
@@ -192,7 +85,7 @@
 <!-- ============ 1 GINI SPLIT ============ -->
 <section class="step" id="t1">
   <h2>Задача 1 · 🔴 Gini impurity и выбор сплита</h2>
-  <div class="src">src: master_conspect.md, л. 3 — «Gini impurity и Gini feature importance»; ДЗ 2. Полный разбор с выводом и построением дерева по реальным данным ДЗ 2 — <a href="topic-03.html#calc1">тема 3, §5</a></div>
+  <div class="src">src: master_conspect.md, л. 3 — «Gini impurity и Gini feature importance»; ДЗ 2. Полный разбор с выводом и построением дерева по реальным данным ДЗ 2 — <a href="03-trees-ensembles-gini.html#calc1">тема 3, §5</a></div>
 
   <p><b>Формулы — три штуки, больше ничего не нужно:</b></p>
   $$\text{Gini}(m)=1-\sum_{k=1}^{K}p_{mk}^2,\qquad
@@ -251,7 +144,7 @@
 <!-- ============ 2 GINI FI ============ -->
 <section class="step" id="t2">
   <h2>Задача 2 · 🔴 Gini feature importance по дереву</h2>
-  <div class="src">src: master_conspect.md, л. 3 и ДЗ 2 — «MDI (Mean Decrease Impurity) — пошагово». Полный разбор, реальные числа RF из ДЗ 2 и сравнение с PFI — <a href="topic-03.html#calc2">тема 3, §6 и §9</a></div>
+  <div class="src">src: master_conspect.md, л. 3 и ДЗ 2 — «MDI (Mean Decrease Impurity) — пошагово». Полный разбор, реальные числа RF из ДЗ 2 и сравнение с PFI — <a href="03-trees-ensembles-gini.html#calc2">тема 3, §6 и §9</a></div>
 
   $$\text{Imp}(m)=\frac{n_m}{n_{\text{total}}}\cdot\Delta\text{Gini}(m),
     \qquad \text{FI}_j=\sum_{m:\ \text{сплит по }x_j}\text{Imp}(m)$$
@@ -320,13 +213,13 @@
   <b>на данных с меткой</b> и может считаться на test.
   <b>«При повторном запуске получим ли то же самое?»</b> — <b>нет</b>: случайность RF (бутстрэп,
   подвыборка признаков) плюс случайность перестановки в PFI. Это же — источник нестабильности
-  из <a href="topic-11.html">темы 11</a>.</div>
+  из <a href="11-evaluation.html">темы 11</a>.</div>
 </section>
 
 <!-- ============ 3 ALE ============ -->
 <section class="step" id="t3">
   <h2>Задача 3 · 🔴 ALE по $K$ бинам</h2>
-  <div class="src">src: master_conspect.md, л. 4 — «Эмпирический оценщик»; полный вывод и связь с PD / M-plot — <a href="topic-04.html">тема 4</a></div>
+  <div class="src">src: master_conspect.md, л. 4 — «Эмпирический оценщик»; полный вывод и связь с PD / M-plot — <a href="04-pd-mplot-ale-fanova.html">тема 4</a></div>
 
   $$\hat g_{j,ALE}(x)=\sum_{k=1}^{k_j(x)}\frac{1}{n_j(k)}
     \sum_{\{i:\,x_{i,j}\in N_j(k)\}}\Big[\hat f(z_{k,j},x_{i,-j})-\hat f(z_{k-1,j},x_{i,-j})\Big]$$
@@ -479,13 +372,13 @@
   (3) <b>Применить эту рекурсию при зависимых признаках.</b> Она верна только для
   <b>меры-произведения</b>; при зависимости нужна <b>generalized fANOVA</b> (Hooker 2007)
   с иерархической ортогональностью — и чистого разложения дисперсии там уже нет
-  (<a href="topic-04.html">тема 4</a>).</div>
+  (<a href="04-pd-mplot-ale-fanova.html">тема 4</a>).</div>
 </section>
 
 <!-- ============ 5 PFI ============ -->
 <section class="step" id="t5">
   <h2>Задача 5 · 🔴 Точный PFI по всем 6 перестановкам</h2>
-  <div class="src">src: XAI_MoedA_2026.pdf, שאלה 2а; полный разбор с выводом — <a href="topic-05.html">тема 5</a>, §3</div>
+  <div class="src">src: XAI_MoedA_2026.pdf, שאלה 2а; полный разбор с выводом — <a href="05-feature-importance.html">тема 5</a>, §3</div>
 
   <p><b>Дано.</b> $\hat f(x_1,x_2)=20+5x_1+2x_2$, три наблюдения:
   $(x_1,x_2,y)$ = $(5,28,110)$, $(12,37,150)$, $(16,40,175)$. Нужен точный PFI для $x_1$
@@ -589,7 +482,7 @@
 <!-- ============ 6 MINIPATCH ============ -->
 <section class="step" id="t6">
   <h2>Задача 6 · 🔴 Minipatch LOCO</h2>
-  <div class="src">src: ДЗ 3, Algorithm 1; полный разбор — <a href="topic-05.html">тема 5</a>, §6</div>
+  <div class="src">src: ДЗ 3, Algorithm 1; полный разбор — <a href="05-feature-importance.html">тема 5</a>, §6</div>
 
   <p>Здесь «счётная» часть — не арифметика, а <b>правильные индикаторы в знаменателях</b>.
   Пять шагов, каждый в одну строку:</p>
@@ -618,7 +511,7 @@
     и по столбцам (даёт LOCO-контраст) — дают валидные <b>доверительные интервалы</b>:
     $$\sqrt{N}\,\sigma_j^{-1}\big(\bar\Delta_j-\Delta^{\text{LOCO}}_j\big)\xrightarrow{\ d\ }\mathcal{N}(0,1)$$
     Обычные меры важности такого не дают — это редкое исключение и мостик
-    в <a href="topic-11.html">тему 11</a>.
+    в <a href="11-evaluation.html">тему 11</a>.
   </div>
 
   <div class="trap"><b>Ловушки.</b>
@@ -634,7 +527,7 @@
 <!-- ============ 7 SHAPLEY ============ -->
 <section class="step" id="t7">
   <h2>Задача 7 · 🔴 Shapley через все 6 порядков</h2>
-  <div class="src">src: полный разбор двух вариантов (3 признака и игра 4 игроков из ДЗ 3) — <a href="topic-06.html">тема 6</a>, §4–5</div>
+  <div class="src">src: полный разбор двух вариантов (3 признака и игра 4 игроков из ДЗ 3) — <a href="06-shapley-shap.html">тема 6</a>, §4–5</div>
 
   $$\phi_j=\frac{1}{p!}\sum_{\tau\in\Pi_p}\Big[V\big(S^\tau_j\cup\{j\}\big)-V\big(S^\tau_j\big)\Big]$$
 
@@ -680,7 +573,7 @@
 <!-- ============ 8 KERNELSHAP ============ -->
 <section class="step" id="t8">
   <h2>Задача 8 · 🔴 Веса KernelSHAP</h2>
-  <div class="src">src: Lundberg &amp; Lee, Theorem 2; полный разбор — <a href="topic-06.html">тема 6</a>, §7</div>
+  <div class="src">src: Lundberg &amp; Lee, Theorem 2; полный разбор — <a href="06-shapley-shap.html">тема 6</a>, §7</div>
 
   $$\pi_{x'}(z')=\frac{p-1}{\binom{p}{|z'|}\;|z'|\;(p-|z'|)}$$
 
@@ -714,7 +607,7 @@
 <!-- ============ 9 WATERFALL ============ -->
 <section class="step" id="t9">
   <h2>Задача 9 · 🔴 Чтение waterfall plot</h2>
-  <div class="src">src: ДЗ 3, Q3d; полный разбор двух наблюдений — <a href="topic-06.html">тема 6</a>, §10</div>
+  <div class="src">src: ДЗ 3, Q3d; полный разбор двух наблюдений — <a href="06-shapley-shap.html">тема 6</a>, §10</div>
 
   $$\hat f(x^{(i)})=\underbrace{\mathbb{E}[\hat f(X)]}_{\phi_0}+\sum_{j=1}^{p}\phi_j^{(i)}$$
 
@@ -755,7 +648,7 @@
 <!-- ============ 10 УДАЛЕНИЕ ============ -->
 <section class="step" id="t10">
   <h2>Задача 10 · 🔴 Чтение графика удаления примеров</h2>
-  <div class="src">src: XAI_MoedA_2026.pdf, שאלה 4г; Ghorbani &amp; Zou §3, Fig. 2–3; полный разбор — <a href="topic-09.html">тема 9</a>, §10</div>
+  <div class="src">src: XAI_MoedA_2026.pdf, שאלה 4г; Ghorbani &amp; Zou §3, Fig. 2–3; полный разбор — <a href="10-example-based.html">тема 9</a>, §10</div>
 
   <p><b>Протокол:</b> удалять обучающие точки <b>в порядке их ценности</b> и смотреть, как меняется
   точность. Графиков <b>два</b>, и читаются они в <b>противоположные</b> стороны.</p>
@@ -833,27 +726,27 @@
   <h3>Карта: где искать полный разбор</h3>
   <table class="contrast">
     <tr><th>Тема</th><th>Файл</th><th>Что там из счётного</th></tr>
-    <tr><td>1</td><td><a href="topic-01.html">Модель · эффекты · effect plot</a></td>
+    <tr><td>1</td><td><a href="01-linear-models.html">Модель · эффекты · effect plot</a></td>
         <td>важность как $|\beta_j|\sigma_j$; связь effect plot и PDI</td></tr>
-    <tr><td>2</td><td><a href="topic-02.html">Логит · сплайны · GAM · интеракции</a></td>
+    <tr><td>2</td><td><a href="02-glm-gam-interactions.html">Логит · сплайны · GAM · интеракции</a></td>
         <td>odds и odds ratio по таблице (ДЗ 1); аналитический вывод PD и наклонов ICE</td></tr>
-    <tr><td>3</td><td><a href="topic-03.html">Деревья и Gini</a></td>
+    <tr><td>3</td><td><a href="03-trees-ensembles-gini.html">Деревья и Gini</a></td>
         <td>задачи 1 и 2 полностью: построение дерева по 14 наблюдениям ДЗ 2, MDI по дереву и по лесу, MDI vs PFI</td></tr>
-    <tr><td>4</td><td><a href="topic-04.html">PD · M-plot · ALE · fANOVA</a></td>
+    <tr><td>4</td><td><a href="04-pd-mplot-ale-fanova.html">PD · M-plot · ALE · fANOVA</a></td>
         <td>ALE по $K$ бинам с выводом; PD vs M-plot vs ALE</td></tr>
-    <tr><td>5</td><td><a href="topic-05.html">PFI · CFI · LOCO · PDI · MCR</a></td>
+    <tr><td>5</td><td><a href="05-feature-importance.html">PFI · CFI · LOCO · PDI · MCR</a></td>
         <td>точный PFI (Moed A Q2), minipatch LOCO</td></tr>
-    <tr><td>6</td><td><a href="topic-06.html">Shapley и SHAP</a></td>
+    <tr><td>6</td><td><a href="06-shapley-shap.html">Shapley и SHAP</a></td>
         <td>Shapley 3 признака и 4 игрока, веса KernelSHAP, waterfall</td></tr>
-    <tr><td>7</td><td><a href="topic-07.html">Covert · RISE · LIME · Laugel</a></td>
+    <tr><td>7</td><td><a href="07-local-surrogates.html">Covert · RISE · LIME · Laugel</a></td>
         <td>формулы четырёх вариантов feature removal; deletion / insertion AUC</td></tr>
-    <tr><td>8</td><td><a href="topic-08.html">Saliency maps</a></td>
+    <tr><td>8</td><td><a href="08-saliency-maps.html">Saliency maps</a></td>
         <td>численный IG на примере насыщения, сумма Римана</td></tr>
-    <tr><td>9</td><td><a href="topic-09.html">Пространство примеров</a></td>
+    <tr><td>9</td><td><a href="10-example-based.html">Пространство примеров</a></td>
         <td>MMD² и witness численно; график удаления примеров (Moed A Q4)</td></tr>
-    <tr><td>10</td><td><a href="topic-10.html">Концепты</a></td>
+    <tr><td>10</td><td><a href="09-concept-explanations.html">Концепты</a></td>
         <td>IoU численно; разбор sample question про CBM</td></tr>
-    <tr><td>11</td><td><a href="topic-11.html">Оценка методов объяснения</a></td>
+    <tr><td>11</td><td><a href="11-evaluation.html">Оценка методов объяснения</a></td>
         <td>таксономия трёх уровней; сквозная таблица проверок всего курса</td></tr>
   </table>
 
@@ -871,10 +764,13 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(990000);
+function randn(){ return XAI.randn(rand); }
 /* ---- Рис.1 дерево с числами (SVG) ---- */
+rand = XAI.rng(990001);
 {
   const box=(x,y,w,h,t1,t2,t3,fill)=>`
     <rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="#E3E2DC"/>
@@ -883,11 +779,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
     <text class="ts" x="${x+w/2}" y="${y+50}" text-anchor="middle">${t3}</text>`;
   document.getElementById('svg-tree').innerHTML = `
   <svg viewBox="0 0 660 300" width="100%" style="max-width:660px;display:block;margin:0 auto;">
-    <style>
-      .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
-      .e{stroke:#C9C8C2;stroke-width:1.6;}
-      .el{font:600 11.5px ui-monospace,Menlo,Consolas,monospace;}
+    <style>#svg-tree .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-tree .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-tree .e{stroke:#C9C8C2;stroke-width:1.6;}#svg-tree .el{font:600 11.5px ui-monospace,Menlo,Consolas,monospace;}
     </style>
     ${box(252,10,156,60,'12A / 8B','n = 20','Gini = 0.48','#F2F1EC')}
     <line class="e" x1="330" y1="70" x2="150" y2="112"/>
@@ -917,6 +809,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
 }
 
 /* ---- Рис.2 ALE ---- */
+rand = XAI.rng(990002);
 {
   const z=[0,3,6,9];
   const g=[0,8.25,17.25,27.75];
@@ -943,6 +836,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
       ],
       legend:{orientation:'h',y:-0.26,font:{size:10.5}}}, CFG);
 }
+})();
 </script>
 
 </body>

@@ -3,92 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 3 · Деревья, ансамбли и Gini</title>
+<title>Глава 3 · Деревья, ансамбли и мера Gini — Интерпретируемость ML</title>
+<meta name="description" content="Дерево как кусочно-постоянная функция, жадный рост, Gini impurity, правило разбиения и Gini feature importance (MDI).">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7; --paper:#FFFFFF; --ink:#1E2430; --ink-soft:#5B6472; --rule:#E3E2DC;
-    --accent:#2F6F6D; --accent-bg:#EBF2F1; --trap:#B5540B; --trap-bg:#FCF1E8;
-    --core:#8A5CB8; --calc:#C0392B; --safe:#2F6F6D; --source:#5B6472; --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px; line-height:1.65; width:66.67%; margin:0 auto; padding:40px 0 100px;
-  }
-  @media (max-width:900px){ body{width:auto; max-width:760px; padding:40px 20px 100px;} }
-  h1{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.7em; font-weight:600; margin:0 0 6px;}
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{display:inline-block; font-size:0.78em; padding:2px 9px; border-radius:3px; margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-  .badge.safe{background:var(--safe);color:#fff;}
-
-  nav.toc{background:var(--paper); border:1px solid var(--rule); border-radius:4px;
-    padding:14px 18px; margin-bottom:36px; font-size:0.92em;}
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.06em; margin:22px 0 4px;}
-  .src{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em; color:var(--source); margin-bottom:14px;}
-  .src a{color:var(--accent);}
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  tr.best td{background:#EBF2F1; font-weight:600;}
-  .trap .src{margin-top:8px;}
-  a{color:var(--accent);}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="03">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Деревья, ансамбли и мера Gini</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 3 · тема 3</div>
 <div class="badges">
@@ -130,9 +59,9 @@
     именно её недостатки мотивируют PFI в лекции 5.</li>
     <li><b>Внешняя мера эффекта.</b> Раз производной нет, эффект признака придётся определять
     через <i>подстановку значений и наблюдение за выходом</i> — это PD/ALE из
-    <a href="topic-04.html">темы 4</a>. По той же причине к деревьям
+    <a href="04-pd-mplot-ale-fanova.html">темы 4</a>. По той же причине к деревьям
     неприменим и весь градиентный инструментарий из
-    <a href="topic-08.html">темы 8</a>: там, где производная равна нулю
+    <a href="08-saliency-maps.html">темы 8</a>: там, где производная равна нулю
     почти всюду и не определена в точках разбиения, «важность как градиент» смысла не имеет.</li>
   </ul>
 
@@ -193,7 +122,7 @@
         <td>чтобы дерево «увидело» интеракцию $x_1\times x_2$, оно сначала должно сделать сплит
         по $x_1$ <i>или</i> $x_2$ — а он будет выбран только если признак хорош сам по себе</td>
         <td>ключевое ограничение; сравните с fANOVA
-        (<a href="topic-04.html#fanova">тема 4</a>), которая раскладывает
+        (<a href="04-pd-mplot-ale-fanova.html#fanova">тема 4</a>), которая раскладывает
         функцию на все $2^p$ компонент независимо от маргинальных эффектов</td></tr>
     <tr><td><b>Пороги $t$ определяются обучающими данными</b></td>
         <td>положение границы подогнано под конкретную выборку</td>
@@ -399,7 +328,7 @@
   Это <b>Rashomon effect</b> в миниатюре (§11 ниже) — и прямая причина того, почему в лекции 5
   появляется <b>Model Class Reliance</b>: важность признака оценивают не для одной модели,
   а для целого класса одинаково хороших моделей
-  (<a href="topic-05.html">тема 5</a>).</div>
+  (<a href="05-feature-importance.html">тема 5</a>).</div>
 
   <h3>Шаг 7. Остаток ветви</h3>
   <div class="calcbox">
@@ -521,7 +450,7 @@
   Чем больше у признака кандидатов на разрез, тем выше шанс, что <i>какой-нибудь</i> из них случайно
   хорошо разделит выборку. Это и есть знаменитое <b>смещение MDI в пользу непрерывных признаков
   и признаков с большим числом уровней</b>. Ровно та же болезнь была у наивной важности
-  $\sum|\beta_{\text{dummy}}|$ из <a href="topic-01.html#calc">темы 1</a>,
+  $\sum|\beta_{\text{dummy}}|$ из <a href="01-linear-models.html#calc">темы 1</a>,
   где первое место занял <code class="f">mnth</code> с его 11 дамми-переменными.</div>
 </section>
 
@@ -549,10 +478,10 @@
 
   <div class="trap"><b>«Дорогие монотонные эффекты» — на что это влияет в курсе.</b>
   Кусочно-постоянная функция означает, что у дерева <b>нет производной</b>. Поэтому к нему неприменим
-  ни один градиентный метод объяснения (<a href="topic-08.html">тема 8</a>),
+  ни один градиентный метод объяснения (<a href="08-saliency-maps.html">тема 8</a>),
   а определение ALE через интеграл от частной производной требует
   <b>второго определения — через конечные разности</b>, которое как раз и работает без
-  дифференцируемости (<a href="topic-04.html#ale">тема 4</a>,
+  дифференцируемости (<a href="04-pd-mplot-ale-fanova.html#ale">тема 4</a>,
   Definition 1 у Apley &amp; Zhu). Это прямая связь между лекцией 3 и лекцией 4.</div>
 </section>
 
@@ -587,9 +516,9 @@
   Именно независимость деревьев в RF позволяет (а) усреднять MDI по деревьям как в шаге 4 алгоритма,
   (б) строить <b>out-of-bag</b> оценки, (в) использовать структуру леса для <i>условной</i>
   перестановки признаков в CFI: у Strobl сетка для условной перестановки берётся прямо из разбиений
-  дерева (<a href="topic-05.html">тема 5</a>), и (г) определять
+  дерева (<a href="05-feature-importance.html">тема 5</a>), и (г) определять
   <b>model-based расстояние между примерами</b> — как часто два примера попадают в один лист
-  (<a href="topic-09.html">тема 9</a>).</div>
+  (<a href="10-example-based.html">тема 9</a>).</div>
 
   <p><b>Цена за ансамбль — интерпретируемость.</b> Одно дерево читается как набор правил;
   сто деревьев — уже нет. Поэтому у леса остаётся только глобальная агрегированная важность
@@ -649,7 +578,7 @@
       перестановкам.</li>
     </ul>
     Это же — источник <b>нестабильности объяснений</b> из
-    <a href="topic-11.html">темы 11</a>.
+    <a href="11-evaluation.html">темы 11</a>.
   </div>
 
   <div class="trap"><b>Формулировка, которую стоит держать наготове.</b> «Gini FI и PFI отвечают
@@ -657,7 +586,7 @@
   (model reliance), PFI — <i>насколько предсказание становится хуже без него</i> (predictability).
   Поэтому совпадение верхушки рангов — свидетельство, а не тавтология». Три трактовки важности
   (`X_j causal in the model` / `Y predictable by X_j` / `model needs X_j`) разобраны в
-  <a href="topic-05.html">теме 5</a>.</div>
+  <a href="05-feature-importance.html">теме 5</a>.</div>
 </section>
 
 <!-- ============ BREIMAN ============ -->
@@ -694,7 +623,7 @@
   дают три разных дерева и три разных объяснения.
   <br><b>Прямой мостик:</b> отсюда вырастает <b>Model Class Reliance</b> Fisher, Rudin &amp; Dominici —
   важность признака оценивается не для одной модели, а как интервал по всему $\varepsilon$-Rashomon-множеству
-  одинаково хороших моделей (<a href="topic-05.html">тема 5</a>, читательская работа 2).</div>
+  одинаково хороших моделей (<a href="05-feature-importance.html">тема 5</a>, читательская работа 2).</div>
 
   <p><b>Третий тезис — тот, с которого начинается вся вторая половина курса:</b> если изучать надо
   предсказания, а не параметры, то нужны инструменты, зондирующие $\hat f$ снаружи. Лекция 2
@@ -750,10 +679,13 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(300000);
+function randn(){ return XAI.randn(rand); }
 /* ---- Рис.1: дерево (SVG) ---- */
+rand = XAI.rng(300001);
 {
   const box=(x,y,w,h,t1,t2,fill)=>`
     <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${fill}" stroke="#E3E2DC"/>
@@ -764,12 +696,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
 
   document.getElementById('svg-tree').innerHTML = `
   <svg viewBox="0 0 720 470" width="100%" style="max-width:720px;display:block;margin:0 auto;">
-    <style>
-      .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
-      .e{stroke:#C9C8C2;stroke-width:1.6;}
-      .el{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;}
-      .leaf{font:600 11px ui-monospace,Menlo,Consolas,monospace;}
+    <style>#svg-tree .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-tree .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-tree .e{stroke:#C9C8C2;stroke-width:1.6;}#svg-tree .el{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;}#svg-tree .leaf{font:600 11px ui-monospace,Menlo,Consolas,monospace;}
     </style>
 
     ${box(280,8,160,46,'9 Yes / 5 No','n = 14 · φ = 0.459','#F2F1EC')}
@@ -810,6 +737,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
 }
 
 /* ---- Рис.2: MDI vs важность по корню ---- */
+rand = XAI.rng(300002);
 {
   const feats=['Temp','Humidity','Wind'];
   Plotly.newPlot('plot-mdi', [
@@ -826,6 +754,7 @@ const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
     yaxis:{range:[0,0.92], ...AXIS}
   }, CFG);
 }
+})();
 </script>
 
 </body>

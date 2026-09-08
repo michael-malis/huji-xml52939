@@ -3,128 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 6 · Shapley values и SHAP</title>
+<title>Глава 6 · Shapley values и SHAP — Интерпретируемость ML</title>
+<meta name="description" content="Кооперативная игра, аксиомы Shapley, KernelSHAP, локальная атрибуция, waterfall и beeswarm, агрегация локальных значений в глобальную важность.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;
-    --calc:#C0392B;
-    --source:#5B6472;
-    --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    width:66.67%;
-    margin:0 auto;
-    padding:40px 0 100px;
-  }
-  @media (max-width:900px){
-    body{width:auto; max-width:760px; padding:40px 20px 100px;}
-  }
-  h1{
-    font-family:Georgia,"Iowan Old Style","Charter",serif;
-    font-size:1.7em;
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block;
-    font-size:0.78em;
-    padding:2px 9px;
-    border-radius:3px;
-    margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-
-  nav.toc{
-    background:var(--paper);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:14px 18px;
-    margin-bottom:36px;
-    font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-size:1.03em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em;
-    color:var(--source);
-    margin-bottom:14px;
-  }
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="06">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Shapley values и SHAP: единственная честная атрибуция</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекции 6b + 7 · тема 6</div>
 <div class="badges">
@@ -1142,22 +1035,20 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-function randn(){const u=1-Math.random(), v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(600000);
+function randn(){ return XAI.randn(rand); }
 function fact(n){let r=1; for(let i=2;i<=n;i++) r*=i; return r;}
 function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n-k+i)/i; return r;}
 
 /* ---- Рис.1 три оси Covert с положением SHAP (SVG) ---- */
+rand = XAI.rng(600001);
 {
   document.getElementById('svg-axis').innerHTML = `
   <svg viewBox="0 0 700 260" width="100%" style="max-width:680px;display:block;margin:0 auto;">
-    <style>
-      .ax{stroke:#B9C7C4;stroke-width:1.6;}
-      .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}
-      .dP{fill:#C0392B;} .dL{fill:#2F6F6D;} .dS{fill:#8A5CB8;}
+    <style>#svg-axis .ax{stroke:#B9C7C4;stroke-width:1.6;}#svg-axis .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-axis .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-axis .dP{fill:#C0392B;}#svg-axis .dL{fill:#2F6F6D;}#svg-axis .dS{fill:#8A5CB8;}
     </style>
     <text class="hdr" x="10" y="30">1 · Feature removal</text>
     <line class="ax" x1="205" y1="25" x2="670" y2="25"/>
@@ -1188,6 +1079,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.1 веса w(s) ---- */
+rand = XAI.rng(600002);
 {
   const traces=[];
   const cols={3:'#9AA0A6',4:'#2F6F6D',5:'#8A5CB8',6:'#C0392B'};
@@ -1205,6 +1097,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.2 шесть порядков ---- */
+rand = XAI.rng(600003);
 {
   const ord=['(1,2,3)','(1,3,2)','(2,1,3)','(2,3,1)','(3,1,2)','(3,2,1)'];
   Plotly.newPlot('plot-orders', [
@@ -1222,6 +1115,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.3 ДЗ3 четыре игрока ---- */
+rand = XAI.rng(600004);
 {
   const pl=['t','m','s','j'], vals=[245/12,245/12,125/12,-37/4];
   Plotly.newPlot('plot-hw3', [
@@ -1238,6 +1132,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.4 экспоненциальный взрыв ---- */
+rand = XAI.rng(600005);
 {
   const ps=[],sub=[],per=[];
   for(let p=2;p<=15;p++){ps.push(p); sub.push(Math.pow(2,p)); per.push(fact(p));}
@@ -1251,6 +1146,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.5 сходимость Монте-Карло ---- */
+rand = XAI.rng(600006);
 {
   const traces=[]; const cols=['#2F6F6D','#8A5CB8','#B5540B'];
   const TRUE=20;
@@ -1275,6 +1171,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.6 ядро KernelSHAP ---- */
+rand = XAI.rng(600007);
 {
   const traces=[]; const cols={4:'#2F6F6D',6:'#8A5CB8',10:'#C0392B'};
   [4,6,10].forEach(p=>{
@@ -1291,6 +1188,7 @@ function binom(n,k){if(k<0||k>n) return 0; let r=1; for(let i=1;i<=k;i++) r=r*(n
 }
 
 /* ---- Рис.7 и 8: waterfall ---- */
+rand = XAI.rng(600008);
 function waterfall(divId, base, contribs, finalVal){
   const names = contribs.map(c=>c[0]);
   const vals  = contribs.map(c=>c[1]);
@@ -1326,11 +1224,12 @@ waterfall('plot-wf2', 4615.39, [
 ], 3509.55);
 
 /* ---- Рис.9 dependency plot ---- */
+rand = XAI.rng(600009);
 {
   const n=320, X=[],Y=[],C=[];
   for(let i=0;i<n;i++){
-    const t=Math.random();               // temp, нормированная
-    const h=Math.random();               // humidity
+    const t=rand();               // temp, нормированная
+    const h=rand();               // humidity
     const shape = 1800*(1/(1+Math.exp(-(t-0.45)*9)) - 0.5);
     const inter = -520*(h-0.5)*(t>0.35?1:0.25);
     X.push(t); Y.push(shape+inter+randn()*55); C.push(h);
@@ -1348,6 +1247,7 @@ waterfall('plot-wf2', 4615.39, [
 }
 
 /* ---- Рис.10 дубликаты: PFI vs LOCO vs Shapley ---- */
+rand = XAI.rng(600010);
 {
   const feats=['x₁','x₁′ (копия x₁)','x₃ (независимый)'];
   Plotly.newPlot('plot-dup', [
@@ -1358,6 +1258,7 @@ waterfall('plot-wf2', 4615.39, [
       xaxis:{title:'признак',...AXIS}, yaxis:{title:'важность (усл. ед.)',...AXIS},
       legend:{orientation:'h',y:-0.24}}, CFG);
 }
+})();
 </script>
 
 </body>

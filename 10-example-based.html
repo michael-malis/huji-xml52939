@@ -3,128 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 9 · Объяснения в пространстве примеров</title>
+<title>Глава 10 · Пространство примеров — Интерпретируемость ML</title>
+<meta name="description" content="Смена единицы объяснения на обучающий пример: прототипы и criticisms, MMD², influence functions и Data Shapley.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;
-    --calc:#C0392B;
-    --source:#5B6472;
-    --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    width:66.67%;
-    margin:0 auto;
-    padding:40px 0 100px;
-  }
-  @media (max-width:900px){
-    body{width:auto; max-width:760px; padding:40px 20px 100px;}
-  }
-  h1{
-    font-family:Georgia,"Iowan Old Style","Charter",serif;
-    font-size:1.7em;
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block;
-    font-size:0.78em;
-    padding:2px 9px;
-    border-radius:3px;
-    margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-
-  nav.toc{
-    background:var(--paper);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:14px 18px;
-    margin-bottom:36px;
-    font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-size:1.03em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em;
-    color:var(--source);
-    margin-bottom:14px;
-  }
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="10">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Пространство примеров: прототипы · influence functions · Data Shapley</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекции 10–11 · тема 9</div>
 <div class="badges">
@@ -392,7 +285,7 @@
   <b>sparsity</b> (меняется мало признаков), <b>plausibility / on-manifold</b> (точка реалистична),
   <b>actionable</b> (изменение выполнимо). Критика Laugel: $\epsilon$-justification, разделение
   на <b>JCF</b> и <b>UCF</b>, и главный вывод — <b>justification $\neq$ близость</b>.
-  Всё это разобрано в <a href="topic-07.html">теме 7</a>, §8–9.</p>
+  Всё это разобрано в <a href="07-local-surrogates.html">теме 7</a>, §8–9.</p>
 
   <p><b>Что добавляет взгляд из этой темы.</b> В теме 7 counterfactual был <i>локальным
   объяснением одного предсказания</i>. Здесь он — <b>элемент пространства примеров</b>, и вопрос
@@ -574,7 +467,7 @@
 
   <p>Дальше — <b>обычные Shapley values по этой игре</b>: та же формула, те же веса, та же
   эквивалентность форм. Механику не пересказываем — она полностью разобрана
-  в <a href="topic-06.html">теме 6</a>, §1–2. Полезно отметить, что это
+  в <a href="06-shapley-shap.html">теме 6</a>, §1–2. Полезно отметить, что это
   уже второй перенос одной и той же конструкции, и будет третий: в теме 10 игроками станут
   обнаруженные концепты (ConceptSHAP), а $V(S)$ — completeness score набора концептов. Меняется
   только определение игрока и value-функции; аксиомы, веса и способ приближения — те же.</p>
@@ -820,12 +713,14 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-function randn(){const u=1-Math.random(), v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(1000000);
+function randn(){ return XAI.randn(rand); }
 
 /* ---- Рис.1 MMD / witness ---- */
+rand = XAI.rng(1000001);
 {
   const X=[0,0.2,0.4,3.0], Z=[0.2];
   const k=(a,b)=>Math.exp(-Math.pow(a-b,2)/2);
@@ -859,6 +754,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.2 random forest proximity (SVG) ---- */
+rand = XAI.rng(1000002);
 {
   /* 4 дерева, 4 листа каждое; в каком листе оказался каждый пример */
   const leaf = {x1:[0,1,2,0], x2:[0,1,2,3], x3:[3,2,0,1]};
@@ -892,16 +788,14 @@ function randn(){const u=1-Math.random(), v=Math.random();
     <text class="lg" x="416" y="168" fill="#C0392B">prox(x₁,x₃) = 0/4 = 0</text>`;
   document.getElementById('svg-prox').innerHTML = `
   <svg viewBox="0 0 640 186" width="100%" style="max-width:640px;display:block;margin:0 auto;">
-    <style>
-      .hd{font:600 12px Georgia,serif;fill:#2F6F6D;}
-      .br{stroke:#C9C8C2;stroke-width:1.3;}
-      .lg{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
+    <style>#svg-prox .hd{font:600 12px Georgia,serif;fill:#2F6F6D;}#svg-prox .br{stroke:#C9C8C2;stroke-width:1.3;}#svg-prox .lg{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
     </style>
     ${out}
   </svg>`;
 }
 
 /* ---- Рис.3 influence ---- */
+rand = XAI.rng(1000003);
 {
   const n=170, X=[],Y=[],I=[];
   const gtest=[0.85,0.53];
@@ -932,6 +826,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.4 truncation ---- */
+rand = XAI.rng(1000004);
 {
   const N=120, xs=[], v=[];
   for(let j=0;j<=N;j++){
@@ -962,6 +857,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.5 графики удаления примеров ---- */
+rand = XAI.rng(1000005);
 {
   const f=[]; for(let i=0;i<=50;i++) f.push(i/50*0.6);   /* доля удалённых, 0..60% */
   const base=0.80;
@@ -1003,6 +899,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
       ],
       legend:{orientation:'h',y:-0.32,font:{size:10.5}}}, CFG);
 }
+})();
 </script>
 
 </body>

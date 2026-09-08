@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="6" fill="#2F6F6D"/>
+  <!-- Кривая эффекта: ломаная ALE поверх облака точек -->
+  <path d="M5 24 L11 17 L17 19 L21 10 L27 8" fill="none" stroke="#FAFAF7"
+        stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="11" cy="17" r="2.1" fill="#EBF2F1"/>
+  <circle cx="21" cy="10" r="2.1" fill="#EBF2F1"/>
+</svg>

@@ -3,91 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 2 · Логистическая регрессия, сплайны, GAM, интеракции</title>
+<title>Глава 2 · GLM, сплайны, GAM, интеракции — Интерпретируемость ML</title>
+<meta name="description" content="За пределами линейной модели: функция связи, логит, odds и odds ratio, сплайны, обобщённые аддитивные модели и кодирование интеракций.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7; --paper:#FFFFFF; --ink:#1E2430; --ink-soft:#5B6472; --rule:#E3E2DC;
-    --accent:#2F6F6D; --accent-bg:#EBF2F1; --trap:#B5540B; --trap-bg:#FCF1E8;
-    --core:#8A5CB8; --calc:#C0392B; --safe:#2F6F6D; --source:#5B6472; --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px; line-height:1.65; width:66.67%; margin:0 auto; padding:40px 0 100px;
-  }
-  @media (max-width:900px){ body{width:auto; max-width:760px; padding:40px 20px 100px;} }
-  h1{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.7em; font-weight:600; margin:0 0 6px;}
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{display:inline-block; font-size:0.78em; padding:2px 9px; border-radius:3px; margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-  .badge.safe{background:var(--safe);color:#fff;}
-
-  nav.toc{background:var(--paper); border:1px solid var(--rule); border-radius:4px;
-    padding:14px 18px; margin-bottom:36px; font-size:0.92em;}
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.06em; margin:22px 0 4px;}
-  .src{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em; color:var(--source); margin-bottom:14px;}
-  .src a{color:var(--accent);}
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-  a{color:var(--accent);}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="02">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>За пределами линейной модели: логит, сплайны, GAM, интеракции</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 2 (часть 1 и 3) · тема 2</div>
 <div class="badges">
@@ -313,10 +243,10 @@
 
   <div class="trap"><b>Это первый в курсе пример omitted variable bias — запомните связку.</b>
   Одно и то же явление всплывёт ещё дважды:
-  <br>• <b>M-plot</b> (<a href="topic-04.html#mplot">тема 4</a>):
+  <br>• <b>M-plot</b> (<a href="04-pd-mplot-ale-fanova.html#mplot">тема 4</a>):
   если $X_j$ коррелирует с $X_k$, а на $Y$ влияет $X_k$, условное среднее припишет эффект $X_k$
   признаку $X_j$ — <i>дословно то же самое, что здесь произошло с сезоном</i>;
-  <br>• <b>PFI при коррелированных признаках</b> (<a href="topic-05.html">тема 5</a>):
+  <br>• <b>PFI при коррелированных признаках</b> (<a href="05-feature-importance.html">тема 5</a>):
   два коррелированных признака делят важность между собой и оба выглядят слабыми.
   <br>Формулировка для экзамена: <b>коэффициент интерпретируем только относительно того, что ещё
   есть в модели</b>. «Эффект сезона» без указания набора остальных признаков — не определён.</div>
@@ -325,7 +255,7 @@
   Он остаётся интерпретируемым, но теперь означает логит для зимнего дня, у которого <i>все</i>
   числовые признаки равны нулю, — то есть для точки, которой в данных не существует.
   Это первое появление сюжета «объяснение опирается на точку вне многообразия данных»
-  (<a href="topic-05.html">тема 5</a>, off-manifold).</p>
+  (<a href="05-feature-importance.html">тема 5</a>, off-manifold).</p>
 </section>
 
 <!-- ============ НЕЛИНЕЙНОСТИ ============ -->
@@ -478,7 +408,7 @@
   <div class="trap"><b>Куда это ведёт.</b> Ровно эта комбинаторика — «главные эффекты + все пары +
   все тройки + …» — и есть <b>функциональное ANOVA-разложение</b>:
   $f(x)=\sum_{u\subseteq\{1..p\}}f_u(x_u)$, $2^p$ слагаемых
-  (<a href="topic-04.html#fanova">тема 4</a>). Разница только в том,
+  (<a href="04-pd-mplot-ale-fanova.html#fanova">тема 4</a>). Разница только в том,
   что здесь мы члены <i>добавляем руками в модель</i>, а там — <i>извлекаем из уже обученной модели</i>.</div>
 </section>
 
@@ -547,13 +477,13 @@
   плоскую (или просто «среднюю») кривую</b>, хотя эффект есть у всех наблюдений — просто разный.
   Крайний случай виден прямо из формулы: если $b_1=-\tfrac12 b_3$, наклон PD равен нулю при том,
   что <i>ни одна</i> ICE-кривая не горизонтальна. Отсюда правило курса: <b>смотреть ICE до PD</b>.
-  <div class="src" style="margin:8px 0 0;">Полный разбор PD и её проблем — <a href="topic-04.html#ice-pd">тема 4, §2 и §4</a></div></div>
+  <div class="src" style="margin:8px 0 0;">Полный разбор PD и её проблем — <a href="04-pd-mplot-ale-fanova.html#ice-pd">тема 4, §2 и §4</a></div></div>
 </section>
 
 <!-- ============ CP ICE PD ============ -->
 <section class="step" id="cpicepd">
   <h2>9. CP → ICE → PD: напоминание в пять строк</h2>
-  <div class="src">src: слайды л. 2 (сл. 22–35). <b>Полный разбор — <a href="topic-04.html#cp">тема 4, §1–3</a></b>, здесь только конспект-напоминание</div>
+  <div class="src">src: слайды л. 2 (сл. 22–35). <b>Полный разбор — <a href="04-pd-mplot-ale-fanova.html#cp">тема 4, §1–3</a></b>, здесь только конспект-напоминание</div>
 
   <p>Часть 3 лекции 2 открывается перспективой Breiman: <i>«если предсказания верны — изучай
   предсказания»</i>. Дальше три графика:</p>
@@ -626,13 +556,15 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-function randn(){const u=1-Math.random(), v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(200000);
+function randn(){ return XAI.randn(rand); }
 const logistic = z => 1/(1+Math.exp(-z));
 
 /* ---- Рис.1 логистическая кривая с тремя сдвигами ---- */
+rand = XAI.rng(200001);
 {
   const z=[], y=[];
   for(let i=-80;i<=80;i++){ z.push(i/10); y.push(logistic(i/10)); }
@@ -659,6 +591,7 @@ const logistic = z => 1/(1+Math.exp(-z));
 }
 
 /* ---- Рис.2 step / broken stick / linear spline ---- */
+rand = XAI.rng(200002);
 {
   const xs=[]; for(let i=0;i<=100;i++) xs.push(i/10);   // 0..10, узел в 5
   const knot=5;
@@ -686,6 +619,7 @@ const logistic = z => 1/(1+Math.exp(-z));
 }
 
 /* ---- Рис.3 ICE без интеракции / с интеракцией ---- */
+rand = XAI.rng(200003);
 {
   const grid=[]; for(let i=0;i<=20;i++) grid.push(i/20);
   const x2 = [0.05,0.14,0.23,0.32,0.41,0.5,0.59,0.68,0.77,0.86,0.95];
@@ -717,6 +651,7 @@ const logistic = z => 1/(1+Math.exp(-z));
     yaxis2:{range:[0,7], ...AXIS}
   }, CFG);
 }
+})();
 </script>
 
 </body>

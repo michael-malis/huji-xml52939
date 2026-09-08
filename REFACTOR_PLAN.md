@@ -6,7 +6,7 @@
 
 Underneath that framing the *content* is genuinely good — dense derivations, correct arithmetic, honest treatment of off-manifold extrapolation, Shapley axioms, ALE accumulation, sanity checks. The goal is to keep all of that and remove everything that ties it to a specific test sitting, reorganizing it into a book a stranger could read in 2028 without knowing the course exists.
 
-**Technical debt that must be paid at the same time.** The CSS is copy-pasted 13 times and has already diverged into 6 incompatible variants (`.badge.safe` exists in 4 files, so 5 call sites fake the color with inline `style=`). 17 figure blocks draw from unseeded `Math.random()`, so charts show different numbers on every reload — unacceptable in a reference work. `body{width:66.67%}` produces a ~1280 px line length on a 1080p monitor. The index renders raw LaTeX as literal text because it has no MathJax. None of this is fixable file-by-file; it needs a shared asset layer.
+**Technical debt that must be paid at the same time.** The CSS is copy-pasted 13 times and has already diverged into 6 incompatible variants (`.badge.safe` exists in 4 files, so 5 call sites fake the color with inline `style=`). 28 call sites draw from unseeded `Math.random()`, so charts show different numbers on every reload — unacceptable in a reference work. `body{width:66.67%}` produces a ~1280 px line length on a 1080p monitor. The index renders raw LaTeX as literal text because it has no MathJax. None of this is fixable file-by-file; it needs a shared asset layer.
 
 **Decisions taken (confirmed with the user):**
 
@@ -161,7 +161,7 @@ The single largest source of current bugs is that there is no shared layer at al
 **Create `assets/book.js`** — classic script, not an ES module (ES modules and `fetch()` are blocked under `file://`; classic `<script src>` and `<link rel=stylesheet>` are not, and the site must keep opening by double-click):
 
 - MathJax config, hoisted out of 12 duplicated inline blocks.
-- **A seeded PRNG** (mulberry32 or similar) exported as `rng(seed)`, replacing the 17 unseeded `Math.random()` call sites. Every figure gets an explicit literal seed. This is what makes charts reproducible.
+- **A seeded PRNG** (mulberry32 or similar) exported as `rng(seed)`, replacing the 28 unseeded `Math.random()` call sites. Every figure gets an explicit literal seed. This is what makes charts reproducible.
 - The shared `CFG` / `AXIS` Plotly constants — moved off the global top level into a namespace object (`window.XAI = {...}`). Top-level `const CFG` is exactly what broke the previous combined build per `revision_log.md`.
 - Prev/next navigation wiring, in-page TOC scroll-spy, back-to-top, theme toggle.
 
@@ -272,7 +272,7 @@ The gate. Nothing ships until this is green.
 
 1. **Index renders raw LaTeX as text** — cards 1 and 6 contain `$|\beta_j|$` and `frac|S|!(p-|S|-1)!p!`; `index.html` has no MathJax. Fixed structurally by §1.2 (`.ch-topics` avoids math).
 2. **`.badge.safe` missing from topics 04–12** → 4 inline `style=` hacks on the index, 1 in topic-11. Fixed by the unified stylesheet.
-3. **17 unseeded `Math.random()` figure blocks** → charts change on reload. Fixed by `XAI.rng(seed)`.
+3. **28 unseeded `Math.random()` call sites** → charts change on reload. Fixed by `XAI.rng(seed)`.
 4. **`body{width:66.67%}`** → ~160-character measure on a 1080p monitor.
 5. **Mobile table rule is destructive**: `@media (max-width:480px){table{display:block; overflow-x:auto; white-space:nowrap}}` applies `display:block` to the `<table>` itself, discarding table semantics for assistive tech, and `white-space:nowrap` forces prose cells onto one line. Replace with a `<div class="table-wrap" role="region" tabindex="0" aria-label="…">` wrapper that scrolls, leaving the table intact.
 6. **SVG-local `<style>` class collisions** (`.t`, `.ln`, `.ax`, `.hd`…) — see Phase 1.
@@ -346,7 +346,7 @@ Test at **320 / 375 / 414 / 768 / 1024 / 1280 / 1920** px:
 - [ ] Rename all 11 chapter files to §1.1 slugs, including the 9 ↔ 10 swap
 - [ ] Rewrite every internal `href` for the new names; `audit_links.py` → zero failures
 - [ ] Prefix all 16 inline-SVG class names per figure; verify no two SVGs on one page collide
-- [ ] Replace all 17 `Math.random()` call sites with seeded `XAI.rng(<literal>)`
+- [ ] Replace all 28 `Math.random()` call sites with seeded `XAI.rng(<literal>)`
 
 ## 3.3 Phase 2 — Index and matter
 

@@ -3,128 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 5 · PFI → CFI → LOCO → PDI → MCR</title>
+<title>Глава 5 · Важность признака: PFI, CFI, LOCO, PDI, MCR — Интерпретируемость ML</title>
+<meta name="description" content="Три трактовки важности переменной, permutation feature importance и его родственники, разложение дисперсии и model class reliance.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;      /* основной структурный акцент */
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;        /* экзаменационная ловушка */
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;        /* бейдж "ядро курса" */
-    --calc:#C0392B;        /* бейдж "счётные задачи" */
-    --source:#5B6472;      /* нейтральный source-бейдж */
-    --illustr:#9AA0A6;     /* иллюстративный, не цитируемый материал */
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    width:66.67%;
-    margin:0 auto;
-    padding:40px 0 100px;
-  }
-  @media (max-width:900px){
-    body{width:auto; max-width:760px; padding:40px 20px 100px;}
-  }
-  h1{
-    font-family:Georgia,"Iowan Old Style","Charter",serif;
-    font-size:1.7em;
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block;
-    font-size:0.78em;
-    padding:2px 9px;
-    border-radius:3px;
-    margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-
-  nav.toc{
-    background:var(--paper);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:14px 18px;
-    margin-bottom:36px;
-    font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-size:1.03em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em;
-    color:var(--source);
-    margin-bottom:14px;
-  }
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="05">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>PFI и его родственники: CFI · LOCO · PDI · MCR</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекции 5 + 6a · тема 5</div>
 <div class="badges">
@@ -1023,23 +916,18 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-function randn(){const u=1-Math.random(), v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(500000);
+function randn(){ return XAI.randn(rand); }
 
 /* ---- Рис.1 три оси Covert (SVG) ---- */
+rand = XAI.rng(500001);
 {
   document.getElementById('svg-covert').innerHTML = `
   <svg viewBox="0 0 700 250" width="100%" style="max-width:680px;display:block;margin:0 auto;">
-    <style>
-      .ax{stroke:#B9C7C4;stroke-width:1.6;}
-      .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}
-      .dotA{fill:#C0392B;}
-      .dotB{fill:#8A5CB8;}
-      .lnA{stroke:#C0392B;stroke-width:1.6;}
-      .lnB{stroke:#8A5CB8;stroke-width:1.6;stroke-dasharray:5 4;}
+    <style>#svg-covert .ax{stroke:#B9C7C4;stroke-width:1.6;}#svg-covert .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-covert .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-covert .dotA{fill:#C0392B;}#svg-covert .dotB{fill:#8A5CB8;}#svg-covert .lnA{stroke:#C0392B;stroke-width:1.6;}#svg-covert .lnB{stroke:#8A5CB8;stroke-width:1.6;stroke-dasharray:5 4;}
     </style>
     <text class="hdr" x="14" y="26">1 · Feature removal</text>
     <line class="ax" x1="200" y1="21" x2="660" y2="21"/>
@@ -1067,6 +955,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.2 разложение дисперсии ---- */
+rand = XAI.rng(500002);
 {
   const feats=['x₁ (сильный)','x₂ (средний)','x₃ (слабый)'];
   const explained=[0.62,0.31,0.06];
@@ -1080,13 +969,14 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.3 перестановка выносит точки off-manifold ---- */
+rand = XAI.rng(500003);
 {
   const n=130, rho=0.85; const X1=[],X2=[];
   for(let i=0;i<n;i++){const z1=randn(),z2=randn();
     X1.push(z1); X2.push(rho*z1+Math.sqrt(1-rho*rho)*z2);}
   // случайная перестановка столбца X1
   const idx=X1.map((_,i)=>i);
-  for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
+  for(let i=idx.length-1;i>0;i--){const j=Math.floor(rand()*(i+1));[idx[i],idx[j]]=[idx[j],idx[i]];}
   const P1=idx.map(k=>X1[k]);
   Plotly.newPlot('plot-perm-offmanifold', [
     {x:X1,y:X2,mode:'markers',marker:{size:6,color:'rgba(30,36,48,0.30)'},name:'реальные данные',hoverinfo:'skip'},
@@ -1097,6 +987,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.4 MAE шести перестановок ---- */
+rand = XAI.rng(500004);
 {
   const labels=['(5,12,16)\nоригинал','(5,16,12)','(12,5,16)','(12,16,5)','(16,5,12)','(16,12,5)'];
   const mae=[6, 16, 62/3, 100/3, 92/3, 100/3];
@@ -1117,6 +1008,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.5 PFI vs CFI: область перестановки ---- */
+rand = XAI.rng(500005);
 {
   const n=110, rho=0.85; const X1=[],X2=[];
   for(let i=0;i<n;i++){const z1=randn(),z2=randn();
@@ -1145,6 +1037,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.6 дубликаты: PFI vs CFI vs LOCO ---- */
+rand = XAI.rng(500006);
 {
   const feats=['x₁','x₁′ (копия x₁)','x₃ (независимый)'];
   Plotly.newPlot('plot-dup', [
@@ -1157,6 +1050,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.7 minipatch (SVG) ---- */
+rand = XAI.rng(500007);
 {
   const R=7, C=8, cw=44, ch=22, x0=120, y0=34;
   let cells='';
@@ -1170,9 +1064,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
   }
   document.getElementById('svg-minipatch').innerHTML = `
   <svg viewBox="0 0 700 250" width="100%" style="max-width:690px;display:block;margin:0 auto;">
-    <style>
-      .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
+    <style>#svg-minipatch .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-minipatch .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
     </style>
     ${cells}
     <rect x="${x0+patch.c0*cw}" y="${y0+patch.r0*ch}" width="${(patch.c1-patch.c0)*cw}"
@@ -1191,6 +1083,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.8 PDI: дисперсия PD-кривой ---- */
+rand = XAI.rng(500008);
 {
   const x=Array.from({length:41},(_,i)=>i/40*10);
   const flat=x.map(v=>5+0.05*v);
@@ -1207,6 +1100,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.9 MCR ---- */
+rand = XAI.rng(500009);
 {
   const N=200, L=[], MRv=[];
   for(let i=0;i<N;i++){
@@ -1235,6 +1129,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
       annotations:[{x:thr,y:hi+0.35,text:'E L(f_ref) + ε',showarrow:false,xshift:-52,font:{size:11,color:'#B5540B'}}],
       legend:{orientation:'h',y:-0.25}}, CFG);
 }
+})();
 </script>
 
 </body>

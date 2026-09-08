@@ -3,128 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>52939 · Блок 7 · LIME · RISE · Explaining by Removing</title>
+<title>Глава 7 · Локальные суррогаты и контрфактуалы — Интерпретируемость ML</title>
+<meta name="description" content="Explaining by Removing как классификационная система, RISE, LIME и его критики, контрфактуальные объяснения.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/book.css">
+<!-- book.js подключается синхронно: он ставит тему до первой отрисовки,
+     объявляет window.MathJax до загрузки MathJax и определяет XAI.rng/CFG/AXIS
+     до инлайнового скрипта с фигурами в конце документа. -->
+<script src="assets/book.js"></script>
 <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
-<script>
-  MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
-</script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<style>
-  :root{
-    --bg:#FAFAF7;
-    --paper:#FFFFFF;
-    --ink:#1E2430;
-    --ink-soft:#5B6472;
-    --rule:#E3E2DC;
-    --accent:#2F6F6D;
-    --accent-bg:#EBF2F1;
-    --trap:#B5540B;
-    --trap-bg:#FCF1E8;
-    --core:#8A5CB8;
-    --calc:#C0392B;
-    --source:#5B6472;
-    --illustr:#9AA0A6;
-  }
-  *{box-sizing:border-box;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    font-size:16.5px;
-    line-height:1.65;
-    width:66.67%;
-    margin:0 auto;
-    padding:40px 0 100px;
-  }
-  @media (max-width:900px){
-    body{width:auto; max-width:760px; padding:40px 20px 100px;}
-  }
-  h1{
-    font-family:Georgia,"Iowan Old Style","Charter",serif;
-    font-size:1.7em;
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .meta{color:var(--ink-soft); font-size:0.92em; margin-bottom:8px;}
-  .badges{margin-bottom:28px;}
-  .badge{
-    display:inline-block;
-    font-size:0.78em;
-    padding:2px 9px;
-    border-radius:3px;
-    margin-right:6px;
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  }
-  .badge.core{background:var(--core);color:#fff;}
-  .badge.calc{background:var(--calc);color:#fff;}
-
-  nav.toc{
-    background:var(--paper);
-    border:1px solid var(--rule);
-    border-radius:4px;
-    padding:14px 18px;
-    margin-bottom:36px;
-    font-size:0.92em;
-  }
-  nav.toc a{color:var(--accent); text-decoration:none;}
-  nav.toc a:hover{text-decoration:underline;}
-  nav.toc ol{margin:6px 0 0; padding-left:20px;}
-
-  section.step{margin:0 0 8px; padding-top:34px; border-top:1px solid var(--rule);}
-  section.step:first-of-type{border-top:none;}
-
-  h2{font-family:Georgia,"Iowan Old Style","Charter",serif; font-size:1.28em; margin:0 0 4px;}
-  h3{font-size:1.03em; margin:22px 0 4px;}
-  .src{
-    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    font-size:0.78em;
-    color:var(--source);
-    margin-bottom:14px;
-  }
-  .src.illustr{color:var(--illustr); font-style:italic;}
-
-  .fig{background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:10px 10px 4px; margin:16px 0 6px;}
-  .fig-cap{font-size:0.85em; color:var(--ink-soft); font-style:italic; margin:6px 2px 14px;}
-  .fig-cap.illustr::before{content:"⚠ иллюстративная схема — не цитировать на экзамене. ";
-    color:var(--illustr); font-style:normal; font-weight:600;}
-
-  .trap{background:var(--trap-bg); border-left:3px solid var(--trap); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .trap b{color:var(--trap);}
-
-  .calcbox{background:var(--accent-bg); border-left:3px solid var(--accent); padding:12px 16px; margin:18px 0; border-radius:0 4px 4px 0;}
-  .calcbox b{color:var(--accent);}
-
-  table.contrast{width:100%; border-collapse:collapse; margin:18px 0; font-size:0.93em; background:var(--accent-bg);}
-  table.contrast th, table.contrast td{border:1px solid #CFE0DD; padding:7px 10px; text-align:left; vertical-align:top;}
-  table.contrast th{background:#DCEAE8;}
-
-  code.f{font-family:ui-monospace,Menlo,Consolas,monospace;}
-
-  .lead{font-size:1.03em;}
-  ul{padding-left:22px;}
-  li{margin:4px 0;}
-  table.plain{width:100%; border-collapse:collapse; margin:16px 0; font-size:0.9em; background:var(--paper);}
-  table.plain th, table.plain td{border:1px solid var(--rule); padding:7px 10px; text-align:left; vertical-align:top;}
-  table.plain th{background:#F2F1EC; font-weight:600;}
-  table.plain td.num{text-align:right; font-family:ui-monospace,Menlo,Consolas,monospace;}
-  .trap .src{margin-top:8px;}
-
-  a.back-link{
-    display:inline-block; font-size:0.85em; color:var(--accent);
-    text-decoration:none; margin-bottom:14px;
-  }
-  a.back-link:hover{text-decoration:underline;}
-  @media (max-width:480px){
-    table.contrast, table.plain{ display:block; overflow-x:auto; white-space:nowrap; }
-  }
-  mjx-container{ overflow-x:auto; overflow-y:hidden; max-width:100%; }
-  mjx-container:not([display="true"]){ display:inline-block; vertical-align:middle; }
-</style>
 </head>
 
-<body>
+<body class="chapter" data-chapter="07">
 
-<a class="back-link" href="index.html">← Back to topics</a>
+<a class="back-link" href="index.html">← Оглавление</a>
 <h1>Локальные объяснения: Explaining by Removing · RISE · LIME · Laugel</h1>
 <div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекция 8 · тема 7</div>
 <div class="badges">
@@ -805,12 +698,14 @@
 </section>
 
 <script>
-const CFG = {displayModeBar:false, scrollZoom:false, doubleClick:false, responsive:true};
-const AXIS = {zeroline:false, gridcolor:'#EEEDE7'};
-function randn(){const u=1-Math.random(), v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+(function(){
+"use strict";
+const CFG = XAI.CFG, AXIS = XAI.AXIS;
+let rand = XAI.rng(700000);
+function randn(){ return XAI.randn(rand); }
 
 /* ---- Рис.1 решётка трёх осей (SVG) ---- */
+rand = XAI.rng(700001);
 {
   const rows=[
     {h:'1 · Feature removal', items:['baseline','условное','маргинальное','произв. маргиналов']},
@@ -844,16 +739,14 @@ function randn(){const u=1-Math.random(), v=Math.random();
   });
   document.getElementById('svg-cube').innerHTML = `
   <svg viewBox="0 0 700 290" width="100%" style="max-width:690px;display:block;margin:0 auto;">
-    <style>
-      .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}
-      .cell{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .lg{font:600 12px ui-monospace,Menlo,Consolas,monospace;}
+    <style>#svg-cube .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-cube .cell{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-cube .lg{font:600 12px ui-monospace,Menlo,Consolas,monospace;}
     </style>
     ${cells}${labels}${paths}
   </svg>`;
 }
 
 /* ---- Рис.2 конвейер RISE (SVG) ---- */
+rand = XAI.rng(700002);
 {
   const cell=13, g0x=24, g0y=54;
   let coarse='';
@@ -876,10 +769,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
   }
   document.getElementById('svg-rise').innerHTML = `
   <svg viewBox="0 0 700 210" width="100%" style="max-width:690px;display:block;margin:0 auto;">
-    <style>
-      .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}
-      .ts{font:10.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
-      .ar{stroke:#B9C7C4;stroke-width:1.8;fill:none;marker-end:url(#ah);}
+    <style>#svg-rise .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-rise .ts{font:10.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-rise .ar{stroke:#B9C7C4;stroke-width:1.8;fill:none;marker-end:url(#ah);}
     </style>
     <defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
       <path d="M0,0 L7,3.2 L0,6.4 z" fill="#B9C7C4"/></marker></defs>
@@ -909,6 +799,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.3 deletion / insertion ---- */
+rand = XAI.rng(700003);
 {
   const x=Array.from({length:51},(_,i)=>i/50);
   const good_del = x.map(v=>0.95*Math.exp(-7.5*v)+0.02);
@@ -939,6 +830,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.4 LIME в 2D ---- */
+rand = XAI.rng(700004);
 {
   const gx=[],gy=[],gz=[];
   const NG=70;
@@ -978,6 +870,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.5 ширина ядра меняет объяснение ---- */
+rand = XAI.rng(700005);
 {
   const xs=[]; for(let i=0;i<=300;i++) xs.push(-3+6*i/300);
   const f = v => Math.sin(2.1*v)*1.25 + 0.28*v;
@@ -1005,6 +898,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
 }
 
 /* ---- Рис.6 JCF vs UCF ---- */
+rand = XAI.rng(700006);
 {
   const A=[[],[]], B=[[],[]];
   for(let i=0;i<130;i++){
@@ -1050,6 +944,7 @@ function randn(){const u=1-Math.random(), v=Math.random();
       ],
       legend:{orientation:'h',y:-0.22,font:{size:10}}}, CFG);
 }
+})();
 </script>
 
 </body>
