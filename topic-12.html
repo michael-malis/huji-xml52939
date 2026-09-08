@@ -85,7 +85,7 @@
 <!-- ============ 1 GINI SPLIT ============ -->
 <section class="step" id="t1">
   <h2>Задача 1 · 🔴 Gini impurity и выбор сплита</h2>
-  <div class="src">src: master_conspect.md, л. 3 — «Gini impurity и Gini feature importance»; ДЗ 2. Полный разбор с выводом и построением дерева по реальным данным ДЗ 2 — <a href="03-trees-ensembles-gini.html#calc1">тема 3, §5</a></div>
+  <div class="src">src: master_conspect.md, л. 3 — «Gini impurity и Gini feature importance»; ДЗ 2. Полный разбор с выводом и построением дерева по реальным данным ДЗ 2 — <a href="03-trees-ensembles-gini.html#practicum-tree-build">тема 3, §5</a></div>
 
   <p><b>Формулы — три штуки, больше ничего не нужно:</b></p>
   $$\text{Gini}(m)=1-\sum_{k=1}^{K}p_{mk}^2,\qquad
@@ -144,7 +144,7 @@
 <!-- ============ 2 GINI FI ============ -->
 <section class="step" id="t2">
   <h2>Задача 2 · 🔴 Gini feature importance по дереву</h2>
-  <div class="src">src: master_conspect.md, л. 3 и ДЗ 2 — «MDI (Mean Decrease Impurity) — пошагово». Полный разбор, реальные числа RF из ДЗ 2 и сравнение с PFI — <a href="03-trees-ensembles-gini.html#calc2">тема 3, §6 и §9</a></div>
+  <div class="src">src: master_conspect.md, л. 3 и ДЗ 2 — «MDI (Mean Decrease Impurity) — пошагово». Полный разбор, реальные числа RF из ДЗ 2 и сравнение с PFI — <a href="03-trees-ensembles-gini.html#practicum-gini-mdi">тема 3, §6 и §9</a></div>
 
   $$\text{Imp}(m)=\frac{n_m}{n_{\text{total}}}\cdot\Delta\text{Gini}(m),
     \qquad \text{FI}_j=\sum_{m:\ \text{сплит по }x_j}\text{Imp}(m)$$
