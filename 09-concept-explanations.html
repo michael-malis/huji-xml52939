@@ -37,6 +37,7 @@
     <li><a href="#completeness">Completeness (Yeh et al. 2020) и ConceptSHAP</a></li>
     <li><a href="#cbm">Concept Bottleneck Models</a></li>
     <li><a href="#sae">Sparse Autoencoders</a></li>
+    <li><a href="#canonical">Канонические иллюстрации</a></li>
     <li><a href="#summary">Ключевые выводы главы</a></li>
   </ol>
 </nav>
@@ -666,9 +667,65 @@
   что прокси-метрику нужно валидировать через людей.</p>
 </section>
 
+<!-- ============ КАНОНИЧЕСКИЕ ИЛЛЮСТРАЦИИ ============ -->
+<section class="step" id="canonical">
+  <h2>11. Канонические иллюстрации</h2>
+  <p class="lead">Четыре рисунка, по одному на каждый метод главы, — они и являются той
+  «картинкой из статьи», по которой эти методы обычно узнают.</p>
+
+  <figure class="canonical">
+    <p class="what">Class Activation Mapping: тепловая карта, показывающая, какие области
+    изображения голосуют за конкретный класс, полученная без единого обратного прохода
+    градиента — только из весов последнего слоя.</p>
+    <p class="cite">Zhou, B., Khosla, A., Lapedriza, A., Oliva, A., Torralba, A. (2016).
+    Learning Deep Features for Discriminative Localization. <i>CVPR</i>
+    (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским правом и
+    здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/cam-class-discriminative-maps.png</code>.</p>
+    <figcaption>Рис. 8. CAM: тепловые карты, специфичные для класса.</figcaption>
+  </figure>
+
+  <figure class="canonical">
+    <p class="what">Пара «кошка / собака» на одном изображении: Grad-CAM показывает, что сеть
+    смотрит на разные области в зависимости от того, какой класс объясняется — прямое
+    подтверждение class-discriminative свойства.</p>
+    <p class="cite">Selvaraju, R. R., Cogswell, M., Das, A., Vedantam, R., Parikh, D., Batra, D.
+    (2017). Grad-CAM: Visual Explanations from Deep Networks via Gradient-based Localization.
+    <i>ICCV</i> (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским
+    правом и здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/grad-cam-cat-dog.png</code>.</p>
+    <figcaption>Рис. 9. Grad-CAM: одна и та же картинка, два разных класса, две разные
+    карты.</figcaption>
+  </figure>
+
+  <figure class="canonical">
+    <p class="what">Примеры отдельных юнитов сети и изображений, максимально их
+    активирующих, размеченных человеко-понятным концептом (текстура, часть объекта, сцена) —
+    исходный материал для метрики IoU из §… выше.</p>
+    <p class="cite">Bau, D., Zhou, B., Khosla, A., Oliva, A., Torralba, A. (2017). Network
+    Dissection: Quantifying Interpretability of Deep Visual Representations. <i>CVPR</i>
+    (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским правом и
+    здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/network-dissection-units.png</code>.</p>
+    <figcaption>Рис. 10. Network Dissection: юниты сети, размеченные концептами.</figcaption>
+  </figure>
+
+  <figure class="canonical">
+    <p class="what">Столбчатая диаграмма TCAV score: чувствительность предсказания класса к
+    заданному человеком концепту (например, «полосатость» для класса «зебра»), с доверительным
+    интервалом по случайным контрольным концептам.</p>
+    <p class="cite">Kim, B., Wattenberg, M., Gilmer, J., Cai, C., Wexler, J., Viégas, F.,
+    Sayres, R. (2018). Interpretability Beyond Feature Attribution: Quantitative Testing with
+    Concept Activation Vectors (TCAV). <i>ICML</i> (<a href="references.html#papers">библиография</a>).
+    Рисунок защищён авторским правом и здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/tcav-concept-sensitivity.png</code>.</p>
+    <figcaption>Рис. 11. TCAV: чувствительность класса к заданному концепту.</figcaption>
+  </figure>
+</section>
+
 <!-- ============ СВОДКА ============ -->
 <section class="summary" id="summary">
-  <h2>11. Ключевые выводы главы</h2>
+  <h2>12. Ключевые выводы главы</h2>
   <div class="src"><a href="references.html#papers">Cunningham et al. 2023</a>; <a href="references.html#papers">Bills et al. 2023</a></div>
 
   <table class="plain">

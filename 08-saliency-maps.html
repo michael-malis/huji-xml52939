@@ -37,6 +37,7 @@
     <li><a href="#table">Сравнительная таблица методов</a></li>
     <li><a href="#adebayo">Adebayo et al. 2018: sanity checks</a></li>
     <li><a href="#hw4">Что показывает сравнение на практике</a></li>
+    <li><a href="#canonical">Канонические иллюстрации</a></li>
     <li><a href="#summary">Ключевые выводы главы</a></li>
   </ol>
 </nav>
@@ -610,9 +611,53 @@
   повод для дальнейших проверок, а не окончательная истина.</div>
 </section>
 
+<!-- ============ КАНОНИЧЕСКИЕ ИЛЛЮСТРАЦИИ ============ -->
+<section class="step" id="canonical">
+  <h2>11. Канонические иллюстрации</h2>
+  <p class="lead">Три рисунка из первоисточников: пример сбоя на смещённом фоне, диагностика
+  самих объяснений и очная ставка трёх градиентных методов на одном изображении.</p>
+
+  <figure class="canonical">
+    <p class="what">Корова на пляже вместо привычного пастбища: модель, научившаяся
+    ассоциировать класс с фоном, а не с животным, ошибается при смене окружения — тот самый
+    пример «фон вместо объекта» из §0.</p>
+    <p class="cite">Beery, S., Van Horn, G., Perona, P. (2018). Recognition in Terra Incognita.
+    <i>ECCV</i> (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским
+    правом и здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/terra-incognita-cow.png</code>.</p>
+    <figcaption>Рис. 6. «Корова на пляже» — модель ошибается вне привычного фона.</figcaption>
+  </figure>
+
+  <figure class="canonical">
+    <p class="what">Каскадная рандомизация весов сети слой за слоем и то, как по-разному на
+    неё реагируют разные методы saliency — часть методики sanity checks: карта, безразличная к
+    рандомизации модели, ничего не объясняет именно про эту модель.</p>
+    <p class="cite">Adebayo, J., Gilmer, J., Muelly, M., Goodfellow, I., Hardt, M., Kim, B.
+    (2018). Sanity Checks for Saliency Maps. <i>NeurIPS</i>
+    (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским правом и
+    здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/sanity-checks-cascading-randomization.png</code>.</p>
+    <figcaption>Рис. 7. Каскадная рандомизация: карта saliency должна меняться вместе с
+    моделью.</figcaption>
+  </figure>
+
+  <figure class="canonical">
+    <p class="what">Панель сравнения на одном изображении: vanilla gradient, guided
+    backpropagation и Integrated Gradients — визуальная разница между «шумным» и «сфокусированным»
+    градиентным объяснением, обсуждавшаяся в §2–4.</p>
+    <p class="cite">Simonyan, K., Vedaldi, A., Zisserman, A. (2013); Springenberg, J. T.,
+    Dosovitskiy, A., Brox, T., Riedmiller, M. (2014); Sundararajan, M., Taly, A., Yan, Q. (2017)
+    (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским правом и
+    здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/saliency-methods-comparison-panel.png</code>.</p>
+    <figcaption>Рис. 8. Vanilla gradient vs guided backprop vs Integrated Gradients на одном
+    входе.</figcaption>
+  </figure>
+</section>
+
 <!-- ============ СВОДКА ============ -->
 <section class="summary" id="summary">
-  <h2>11. Ключевые выводы главы</h2>
+  <h2>12. Ключевые выводы главы</h2>
   <div class="src">Molnar, <a href="references.html#books">IML</a>, гл. 10; <a href="references.html#papers">Adebayo et al. 2018</a></div>
 
   <h3>Линия развития методов — скелет любого ответа</h3>

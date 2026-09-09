@@ -45,6 +45,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <li><a href="#viz">Остальные визуализации: dependency, beeswarm, summary</a></li>
     <li><a href="#global">Агрегация локальных значений в глобальный FI</a></li>
     <li><a href="#summary">Ключевые выводы главы</a></li>
+    <li><a href="#canonical">Канонические иллюстрации</a></li>
   </ol>
 </nav>
 
@@ -1019,6 +1020,25 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td>Прочитайте waterfall</td>
         <td>база $\mathbb{E}[\hat f]$ → крупнейшие вклады со знаком → локальность → сумма замыкается (local accuracy)</td></tr>
   </table>
+</section>
+
+<!-- ============ КАНОНИЧЕСКИЕ ИЛЛЮСТРАЦИИ ============ -->
+<section class="step" id="canonical">
+  <h2>14. Канонические иллюстрации</h2>
+  <p class="lead">Рисунок, который читатель ожидает увидеть в главе про SHAP и который нет
+  смысла переизобретать: он уже существует в оригинальной статье и документации библиотеки.</p>
+
+  <figure class="canonical">
+    <p class="what">Beeswarm-график и dependence plot SHAP: то же разложение по коалициям, что
+    и выше, но агрегированное сразу по всей выборке — каждая точка на beeswarm это $\phi_j^{(i)}$
+    одного наблюдения, а dependence plot раскладывает эти точки по значению самого признака.</p>
+    <p class="cite">Lundberg, S. M., Lee, S.-I. (2017). A Unified Approach to Interpreting Model
+    Predictions. <i>NeurIPS</i> (<a href="references.html#papers">библиография</a>). Рисунок и
+    визуализации защищены авторским правом и здесь не публикуются; личная копия может быть
+    добавлена в <code>assets/figures/canonical/shap-beeswarm-dependence.png</code>.</p>
+    <figcaption>Рис. 12. Канонический вид SHAP beeswarm / dependence plot из оригинальной работы
+    и документации библиотеки <code>shap</code>.</figcaption>
+  </figure>
 </section>
 
 <script>

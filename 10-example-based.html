@@ -36,6 +36,7 @@
     <li><a href="#datashapley">Data Shapley: постановка и три аксиомы</a></li>
     <li><a href="#tmc">TMC-Shapley: как приближают Data Shapley</a></li>
     <li><a href="#practicum-data-valuation-curves">Практикум: чтение кривых ценности данных</a></li>
+    <li><a href="#canonical">Канонические иллюстрации</a></li>
     <li><a href="#summary">Ключевые выводы главы</a></li>
   </ol>
 </nav>
@@ -630,9 +631,40 @@
 </section>
 </section>
 
+<!-- ============ КАНОНИЧЕСКИЕ ИЛЛЮСТРАЦИИ ============ -->
+<section class="step" id="canonical">
+  <h2>12. Канонические иллюстрации</h2>
+  <p class="lead">Два рисунка из первоисточников для двух разных единиц объяснения этой
+  главы — прототип/критика и денежная стоимость обучающего примера.</p>
+
+  <figure class="canonical">
+    <p class="what">Прототипы (типичные представители класса) и criticisms (нетипичные, но
+    информативные примеры), выбранные по критерию максимального расхождения MMD между эмпирическим
+    распределением и распределением уже выбранного набора.</p>
+    <p class="cite">Kim, B., Khanna, R., Koyejo, O. (2016). Examples are not Enough, Learn to
+    Criticize! Criticism for Interpretability. <i>NeurIPS</i>
+    (<a href="references.html#papers">библиография</a>). Рисунок защищён авторским правом и
+    здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/mmd-critic-prototypes-criticisms.png</code>.</p>
+    <figcaption>Рис. 6. MMD-critic: прототипы и criticisms одного класса.</figcaption>
+  </figure>
+
+  <figure class="canonical">
+    <p class="what">Кривые качества модели при последовательном удалении обучающих примеров
+    в двух порядках — «сначала самые дешёвые/вредные» против «сначала самые ценные», — источник
+    качественного паттерна, который практикум ниже воспроизводит на собственных числах.</p>
+    <p class="cite">Ghorbani, A., Zou, J. (2019). Data Shapley: Equitable Valuation of Data for
+    Machine Learning. <i>ICML</i>, рис. 2–3 (<a href="references.html#papers">библиография</a>).
+    Рисунок защищён авторским правом и здесь не публикуется; личная копия может быть добавлена в
+    <code>assets/figures/canonical/data-shapley-removal-curves.png</code>.</p>
+    <figcaption>Рис. 7. Data Shapley: кривые удаления «худших/дешёвых первыми» против «лучших
+    первыми».</figcaption>
+  </figure>
+</section>
+
 <!-- ============ СВОДКА ============ -->
 <section class="summary" id="summary">
-  <h2>12. Ключевые выводы главы</h2>
+  <h2>13. Ключевые выводы главы</h2>
   <div class="src"><a href="references.html#papers">Ghorbani &amp; Zou 2019</a> — Data Shapley и три аксиомы</div>
 
   <h3>Карточки методов</h3>
