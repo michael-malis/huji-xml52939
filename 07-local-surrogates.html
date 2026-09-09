@@ -759,9 +759,9 @@ rand = XAI.rng(700001);
     {h:'3 · Summary',         items:['поодиночке','Shapley','аддит. аппрокс.','отбор подмн.']}
   ];
   const methods=[
-    {n:'PFI',   c:'#C0392B', idx:[2,2,0]},
-    {n:'SHAP',  c:'#8A5CB8', idx:[1,0,1]},
-    {n:'RISE',  c:'#2F6F6D', idx:[0,1,2]}
+    {n:'PFI',   c:'var(--calc)', idx:[2,2,0]},
+    {n:'SHAP',  c:'var(--core)', idx:[1,0,1]},
+    {n:'RISE',  c:'var(--safe)', idx:[0,1,2]}
   ];
   const x0=196, cw=118, y0=40, rh=76;
   let cells='', labels='';
@@ -785,7 +785,7 @@ rand = XAI.rng(700001);
   });
   document.getElementById('svg-cube').innerHTML = `
   <svg viewBox="0 0 700 290" width="100%" style="max-width:690px;display:block;margin:0 auto;">
-    <style>#svg-cube .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-cube .cell{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-cube .lg{font:600 12px ui-monospace,Menlo,Consolas,monospace;}
+    <style>#svg-cube .hdr{font:600 12.5px Georgia,serif;fill:var(--accent);}#svg-cube .cell{font:11px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-cube .lg{font:600 12px ui-monospace,Menlo,Consolas,monospace;}
     </style>
     ${cells}${labels}${paths}
   </svg>`;
@@ -815,7 +815,7 @@ rand = XAI.rng(700002);
   }
   document.getElementById('svg-rise').innerHTML = `
   <svg viewBox="0 0 700 210" width="100%" style="max-width:690px;display:block;margin:0 auto;">
-    <style>#svg-rise .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-rise .ts{font:10.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-rise .ar{stroke:#B9C7C4;stroke-width:1.8;fill:none;marker-end:url(#ah);}
+    <style>#svg-rise .t{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-rise .ts{font:10.5px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink-soft);}#svg-rise .ar{stroke:#B9C7C4;stroke-width:1.8;fill:none;marker-end:url(#ah);}
     </style>
     <defs><marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
       <path d="M0,0 L7,3.2 L0,6.4 z" fill="#B9C7C4"/></marker></defs>

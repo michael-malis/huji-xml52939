@@ -527,7 +527,7 @@ rand = XAI.rng(1100001);
 {
   document.getElementById('svg-incomp').innerHTML = `
   <svg viewBox="0 0 660 230" width="100%" style="max-width:660px;display:block;margin:0 auto;">
-    <style>#svg-incomp .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-incomp .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-incomp .hd{font:600 12.5px Georgia,serif;}#svg-incomp .ar{stroke:#B9C7C4;stroke-width:1.6;fill:none;marker-end:url(#ah3);}
+    <style>#svg-incomp .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-incomp .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink-soft);}#svg-incomp .hd{font:600 12.5px Georgia,serif;}#svg-incomp .ar{stroke:#B9C7C4;stroke-width:1.6;fill:none;marker-end:url(#ah3);}
     </style>
     <defs><marker id="ah3" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
       <path d="M0,0 L7,3.2 L0,6.4 z" fill="#B9C7C4"/></marker></defs>
@@ -546,12 +546,12 @@ rand = XAI.rng(1100001);
     <path class="ar" d="M176,83 L244,83"/>
     <path class="ar" d="M400,83 L468,83"/>
 
-    <text class="hd" x="210" y="140" text-anchor="middle" fill="#2F6F6D">uncertainty</text>
+    <text class="hd" x="210" y="140" text-anchor="middle" fill="var(--safe)">uncertainty</text>
     <text class="ts" x="210" y="160" text-anchor="middle">измерима:</text>
     <text class="ts" x="210" y="176" text-anchor="middle">дисперсия, ДИ</text>
     <text class="ts" x="210" y="196" text-anchor="middle">лечится данными</text>
 
-    <text class="hd" x="440" y="140" text-anchor="middle" fill="#B5540B">incompleteness</text>
+    <text class="hd" x="440" y="140" text-anchor="middle" fill="var(--pitfall)">incompleteness</text>
     <text class="ts" x="440" y="160" text-anchor="middle">неизмерима:</text>
     <text class="ts" x="440" y="176" text-anchor="middle">неквантифицированное смещение</text>
     <text class="ts" x="440" y="196" text-anchor="middle">лечится только объяснениями</text>
@@ -568,11 +568,11 @@ rand = XAI.rng(1100002);
 {
   const rows=[
     {n:'1 · Application-grounded', who:'реальные эксперты', task:'реальная задача',
-      cost:0.92, col:'#C0392B'},
+      cost:0.92, col:'var(--calc)'},
     {n:'2 · Human-grounded', who:'обычные люди / LLM', task:'упрощённая задача',
-      cost:0.55, col:'#8A5CB8'},
+      cost:0.55, col:'var(--core)'},
     {n:'3 · Functionally-grounded', who:'людей нет', task:'прокси-задача',
-      cost:0.16, col:'#2F6F6D'}
+      cost:0.16, col:'var(--safe)'}
   ];
   const x0=16, y0=56, rh=54, bx=352, bw=278;
   let out=`<text class="hd" x="${x0}" y="30">уровень</text>
@@ -590,7 +590,7 @@ rand = XAI.rng(1100002);
   out += `<text class="ts" x="${x0}" y="222">functionally-grounded уместна, только если прокси уже согласован с человеческим экспериментом</text>`;
   document.getElementById('svg-levels').innerHTML = `
   <svg viewBox="0 0 660 236" width="100%" style="max-width:660px;display:block;margin:0 auto;">
-    <style>#svg-levels .hd{font:600 12px Georgia,serif;fill:#5B6472;}#svg-levels .t{font:600 12.5px ui-monospace,Menlo,Consolas,monospace;}#svg-levels .ts{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
+    <style>#svg-levels .hd{font:600 12px Georgia,serif;fill:var(--ink-soft);}#svg-levels .t{font:600 12.5px ui-monospace,Menlo,Consolas,monospace;}#svg-levels .ts{font:11.5px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink-soft);}
     </style>
     ${out}
   </svg>`;

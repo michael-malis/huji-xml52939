@@ -823,11 +823,11 @@ rand = XAI.rng(300001);
     <text class="t" x="${x+w/2}" y="${y+19}" text-anchor="middle">${t1}</text>
     <text class="ts" x="${x+w/2}" y="${y+35}" text-anchor="middle">${t2}</text>`;
   const edge=(x1,y1,x2,y2)=>`<line class="e" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
-  const lab=(x,y,t,anchor)=>`<text class="el" x="${x}" y="${y}" text-anchor="${anchor||'middle'}" fill="#2F6F6D">${t}</text>`;
+  const lab=(x,y,t,anchor)=>`<text class="el" x="${x}" y="${y}" text-anchor="${anchor||'middle'}" fill="var(--accent)">${t}</text>`;
 
   document.getElementById('svg-tree').innerHTML = `
   <svg viewBox="0 0 786 470" width="100%" style="max-width:786px;display:block;margin:0 auto;">
-    <style>#svg-tree .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-tree .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}#svg-tree .e{stroke:#C9C8C2;stroke-width:1.6;}#svg-tree .el{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;}#svg-tree .leaf{font:600 11px ui-monospace,Menlo,Consolas,monospace;}
+    <style>#svg-tree .t{font:600 12px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-tree .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink-soft);}#svg-tree .e{stroke:#C9C8C2;stroke-width:1.6;}#svg-tree .el{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;}#svg-tree .leaf{font:600 11px ui-monospace,Menlo,Consolas,monospace;}
     </style>
 
     ${box(280,8,160,46,'9 Yes / 5 No','n = 14 · φ = 0.459','#F2F1EC')}

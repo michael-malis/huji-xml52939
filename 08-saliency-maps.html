@@ -746,11 +746,11 @@ rand = XAI.rng(800001);
   const dc = R.map(v=> v>0 ? v : 0);
   const gb = f.map((v,i)=> (v>0 && R[i]>0) ? R[i] : 0);
   const rows=[
-    {t:'f ˡ  (активации снизу)', a:f,  c:'#5B6472'},
-    {t:'R ˡ⁺¹  (градиент сверху)', a:R, c:'#5B6472'},
-    {t:'Backprop:  (f ˡ>0)·R', a:bp, c:'#2F6F6D'},
-    {t:'Deconvnet:  (R>0)·R', a:dc, c:'#8A5CB8'},
-    {t:'Guided:  (f ˡ>0)(R>0)·R', a:gb, c:'#C0392B'}
+    {t:'f ˡ  (активации снизу)', a:f,  c:'var(--ink-soft)'},
+    {t:'R ˡ⁺¹  (градиент сверху)', a:R, c:'var(--ink-soft)'},
+    {t:'Backprop:  (f ˡ>0)·R', a:bp, c:'var(--safe)'},
+    {t:'Deconvnet:  (R>0)·R', a:dc, c:'var(--core)'},
+    {t:'Guided:  (f ˡ>0)(R>0)·R', a:gb, c:'var(--calc)'}
   ];
   const x0=268, cw=62, y0=36, rh=40;
   let out='';
@@ -762,7 +762,7 @@ rand = XAI.rng(800001);
       out += `<rect x="${x0+ci*cw}" y="${yy-15}" width="${cw-8}" height="26"
         fill="${zero?'#F4F3EE':'#FFFFFF'}" stroke="${ri>=2?r.c:'#E3E2DC'}" stroke-width="${ri>=2?1.4:1}"/>
         <text class="vl" x="${x0+ci*cw+(cw-8)/2}" y="${yy+3}" text-anchor="middle"
-          fill="${zero?'#B7B6B0':'#1E2430'}">${v}</text>`;
+          fill="${zero?'#B7B6B0':'var(--ink)'}">${v}</text>`;
     });
     if(ri===1) out += `<line x1="10" y1="${yy+21}" x2="530" y2="${yy+21}" stroke="#E3E2DC"/>`;
   });
