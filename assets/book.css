@@ -48,6 +48,7 @@
   --source:      #5B6472;
   --illustr:     #9AA0A6;
   --th-bg:       #F2F1EC;
+  --scroll-shadow: rgba(30,36,48,.14);
 
   /* Наследие: бейджи. Сохранены как токены, но на страницах книги
      употребляется только .badge.practicum. */
@@ -99,6 +100,7 @@
     --source:      #A2ABB8;
     --illustr:     #7C838D;
     --th-bg:       #232830;
+    --scroll-shadow: rgba(0,0,0,.45);
 
     --core:        #B99BE0;
     --calc:        #E08A7E;
@@ -130,6 +132,7 @@
   --source:      #A2ABB8;
   --illustr:     #7C838D;
   --th-bg:       #232830;
+  --scroll-shadow: rgba(0,0,0,.45);
 
   --core:        #B99BE0;
   --calc:        #E08A7E;
@@ -489,9 +492,26 @@ section.practicum .calcbox b { color: var(--practicum); }
      строку таблицы. */
   padding-bottom: .25rem;
   scrollbar-width: thin;
+  /* Тень-подсказка «здесь можно прокрутить вбок» (Phase 6). Классический
+     приём на двух парах градиентов: пара background-attachment:local
+     прокручивается вместе с содержимым и закрывает тень ровно там, где
+     контента больше нет, а пара :scroll остаётся неподвижной у краёв
+     контейнера. Тень видна только со стороны, куда ещё можно
+     прокрутить, и исчезает сама, когда таблица уже целиком видна. */
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)),
+    linear-gradient(to right, rgba(255,255,255,0), var(--paper) 70%),
+    linear-gradient(to right, var(--scroll-shadow), rgba(255,255,255,0)),
+    linear-gradient(to left, var(--scroll-shadow), rgba(255,255,255,0));
+  background-position: 0 0, 100% 0, 0 0, 100% 0;
+  background-repeat: no-repeat;
+  background-size: 2.5rem 100%, 2.5rem 100%, 1rem 100%, 1rem 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 .table-wrap:focus-visible { outline: 2px solid var(--accent); }
 .table-wrap > table { margin: 0; }
+
 
 table.plain, table.contrast {
   width: 100%;
@@ -529,7 +549,7 @@ tr.best td { background: var(--accent-bg); font-weight: 600; }
    9. Иллюстрации
    -------------------------------------------------------------------------- */
 .fig {
-  background: var(--paper);
+  background-color: var(--paper);
   border: 1px solid var(--rule);
   border-radius: 4px;
   padding: .625rem .625rem .25rem;
@@ -539,6 +559,19 @@ tr.best td { background: var(--accent-bg); font-weight: 600; }
      на конкретной комбинации шрифт/ОС/масштаб. Раньше переполнение
      просто обрезалось; теперь оно скроллится, а не режется. */
   overflow-x: auto;
+  /* Тень-подсказка по тому же рецепту, что у .table-wrap (Phase 6):
+     background-color здесь обязателен как отдельное свойство, а не
+     часть шорткода `background`, иначе он сбросил бы background-image
+     обратно в none и тень пропала бы. */
+  background-image:
+    linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)),
+    linear-gradient(to right, rgba(255,255,255,0), var(--paper) 70%),
+    linear-gradient(to right, var(--scroll-shadow), rgba(255,255,255,0)),
+    linear-gradient(to left, var(--scroll-shadow), rgba(255,255,255,0));
+  background-position: 0 0, 100% 0, 0 0, 100% 0;
+  background-repeat: no-repeat;
+  background-size: 2.5rem 100%, 2.5rem 100%, 1rem 100%, 1rem 100%;
+  background-attachment: local, local, scroll, scroll;
 }
 .fig > div { max-width: 100%; }
 

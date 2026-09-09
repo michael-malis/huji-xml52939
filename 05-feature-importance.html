@@ -100,7 +100,8 @@
   и по этой трактовке <b>ни одна из двух не нужна</b>. Этот вывод понадобится в разделе 5 —
   он и есть причина, по которой CFI на дубликатах даёт ноль.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>#</th><th>Цель</th><th>Формально</th><th>Что её ломает</th><th>Ось TTTM/TTTD</th></tr>
     <tr>
       <td>1</td>
@@ -124,6 +125,7 @@
       <td>смесь</td>
     </tr>
   </table>
+</div>
 
   <p>Оси <b>TTTM / TTTD</b> (true-to-the-model / true-to-the-data) — это первая ось сквозной таксономии
   курса: говорит ли объяснение о том, что делает обученная функция, или о том, как устроен мир.
@@ -233,7 +235,8 @@
   из маргиналов.</p>
 
   <p>Три свойства удобно держать вместе — уже разобранные, они складываются в одну таблицу:</p>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Вопрос</th><th>Ответ</th><th>Почему (кратко)</th></tr>
     <tr>
       <td>Как PFI обходится с <b>интеракциями</b>?</td>
@@ -254,6 +257,7 @@
       признаку в важность.</td>
     </tr>
   </table>
+</div>
 
   <h3>True-to-the-model или true-to-the-data? (вопрос 2г)</h3>
   <p><b>Ответ: true-to-the-model.</b> PFI измеряет, насколько <i>модель опирается</i> на признак, даже
@@ -287,23 +291,27 @@
   $L(y,\hat y)=(y-\hat y)^2$, среднее которой даёт MSE: там отклонения возводятся в квадрат, и все
   числа ниже получились бы другими. Здесь везде берётся модуль.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>$i$</th><th class="num">$x_1$ (возраст)</th><th class="num">$x_2$ (размер)</th><th class="num">$y$ (рост)</th></tr>
     <tr><td>1</td><td class="num">5</td><td class="num">28</td><td class="num">110</td></tr>
     <tr><td>2</td><td class="num">12</td><td class="num">37</td><td class="num">150</td></tr>
     <tr><td>3</td><td class="num">16</td><td class="num">40</td><td class="num">175</td></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Шаг 1. Базовая ошибка модели — без всякой перестановки.</b><br>
     Это второй член формулы PFI. Считаем предсказание каждой строки по формуле модели и берём модуль
     отклонения от её $y$:
-    <table class="plain">
+    <div class="table-wrap" tabindex="0">
+<table class="plain">
       <tr><th>$i$</th><th>$\hat f(x_1,x_2)=20+5x_1+2x_2$</th><th class="num">$\hat y_i$</th><th class="num">$y_i$</th><th class="num">$L=|y_i-\hat y_i|$</th></tr>
       <tr><td>1</td><td>$20+5\cdot5+2\cdot28=20+25+56$</td><td class="num">101</td><td class="num">110</td><td class="num">9</td></tr>
       <tr><td>2</td><td>$20+5\cdot12+2\cdot37=20+60+74$</td><td class="num">154</td><td class="num">150</td><td class="num">4</td></tr>
       <tr><td>3</td><td>$20+5\cdot16+2\cdot40=20+80+80$</td><td class="num">180</td><td class="num">175</td><td class="num">5</td></tr>
     </table>
+</div>
     $$e_{\text{orig}}=\frac{9+4+5}{3}=\frac{18}{3}=\mathbf{6}$$
   </div>
 
@@ -364,7 +372,8 @@
   <p>Соберём шесть результатов в одну таблицу — считать по ней уже ничего не надо, она только
   фиксирует то, что посчитано выше:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>#</th><th>$(a_1,a_2,a_3)$</th><th>ошибки строк</th><th class="num">сумма</th><th class="num">MAE</th></tr>
     <tr><td>1</td><td>(5, 12, 16) — <i>исходный порядок</i></td><td>9 + 4 + 5</td><td class="num">18</td><td class="num">6,000</td></tr>
     <tr><td>2</td><td>(5, 16, 12)</td><td>9 + 24 + 15</td><td class="num">48</td><td class="num">16,000</td></tr>
@@ -374,6 +383,7 @@
     <tr><td>6</td><td>(16, 12, 5)</td><td>46 + 4 + 50</td><td class="num">100</td><td class="num">33,333</td></tr>
     <tr><th colspan="3">Итого по всем шести</th><th class="num">420</th><th class="num">—</th></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Шаг 3. Средняя ошибка после перестановки и сам PFI.</b><br>
@@ -435,7 +445,8 @@
   какую дополнительную модель придётся обучить. Достаточно описать <b>одну</b> из них; сюда же формально подходит
   Conditional PFI либо LOCO.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Альтернатива</th><th>Формула</th><th>Что делает</th><th>Какая «доп. модель» нужна</th></tr>
     <tr>
       <td><b>Conditional VI</b> (= CFI)</td>
@@ -462,6 +473,7 @@
       <td>обе: сэмплер условного + новая модель</td>
     </tr>
   </table>
+</div>
 
   <p><b>Почему заголовок про «ещё одну модель».</b> Пройдёмся по столбцу справа: две строки требуют
   обучить новую предсказательную модель, одна — оценить и научиться сэмплировать распределение
@@ -666,11 +678,13 @@
   (первый член), либо «с ним предсказание сильно шевелится» (второй). Обе формулировки законны, и
   каждая порождает свою семью методов.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Член тождества</th><th>Смысл</th><th>Кто его оценивает</th><th>Смотрит на $y$?</th></tr>
     <tr><td>$\mathbb{E}[\text{Var}(Y\mid X_s)]$</td><td>необъяснённый остаток $\Rightarrow$ «насколько вырастет ошибка, если убрать признак»</td><td><b>PFI, CFI, LOCO</b> — всё, что было выше</td><td>да</td></tr>
     <tr><td>$\text{Var}(\mathbb{E}[Y\mid X_s])$</td><td>объяснённая часть $\Rightarrow$ «насколько сильно шевелится предсказание»</td><td><b>PDI</b> — следующий раздел</td><td><b>нет</b></td></tr>
   </table>
+</div>
 
   <div class="fig"><div id="plot-vardec" style="height:280px;"></div></div>
   <div class="fig-cap illustr">Рис. 6. Тождество, применённое к каждому признаку по отдельности
@@ -808,7 +822,8 @@
   конструкция с тремя независимыми переключателями. Дальше эта рамка работает как готовый скелет
   ответа на любой вопрос «сравните метод A и метод B» в темах 5–8.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Ось</th><th>Вопрос</th><th>Варианты</th></tr>
     <tr>
       <td><b>1. Feature removal</b></td>
@@ -826,6 +841,7 @@
       <td>удалить признак поодиночке · <b>Shapley values</b> · аддитивная аппроксимация · отбор подмножества</td>
     </tr>
   </table>
+</div>
 
   <p><b>Точные формулы для оси 1</b> — это ядро темы, их стоит держать в голове дословно.
   Здесь $S$ — множество «оставленных» признаков, $\bar S$ — удалённых, $F(x_S)$ — «модель, знающая только $x_S$»:</p>
@@ -846,7 +862,8 @@
   по одной точке на каждой из осей. Отмечены координаты PFI (сплошная линия) и SHAP (пунктир) —
   они отличаются двумя переключателями из трёх.</div>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Метод</th><th>Removal</th><th>Behavior</th><th>Summary</th></tr>
     <tr><td><b>PFI</b> (Breiman)</td><td>маргинальная маргинализация</td><td>loss</td><td>поодиночке</td></tr>
     <tr><td><b>CFI</b> (Strobl)</td><td>условная маргинализация</td><td>loss</td><td>поодиночке</td></tr>
@@ -857,6 +874,7 @@
     <tr><td><b>RISE</b> (тема 7)</td><td>обнуление маской</td><td>вероятность класса</td><td>среднее по маскам</td></tr>
     <tr><td><b>LIME</b> (тема 7)</td><td colspan="3">не removal-based в чистом виде — это <i>локальный суррогат</i></td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Как этим пользоваться.</b> Вопрос «чем SHAP отличается от PFI» решается за
   две строки: у них разная ось removal (условная vs маргинальная) и разная ось summary
@@ -874,7 +892,8 @@
 
   <p>Ничего нового таблица не вводит — каждая строка свёрнута из соответствующего раздела выше.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>PFI</th><th>CFI</th><th>LOCO</th><th>PDI</th><th>MCR</th></tr>
     <tr><td><b>Что делает</b></td><td>переставляет $X_j$ (маргинальное)</td><td>сэмплирует $X_j$ из условного</td><td><b>переобучает</b> без $X_j$</td><td>дисперсия PD-кривой</td><td>диапазон MR по всем хорошим моделям</td></tr>
     <tr><td><b>Смотрит на $y$?</b></td><td>да (loss)</td><td>да (loss)</td><td>да (loss)</td><td><b>нет</b></td><td>да</td></tr>
@@ -885,19 +904,23 @@
     <tr><td><b>Коррелированные признаки</b></td><td>завышает</td><td>занижает (дубликаты → 0)</td><td>дубликаты → 0</td><td>завышает</td><td>показывает весь диапазон</td></tr>
     <tr><td><b>Главная цена</b></td><td>искажение при корреляции</td><td>сложность условного сэмплирования</td><td>$p$ переобучений + рост дисперсии</td><td>игнорирует $y$</td><td>самая дорогая</td></tr>
   </table>
+</div>
 
   <h3>Сравнение по трём осям, как просит план подготовки</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Метод</th><th>Что измеряет (трактовка 1/2/3)</th><th>On- или off-manifold</th><th>Нужна ли дополнительная модель</th></tr>
     <tr><td><b>PFI</b></td><td>трактовка 1 → 3: опора модели на признак</td><td><b>off</b>-manifold</td><td>нет</td></tr>
     <tr><td><b>CFI</b></td><td>трактовка 3: <i>дополнительная</i> информация признака</td><td><b>on</b>-manifold</td><td>да — сэмплер $P(X_j\mid X_{-j})$</td></tr>
     <tr><td><b>LOCO</b></td><td>трактовка 3 на уровне <i>алгоритма</i></td><td><b>on</b>-manifold</td><td>да — $\hat f_{-j}$</td></tr>
     <tr><td><b>PDI</b></td><td>трактовка 1: шевеление предсказаний, без $y$</td><td><b>off</b>-manifold</td><td>нет</td></tr>
   </table>
+</div>
 
   <h3>Карточки</h3>
   <p>Формат из плана: <i>что делает → формула → уровень → TTTM/TTTD → главная слабость → чем чинят</i>.</p>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>Что делает</th><th>Формула-ядро</th><th>Слабость</th><th>Чем чинят</th></tr>
     <tr><td><b>PFI</b></td><td>перестановка столбца, рост потери</td><td>$\mathbb{E}L(\text{perm})-\mathbb{E}L$</td><td>экстраполяция, завышение коррелированных</td><td>CFI / LOCO / relearn-варианты</td></tr>
     <tr><td><b>CFI</b></td><td>условная замена значения</td><td>то же с $X_j\mid X_{-j}$</td><td>условное сэмплирование трудно; дубликаты → 0</td><td>грид из дерева (Strobl), генеративные сэмплеры</td></tr>
@@ -906,6 +929,7 @@
     <tr><td><b>PDI</b></td><td>дисперсия PD-кривой</td><td>$\text{Var}(\hat f_{PD,j})$</td><td>игнорирует $y$; ноль при знакопеременной интеракции</td><td>смотреть ICE до PD; loss-based методы</td></tr>
     <tr><td><b>MR / MCR</b></td><td>опора одной модели / всего Rashomon-класса</td><td>$[\min,\max]$ MR по $\mathcal{R}(\epsilon)$</td><td>дорого; зависит от выбора $\epsilon$ и класса $\mathcal{F}$</td><td>—</td></tr>
   </table>
+</div>
 
 
   <div class="pitfall"><b>Четыре вещи, которые на этом блоке теряют баллы чаще всего.</b>
@@ -930,7 +954,7 @@ rand = XAI.rng(500001);
 {
   document.getElementById('svg-covert').innerHTML = `
   <svg viewBox="0 0 700 250" width="100%" style="max-width:680px;display:block;margin:0 auto;">
-    <style>#svg-covert .ax{stroke:#B9C7C4;stroke-width:1.6;}#svg-covert .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-covert .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-covert .dotA{fill:#C0392B;}#svg-covert .dotB{fill:#8A5CB8;}#svg-covert .lnA{stroke:#C0392B;stroke-width:1.6;}#svg-covert .lnB{stroke:#8A5CB8;stroke-width:1.6;stroke-dasharray:5 4;}
+    <style>#svg-covert .ax{stroke:#B9C7C4;stroke-width:1.6;}#svg-covert .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-covert .hdr{font:600 12.5px Georgia,serif;fill:var(--accent);}#svg-covert .dotA{fill:var(--calc);}#svg-covert .dotB{fill:var(--practicum);}#svg-covert .lnA{stroke:var(--calc);stroke-width:1.6;}#svg-covert .lnB{stroke:var(--practicum);stroke-width:1.6;stroke-dasharray:5 4;}
     </style>
     <text class="hdr" x="14" y="26">1 · Feature removal</text>
     <line class="ax" x1="200" y1="21" x2="660" y2="21"/>
@@ -952,8 +976,8 @@ rand = XAI.rng(500001);
     <line class="lnB" x1="330" y1="21" x2="330" y2="121"/>
     <line class="lnB" x1="330" y1="121" x2="330" y2="221"/>
 
-    <text class="lbl" x="545" y="16" style="fill:#C0392B;font-weight:700;">PFI</text>
-    <text class="lbl" x="285" y="16" style="fill:#8A5CB8;font-weight:700;">SHAP</text>
+    <text class="lbl" x="545" y="16" style="fill:var(--calc);font-weight:700;">PFI</text>
+    <text class="lbl" x="285" y="16" style="fill:var(--practicum);font-weight:700;">SHAP</text>
   </svg>`;
 }
 
@@ -1067,17 +1091,17 @@ rand = XAI.rng(500007);
   }
   document.getElementById('svg-minipatch').innerHTML = `
   <svg viewBox="0 0 700 250" width="100%" style="max-width:690px;display:block;margin:0 auto;">
-    <style>#svg-minipatch .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-minipatch .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:#5B6472;}
+    <style>#svg-minipatch .t{font:12px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-minipatch .ts{font:11px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink-soft);}
     </style>
     ${cells}
     <rect x="${x0+patch.c0*cw}" y="${y0+patch.r0*ch}" width="${(patch.c1-patch.c0)*cw}"
-          height="${(patch.r1-patch.r0)*ch}" fill="none" stroke="#2F6F6D" stroke-width="2.2"/>
+          height="${(patch.r1-patch.r0)*ch}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
     <rect x="${x0+patch2.c0*cw}" y="${y0+patch2.r0*ch}" width="${(patch2.c1-patch2.c0)*cw}"
           height="${(patch2.r1-patch2.r0)*ch}" fill="none" stroke="#B5540B" stroke-width="2.2"/>
     <text class="t" x="${x0}" y="24">признаки  M  →</text>
     <text class="t" x="12" y="${y0+60}">наблюдения</text>
     <text class="t" x="12" y="${y0+78}">N  ↓</text>
-    <text class="ts" x="${x0+patch.c0*cw}" y="${y0+patch.r1*ch+18}" fill="#2F6F6D">патч k₁: n=3 строк, m=3 столбца</text>
+    <text class="ts" x="${x0+patch.c0*cw}" y="${y0+patch.r1*ch+18}" fill="var(--accent)">патч k₁: n=3 строк, m=3 столбца</text>
     <text class="ts" x="${x0+patch2.c0*cw-30}" y="${y0-6}" fill="#B5540B">патч k₂</text>
     <text class="ts" x="${x0}" y="${y0+R*ch+44}">
       важность признака j = средняя ошибка патчей БЕЗ j  −  средняя ошибка патчей С j

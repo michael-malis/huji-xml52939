@@ -72,13 +72,15 @@
   (1) берут преобразование, связывающее $y$ с $x^\top\beta$, и (2) меняют функцию потерь
   вместо среднеквадратичной. Примеры со слайда 6:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Тип отклика</th><th>Проблема</th><th>Типичная связь</th></tr>
     <tr><td>Бинарный $Y\in\{0,1\}$</td><td>$\mathbb{E}[Y]\in[0,1]$, а $x^\top\beta\in\mathbb{R}$</td>
         <td><b>logit</b> — разбирается в этом курсе</td></tr>
     <tr><td>Время до события (survival)</td><td>положительное, цензурированное</td><td>survival link</td></tr>
     <tr><td>Счётные данные</td><td>неотрицательное целое</td><td>$\log$ (пуассоновская регрессия)</td></tr>
   </table>
+</div>
 
   <p><b>Цена для интерпретации, одной фразой:</b> в GLM коэффициент аддитивен <b>на шкале $g$</b>,
   а не на шкале $Y$. Всё, что дальше в этой теме про odds и odds ratio, — это перевод коэффициента
@@ -154,12 +156,14 @@
   <p>Данные о прокате велосипедов. Бинарный отклик: $y=1$, если аренд больше 70-го процентиля
   ($\text{cnt}>5531$), иначе $y=0$. Таблица совместных и маргинальных частот:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>WINTER</th><th>SPRING</th><th>SUMMER</th><th>FALL</th><th>Всего</th></tr>
     <tr><td><b>$y=0$</b></td><td class="num">174</td><td class="num">111</td><td class="num">98</td><td class="num">128</td><td class="num">511</td></tr>
     <tr><td><b>$y=1$</b></td><td class="num">7</td><td class="num">73</td><td class="num">90</td><td class="num">50</td><td class="num">220</td></tr>
     <tr><td><b>Всего</b></td><td class="num">181</td><td class="num">184</td><td class="num">188</td><td class="num">178</td><td class="num">731</td></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Шаг 1. Odds высокого спроса зимой.</b> Odds — это отношение <i>условных вероятностей</i>,
@@ -185,13 +189,15 @@
 
   <div class="calcbox">
     <b>Шаг 3. Сверка с выводом GLM.</b> Модель <code class="f">y ~ season</code>, зима — базовый уровень:
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>Коэффициент</th><th>Estimate</th><th>$e^{\text{Estimate}}$</th><th>Что это по таблице</th></tr>
       <tr><td>(Intercept)</td><td class="num">−3,2131</td><td class="num">0,04023</td><td>$=\text{odds}_{\text{winter}}=7/174$ ✓</td></tr>
       <tr><td>seasonSPRING</td><td class="num">2,7941</td><td class="num">16,348</td><td>$=\text{OR}_{\text{spring/winter}}$ ✓</td></tr>
       <tr><td>seasonSUMMER</td><td class="num">3,1280</td><td class="num">22,828</td><td>$=\text{OR}_{\text{summer/winter}}=\frac{90/98}{7/174}=22{,}83$ ✓</td></tr>
       <tr><td>seasonFALL</td><td class="num">2,2731</td><td class="num">9,709</td><td>$=\text{OR}_{\text{fall/winter}}=\frac{50/128}{7/174}=9{,}71$ ✓</td></tr>
     </table>
+</div>
     <b>Обратный ход</b> (его и просят в пункте «в»): из коэффициентов восстановить odds любого сезона —
     $$\text{odds}_{\text{summer}}=e^{\beta_0}\cdot e^{\beta_{\text{SUMMER}}}
       =0{,}04023\cdot22{,}828=0{,}9184=\frac{90}{98}\ ✓$$
@@ -221,7 +227,8 @@
   <p>Если к той же модели добавить погоду и время, сравнение двух выводов — готовая
   иллюстрация к тому, что происходит с интерпретацией при <b>коррелированных признаках</b>.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Коэффициент</th><th>Модель <code class="f">y ~ season</code></th><th>Полная модель</th><th>$p$-value в полной</th></tr>
     <tr><td>(Intercept)</td><td class="num">−3,2131</td><td class="num">−8,5176</td><td class="num">0,0000</td></tr>
     <tr><td>seasonSPRING</td><td class="num">2,7941</td><td class="num">1,7427</td><td class="num">0,0035</td></tr>
@@ -232,6 +239,7 @@
     <tr><td>windspeed</td><td>—</td><td class="num">−0,0925</td><td class="num">0,0024</td></tr>
     <tr><td>days.since.2011</td><td>—</td><td class="num">0,0166</td><td class="num">0,0000</td></tr>
   </table>
+</div>
 
   <p><b>Что случилось.</b> Лето и осень потеряли значимость (и даже сменили знак), весна ослабла
   с 2,79 до 1,74. Причина: температура, влажность и ветер <b>сильно связаны с сезоном</b>.
@@ -306,7 +314,8 @@
   <p>Теперь всю цепочку удобно свернуть в таблицу: она не заменяет рассуждение выше,
   а фиксирует его результат вместе с точным видом базиса.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Приём</th><th>Отображение $b_1:x_1\mapsto\ \dots$</th><th>Что получается</th></tr>
     <tr><td><b>Полином</b></td><td>$(x_1,\ x_1^2,\ x_1^3)$</td>
         <td>$f_\beta(x)=\beta_0+\beta_{11}x_1+\beta_{12}x_1^2+\beta_{13}x_1^3+\dots$ — гладкая кривая,
@@ -321,6 +330,7 @@
     <tr><td><b>Polynomial splines</b></td><td>то же, но кусками полиномы</td>
         <td>в узлах меняется <b>производная высокого порядка</b> — гладкое соединение кусков</td></tr>
   </table>
+</div>
 
   <div class="fig"><div id="plot-basis" style="height:330px;"></div></div>
   <div class="fig-cap illustr">Рис. 2. Три способа согнуть линию на одних и тех же данных.
@@ -362,11 +372,13 @@
 
   <div class="calcbox">
     <b>Числа на реальных данных.</b> На данных проката велосипедов, те же признаки, две модели:
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>Модель</th><th>$R^2$</th></tr>
       <tr><td>линейная (числовые признаки входят линейно)</td><td class="num">0,8530</td></tr>
       <tr><td>GAM: каждый числовой признак заменён на <code class="f">bs(·, df=10, degree=2)</code></td><td class="num">0,8959</td></tr>
     </table>
+</div>
     Прирост $\approx0{,}043$ — при том, что <b>интерпретируемость не потеряна</b>: у каждого признака
     по-прежнему свой отдельный график эффекта. Это и есть аргумент в пользу GAM.
     <div class="src" style="margin:8px 0 0;">Расчёт на данных проката велосипедов: $R^2$ линейной модели против GAM-подобной</div>
@@ -388,7 +400,8 @@
   <p>Мотивирующий вопрос со слайда: <i>«одинаков ли эффект температуры зимой и летом?»</i>
   Аддитивная модель отвечает «да» по построению — значит, чтобы допустить «нет», нужны новые члены.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Ситуация</th><th>Что добавляют</th><th>Комментарий</th></tr>
     <tr><td>Категориальный партнёр</td><td>$x_1\cdot\mathbb{1}(x_2=c)$</td>
         <td>отдельный наклон по $x_1$ внутри каждой категории $c$</td></tr>
@@ -398,6 +411,7 @@
     <tr><td>В GAM</td><td>член $f_{12}(x_1,x_2)$</td>
         <td>двумерная поверхность; визуализируется как heatmap</td></tr>
   </table>
+</div>
 
   <p>После добавления обучаем как обычную линейную модель. <b>Ограничение, названное на слайде:</b>
   число признаков растёт очень быстро — все пары дают $\binom{p}{2}$ членов, тройки — $\binom{p}{3}$,
@@ -452,13 +466,15 @@
     получается фиксацией $x_2=x_2^{(i)}$:
     $$\hat y_i(x_1)=\big(b_1+b_3x_2^{(i)}\big)x_1+\big(b_0+b_2x_2^{(i)}\big)$$
     Это прямая с наклоном $b_1+b_3x_2^{(i)}$ — <b>своим у каждого наблюдения</b>.
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>Случай</th><th>Наклон ICE-кривой</th><th>Как выглядит пучок</th><th>Наклон PD</th></tr>
       <tr><td>$b_3\approx0$ (интеракции нет)</td><td>$\approx b_1$ у всех</td>
           <td>почти <b>параллельные</b> линии</td><td>$b_1$</td></tr>
       <tr><td>$b_3=5$ (сильная интеракция)</td><td>$b_1+5x_2^{(i)}$, от $b_1$ до $b_1+5$</td>
           <td>линии <b>расходятся веером</b> и могут пересекаться</td><td>$b_1+2{,}5$</td></tr>
     </table>
+</div>
     <b>Проверка средним:</b> среднее наклонов ICE равно
     $b_1+b_3\overline{x_2}=b_1+\tfrac12 b_3$ — ровно наклон PD из пункта (б).
     Это численная проверка утверждения «<b>PD есть в точности среднее по ICE-кривым</b>».
@@ -486,7 +502,8 @@
   <p>Часть 3 лекции 2 открывается перспективой Breiman: <i>«если предсказания верны — изучай
   предсказания»</i>. Дальше три графика:</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>Формула</th><th>Уровень</th><th>На какой вопрос отвечает</th></tr>
     <tr><td><b>CP</b></td><td>$x_j\mapsto\hat f(x_j,x^{(i)}_{-j})$ при фиксированном $i$</td>
         <td>локальный, 1 линия</td><td>как меняется предсказание <i>одного</i> примера</td></tr>
@@ -497,6 +514,7 @@
     <tr><td><b>PD</b></td><td>$\hat f_{j,PD}(x_j)=\frac1n\sum_i\hat f(x_j,x^{(i)}_{-j})$</td>
         <td>глобальный, 1 кривая</td><td>средний маргинальный эффект</td></tr>
   </table>
+</div>
 
   <p>Три вещи, которые нужно помнить и из этой темы: <b>PD есть в точности среднее по ICE</b>;
   <b>d-ICE</b> (производная CP-кривой) при аддитивной модели даёт совпадающие кривые,
@@ -514,7 +532,8 @@
   <h2>10. Ключевые выводы главы</h2>
   <div class="src">Molnar, <a href="references.html#books">IML</a>, гл. 5</div>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>Что делает</th><th>Формула</th><th>Как интерпретируется</th><th>Слабость / частая ошибка</th></tr>
     <tr><td><b>Логистическая регрессия</b></td><td>линейная модель для бинарного отклика</td>
         <td>$\text{logit}\,p(x)=x^\top\beta$</td>
@@ -537,6 +556,7 @@
         <td>наклон ICE = $b_1+b_3x_2^{(i)}$</td>
         <td>число членов растёт как $2^p$; PD усредняет интеракцию и прячет её</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Что теряет баллы именно на этой теме.</b>
   (1) «$\beta_j$ увеличивает вероятность на $\beta_j$» — самая дорогая ошибка блока.

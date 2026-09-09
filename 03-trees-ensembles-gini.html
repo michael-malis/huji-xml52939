@@ -116,7 +116,8 @@
   <p>Алгоритм жадный: на каждом шаге выбирается тот сплит, который <b>прямо сейчас</b> сильнее всего
   снижает потерю. Слайд перечисляет четыре следствия — и все четыре дальше всплывают в курсе:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Свойство</th><th>Что означает</th><th>Куда ведёт</th></tr>
     <tr><td><b>Ошибка всегда падает при сплите</b></td>
         <td>любой сплит не хуже отсутствия сплита, поэтому дерево будет расти до чистых листьев</td>
@@ -134,6 +135,7 @@
         <td>положение границы подогнано под конкретную выборку</td>
         <td>переобучение; и это же чинит бутстрэп в Random Forest — ресемплинг «сглаживает» пороги</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Точность формулировки.</b> «Дерево ловит интеракции дёшево» и «дерево ловит
   интеракции только при сильном маргинальном эффекте» — <b>оба верны одновременно</b>, и хороший
@@ -326,7 +328,8 @@
   <p>Задача: по погодным признакам предсказать, будет ли Шахар играть в теннис. 14 дней наблюдений,
   таблица отсортирована по температуре:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>День</th><th>Temp (°C)</th><th>Humidity</th><th>Wind</th><th>Tennis?</th></tr>
     <tr><td>6</td><td class="num">9</td><td>Normal</td><td>Strong</td><td><b>No</b></td></tr>
     <tr><td>5</td><td class="num">10</td><td>Normal</td><td>Weak</td><td>Yes</td></tr>
@@ -343,6 +346,7 @@
     <tr><td>3</td><td class="num">32</td><td>High</td><td>Weak</td><td>Yes</td></tr>
     <tr><td>1</td><td class="num">35</td><td>High</td><td>Weak</td><td><b>No</b></td></tr>
   </table>
+</div>
 
   <h3>Шаг 1. Примесь корня</h3>
   <div class="calcbox">
@@ -369,7 +373,8 @@
   <p>Различных значений температуры восемь ($9,10,11,18,20,22,29,32,35$ → восемь границ между
   соседними уровнями). Все восемь кандидатов:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Порог</th><th>$n_L$</th><th>$n_R$</th><th>$\phi_L$</th><th>$\phi_R$</th><th>взвеш. примесь</th><th>$\Theta$</th></tr>
     <tr><td>Temp &lt; 9,5</td><td class="num">1</td><td class="num">13</td><td class="num">0,0000</td><td class="num">0,4260</td><td class="num">0,3956</td><td class="num">0,0636</td></tr>
     <tr><td>Temp &lt; 10,5</td><td class="num">3</td><td class="num">11</td><td class="num">0,4444</td><td class="num">0,4628</td><td class="num">0,4589</td><td class="num">0,0003</td></tr>
@@ -380,6 +385,7 @@
     <tr><td>Temp &lt; 30,5</td><td class="num">11</td><td class="num">3</td><td class="num">0,3967</td><td class="num">0,4444</td><td class="num">0,4069</td><td class="num">0,0523</td></tr>
     <tr><td>Temp &lt; 33,5</td><td class="num">13</td><td class="num">1</td><td class="num">0,4260</td><td class="num">0,0000</td><td class="num">0,3956</td><td class="num">0,0636</td></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Итог корневого перебора.</b>
@@ -392,13 +398,15 @@
   <div class="calcbox">
     Узел: 7 набл., <b>6 Yes, 1 No</b>, $\phi=0{,}2449$. Единственный No — день 6 (Temp 9).
     Перебор даёт:
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>Кандидат</th><th>$\Theta$</th></tr>
       <tr class="best"><td>Temp &lt; 9,5</td><td class="num">0,2449</td></tr>
       <tr><td>Temp &lt; 10,5</td><td class="num">0,0544</td></tr>
       <tr><td>Wind == Weak / Strong</td><td class="num">0,0544</td></tr>
       <tr><td>Temp &lt; 15,5</td><td class="num">0,0306</td></tr>
     </table>
+</div>
     <b>Temp &lt; 9,5</b> отрезает ровно этот день: слева 1 набл. (No, $\phi=0$), справа 6 (все Yes, $\phi=0$).
     Взвешенная примесь после сплита равна нулю, значит $\Theta=\phi_{\text{parent}}=0{,}2449$ —
     <b>максимально возможное значение</b> для этого узла. Ветвь закончена, оба ребёнка — листья.
@@ -407,13 +415,15 @@
   <h3>Шаг 5. Правая ветвь: Humidity = High</h3>
   <div class="calcbox">
     Узел: 7 набл., <b>3 Yes, 4 No</b>, $\phi=0{,}4898$.
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>Кандидат</th><th>$\Theta$</th></tr>
       <tr class="best"><td>Temp &lt; 19,0</td><td class="num">0,2612</td></tr>
       <tr><td>Temp &lt; 14,5</td><td class="num">0,1088</td></tr>
       <tr><td>Temp &lt; 21,0</td><td class="num">0,0850</td></tr>
       <tr><td>Wind == Strong / Weak</td><td class="num">0,0136</td></tr>
     </table>
+</div>
     <b>Temp &lt; 19</b>: слева 2 набл. (дни 12 и 4, оба Yes) — чистый лист; справа 5 набл.
     (1 Yes, 4 No), $\phi=\frac{2\cdot1\cdot4}{25}=0{,}32$.
     <p style="margin:8px 0 0;">Проверка: $0{,}4898-\tfrac27\cdot0-\tfrac57\cdot0{,}32
@@ -504,7 +514,8 @@
   <p>В дереве из <a href="#practicum-tree-build">§6</a> ровно шесть внутренних узлов. Для каждого берём $\Theta$, посчитанное выше,
   и умножаем на долю наблюдений в узле:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>#</th><th>Узел</th><th>Признак</th><th>$n_t$</th><th>$\Delta G(t)=\Theta$</th><th>$n_t/14$</th><th>вклад</th></tr>
     <tr><td>1</td><td>корень</td><td><b>Humidity</b></td><td class="num">14</td><td class="num">0,091837</td><td class="num">1,0000</td><td class="num">0,091837</td></tr>
     <tr><td>2</td><td>Normal</td><td><b>Temp</b> &lt; 9,5</td><td class="num">7</td><td class="num">0,244898</td><td class="num">0,5000</td><td class="num">0,122449</td></tr>
@@ -513,6 +524,7 @@
     <tr><td>5</td><td>High, T≥19, Weak</td><td><b>Temp</b> &lt; 26</td><td class="num">3</td><td class="num">0,111111</td><td class="num">0,2143</td><td class="num">0,023810</td></tr>
     <tr><td>6</td><td>…, T≥26</td><td><b>Temp</b> &lt; 33,5</td><td class="num">2</td><td class="num">0,500000</td><td class="num">0,1429</td><td class="num">0,071429</td></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Шаг 1. Сумма по признакам.</b>
@@ -568,7 +580,8 @@
   <h2>8. Как понимают дерево: локально и глобально</h2>
   <div class="src">src: слайды л. 3 (сл. 11–13); IML гл. 9</div>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Уровень</th><th>Метод (дословно со слайда)</th><th>Что получаем</th><th>Координаты по таксономии</th></tr>
     <tr><td><b>Локальный</b></td><td>«Follow the tree branches» — пройти по ветвям для данного примера</td>
         <td>цепочка условий: «влажность высокая И температура ≥ 19 И ветер слабый ⇒ не играет».
@@ -578,6 +591,7 @@
         <td>Gini FI / MDI из <a href="#practicum-gini-mdi">§7</a></td>
         <td>глобальный · white-box · feature space · TTTM</td></tr>
   </table>
+</div>
 
   <p><b>Плюсы одиночного дерева</b> (слайд 13): очень легко понять и валидировать; дёшево добавляет
   глубокие интеракции.<br>
@@ -604,7 +618,8 @@
   <p>Каждое $\hat f_b$ — дерево, обученное на <b>других данных</b>, под <b>другую потерю</b>, или и то и другое.
   Отсюда деление на два семейства:</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>Random Forest</th><th>Gradient Boosting Trees</th></tr>
     <tr><td><b>Что варьируется</b></td><td>одинаковая потеря, <b>разные данные</b></td>
         <td><b>разная потеря</b>, разные данные</td></tr>
@@ -620,6 +635,7 @@
     <tr><td><b>Зависимость деревьев</b></td><td><b>независимы</b> — удобно для анализа</td>
         <td>отрицательно зависимы</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Почему «деревья независимы, удобно для анализа» — не проходная фраза.</b>
   Именно независимость деревьев в RF позволяет (а) усреднять MDI по деревьям как в шаге 4 алгоритма,
@@ -642,7 +658,8 @@
   <p>Та же модель, две меры важности. PFI считалась с MSE-потерей на тестовой выборке,
   MDI — по внутренностям леса:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Признак</th><th>MDI (нормир.)</th><th>PFI (MSE, разность)</th><th>Комментарий</th></tr>
     <tr><td><b>temp</b></td><td class="num">0,4177</td><td class="num">2,2397</td><td>лидер по обеим мерам</td></tr>
     <tr><td><b>season</b></td><td class="num">0,1539</td><td class="num">1,0616</td><td>второй по обеим</td></tr>
@@ -653,13 +670,15 @@
     <tr><td><b>workingday</b></td><td class="num">0,0436</td><td class="num"><b>−0,3630</b></td><td>то же</td></tr>
     <tr><td><b>weekday</b></td><td class="num">0,0464</td><td class="num"><b>−0,3904</b></td><td>то же</td></tr>
   </table>
+</div>
 
   <p><b>Что из этой таблицы нужно уметь сказать.</b> Верхушка совпадает (temp, season, hum),
   хвост — расходится, и расхождение имеет знак: <b>MDI неотрицательна по построению, PFI может
   быть отрицательной</b>. Отрицательная PFI означает, что после разрушения связи признака с откликом
   модель стала предсказывать <i>лучше</i> — признак использовался, но вредил.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Ось сравнения</th><th>Gini FI (MDI)</th><th>PFI</th></tr>
     <tr><td>Что измеряет</td><td>сколько примеси признак снял <b>при построении</b> модели</td>
         <td>насколько вырастет <b>ошибка</b>, если разрушить связь признака с $y$</td></tr>
@@ -674,6 +693,7 @@
         <td>к признакам, у которых нет коррелированных заместителей; экстраполяция при перестановке</td></tr>
     <tr><td>Применима к</td><td>только к деревьям и лесам</td><td>к любой модели</td></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Получим ли то же самое при повторном запуске?</b>
@@ -706,7 +726,8 @@
   <p>Статья задана на лекции 1 как чтение, обсуждалась в классе на лекции 2 и по библиографии
   относится к блоку деревьев. Слайд формулирует противопоставление так:</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Data Modeling Culture</th><th>Algorithmic Modeling Culture</th></tr>
     <tr><td>Модель должна <b>правильно определить порождающий процесс</b></td>
         <td>Если модель <b>хорошо описывает данные</b> — можно исследовать саму модель</td></tr>
@@ -714,6 +735,7 @@
         <td>Нет гарантий, что модель соответствует порождающему процессу</td></tr>
     <tr><td>—</td><td>Опирается на результаты о <b>состоятельности</b> (consistency)</td></tr>
   </table>
+</div>
 
   <p><b>Что именно обсуждали в классе</b> (слайд 21 — это и есть требуемый уровень ответа):</p>
   <ul>
@@ -750,7 +772,8 @@
   равнокачественными сплитами, смещение меры важности в пользу признаков с большим числом
   возможных разрезов.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>Что делает</th><th>Формула</th><th>Уровень</th><th>Слабость</th><th>Чем чинят</th></tr>
     <tr><td><b>Дерево</b></td><td>разбивает пространство на прямоугольники, в каждом константа</td>
         <td>$\hat f=\sum_m c_m\mathbb{1}(x\in R_m)$</td><td>локально: путь по ветвям; глобально: MDI</td>
@@ -773,6 +796,7 @@
     <tr><td><b>Boosting</b></td><td>деревья на остатках предыдущих</td><td>—</td><td>—</td>
         <td>деревья зависимы, анализировать труднее</td><td>—</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Что теряет баллы именно на этой теме.</b>
   (1) Пропустить одно из <b>двух</b> взвешиваний в MDI.

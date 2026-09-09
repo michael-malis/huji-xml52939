@@ -57,7 +57,8 @@
   $$\nabla \hat f(x)=\Big(\frac{\partial \hat f}{\partial x_1},\dots,\frac{\partial \hat f}{\partial x_p}\Big)$$
 
   <h3>Три аргумента, почему градиент — разумная мера эффекта</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Аргумент</th><th>Содержание</th><th>Откуда в курсе</th></tr>
     <tr><td><b>1. Линейная модель</b></td>
         <td>если $\hat f(x)=b_0+\sum_j b_jx_j$, то $\partial\hat f/\partial x_j=b_j$ — а коэффициент
@@ -72,6 +73,7 @@
         Тейлор первого порядка</td>
         <td>—</td></tr>
   </table>
+</div>
 
   <p><b>Что общего у всех трёх аргументов — и почему это ломает наивный вывод.</b> Прочитаем правую
   часть каждого из них внимательно. В первом эффект признака в линейной модели — это не $\beta_j$,
@@ -106,7 +108,8 @@
   <p>Плана подготовки здесь держится жёстко: архитектуры сетей сверх этих трёх компонентов —
   детали здесь не понадобятся — они нужны ровно настолько, чтобы понимать guided backprop и Grad-CAM.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Компонент</th><th>Что делает</th><th>Что важно для saliency</th></tr>
     <tr>
       <td><b>Convolution filter</b></td>
@@ -130,6 +133,7 @@
       слой уже сильно уменьшен</td>
     </tr>
   </table>
+</div>
 </section>
 
 <!-- ============ VANILLA ============ -->
@@ -166,7 +170,8 @@
   ReLU</b>. Обозначения: $R^{l+1}$ — сигнал, приходящий сверху; $f^l$ — активация снизу (то, что
   ReLU получил на прямом проходе).</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Метод</th><th>Правило обратного прохода</th><th>Что маскируется</th></tr>
     <tr><td><b>Backpropagation</b></td>
         <td>$R^l=(f^l>0)\cdot R^{l+1}$</td>
@@ -178,6 +183,7 @@
         <td>$R^l=(f^l>0)\cdot(R^{l+1}>0)\cdot R^{l+1}$</td>
         <td><b>обе</b> маски сразу: сигнал зануляется, если <b>хотя бы одно</b> из двух отрицательно</td></tr>
   </table>
+</div>
 
   <div class="fig"><div id="svg-relu" style="padding:10px 0;"></div></div>
   <div class="fig-cap illustr">Рис. 1. Одни и те же четыре координаты, три правила, три разных
@@ -227,7 +233,8 @@
   описать вклад — нужно проинтегрировать вдоль пути.</p>
 
   <h3>Две аксиомы, из которых выводится метод</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Аксиома</th><th>Формулировка</th><th>Кто нарушает</th></tr>
     <tr>
       <td><b>Sensitivity(a)</b></td>
@@ -243,6 +250,7 @@
       от функции, а не от её реализации</td>
     </tr>
   </table>
+</div>
 
   <p><b>Логика статьи в одну строку:</b> градиенты дают Implementation Invariance, но не Sensitivity;
   LRP-подобные методы — наоборот; IG строится так, чтобы получить <b>обе</b>.</p>
@@ -330,7 +338,8 @@
   <div class="calcbox">
     <b>Шаг 4. Сумма Римана — как это считает библиотека.</b> Возьмём $m=4$ шага, точки середин
     интервалов $\alpha_k=\dfrac{k-0{,}5}{m}$:
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>$k$</th><th>$\alpha_k$</th><th>$t=2\alpha_k$</th><th>$F'(t)$</th></tr>
       <tr><td>1</td><td class="num">0,125</td><td class="num">0,25</td><td class="num">1</td></tr>
       <tr><td>2</td><td class="num">0,375</td><td class="num">0,75</td><td class="num">1</td></tr>
@@ -338,6 +347,7 @@
       <tr><td>4</td><td class="num">0,875</td><td class="num">1,75</td><td class="num">0</td></tr>
       <tr><th colspan="3">среднее</th><th class="num">$\frac{1+1+0+0}{4}=0{,}5$</th></tr>
     </table>
+</div>
     $$\text{IG}\approx(2-0)\times 0{,}5=1$$
     Совпало с точным ответом уже при $m=4$ — потому что функция кусочно-линейная. На реальной сети
     берут $m$ порядка $50$–$300$ и проверяют completeness как <b>диагностику</b>: если
@@ -410,7 +420,8 @@
   В отличие от «красоты карты», они причинные — измеряют, что происходит с предсказанием при
   вмешательстве во вход, а не насколько карта нравится человеку.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Метод</th><th>Основная идея</th><th>Как работает</th><th>Свойства / проблемы</th></tr>
     <tr>
       <td><b>Vanilla Gradient</b></td>
@@ -461,10 +472,12 @@
       <td>грубое разрешение; подробно — тема 10 (лекция 12)</td>
     </tr>
   </table>
+</div>
 
   <h3>Та же таблица по трём диагностическим осям</h3>
   <p>Компактная форма, удобная, если вопрос звучит как «сравните методы»:</p>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Метод</th><th>Сколько проходов модели</th><th>Истинный градиент?</th>
         <th>Чинит насыщение?</th><th>Проходит sanity check?</th></tr>
     <tr><td>Vanilla Gradient</td><td class="num">1</td><td>да</td><td>нет</td><td><b>да</b></td></tr>
@@ -475,6 +488,7 @@
     <tr><td>SmoothGrad</td><td class="num">$n$</td><td>да (усреднённый по шуму)</td><td>нет</td><td>—</td></tr>
     <tr><td>Grad-CAM</td><td class="num">1</td><td>да (по активациям)</td><td>частично</td><td><b>да</b></td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Частая ошибка.</b> Не путать <b>две разные «усредняющие» идеи</b>: SmoothGrad
   усредняет по <b>шуму вокруг точки</b> (чинит шум), IG усредняет вдоль <b>пути от baseline</b>
@@ -493,7 +507,8 @@
   <b>отладка модели</b>.</p>
 
   <h3>Два рандомизационных теста</h3>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Тест</th><th>Что делают</th><th>Что должно произойти у хорошего метода</th></tr>
     <tr>
       <td><b>1. Model parameter randomization test</b></td>
@@ -514,6 +529,7 @@
       <td>карты должны <b>отличаться</b>: объяснение обязано зависеть от связи вход–метка</td>
     </tr>
   </table>
+</div>
 
   <h3>Результаты</h3>
   <ul>
@@ -542,7 +558,8 @@
   (conv $+$ sum-pooling) поддерживает эксперимент.</p>
 
   <h3>Что обсуждали в классе — это и есть требование читательской 4</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Вопрос обсуждения</th><th>Суть</th></tr>
     <tr><td><b>«Что именно они здесь измеряют?»</b></td>
         <td>метрика <b>сходства карт</b>: ранговая корреляция Спирмена, <b>SSIM</b>, HOG-подобие.
@@ -557,6 +574,7 @@
         <td>может ли объяснение быть полезным <b>без информации о метках</b>? без <b>чувствительности
         к параметрам</b>? и — <b>если метод проходит sanity check, значит ли это, что он полезен?</b></td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Частая ошибка — она же ответ на последний открытый вопрос.</b> Sanity checks — это
   <b>необходимое, а не достаточное</b> условие. <b>Прохождение</b> теста <i>не</i> означает, что
@@ -662,7 +680,8 @@
 
   <h3>Линия развития методов — скелет любого ответа</h3>
   <p>Курс подаёт тему как <b>цепочку исправлений</b>, и отвечать удобно по ней:</p>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Шаг</th><th>Что не так у предыдущего</th><th>Как чинят</th></tr>
     <tr><td>Vanilla Gradient</td><td>—</td><td>базовая идея: $\partial\hat f_c/\partial x$</td></tr>
     <tr><td>Guided Backprop</td><td>карты шумные и нечитаемые</td>
@@ -676,9 +695,11 @@
     <tr><td>Sanity checks</td><td>красота карты ничего не гарантирует</td>
         <td>проверить зависимость карты от весов и от меток</td></tr>
   </table>
+</div>
 
   <h3>Шесть вопросов, к которым надо быть готовым</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Вопрос</th><th>Ядро ответа в одну строку</th></tr>
     <tr><td>Почему градиент — мера эффекта?</td>
         <td>три аргумента: коэффициент линейной модели · подынтегральное выражение ALE · Тейлор
@@ -699,6 +720,7 @@
         Vanilla Gradient и Grad-CAM проходят, Guided BackProp и Guided Grad-CAM — нет,
         ведут себя как edge detector; тест <b>необходим, но не достаточен</b></td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Четыре вещи, которые на этом блоке теряют баллы чаще всего.</b>
   (1) Написать «IG усредняет градиенты» без слов «<b>вдоль пути от baseline</b>» — это описание SmoothGrad.

@@ -83,7 +83,8 @@ value отвечает на тот же вопрос иначе: усредня�
   <p><b>Словарь перевода.</b> Shapley value пришёл из теории кооперативных игр 1953 года, и весь
   словарь надо держать в голове парами:</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Теория игр</th><th>Интерпретируемость ML</th><th>Обозначение</th></tr>
     <tr><td>игроки</td><td>признаки модели</td><td>$F=\{1,\dots,p\}$</td></tr>
     <tr><td>коалиция</td><td>подмножество признаков, которые «известны» модели</td><td>$S\subseteq F$</td></tr>
@@ -91,6 +92,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td>маргинальный вклад игрока</td><td>насколько меняется предсказание, когда добавили признак $j$</td><td>$V(S\cup\{j\})-V(S)$</td></tr>
     <tr><td>дележ выигрыша grand coalition</td><td>разложение предсказания по признакам</td><td>$\sum_j\phi_j=V(F)-V(\varnothing)$</td></tr>
   </table>
+</div>
 
   <h3>Форма по подмножествам</h3>
   $$\phi_j=\sum_{S\subseteq F\setminus\{j\}}\frac{|S|!\,(p-|S|-1)!}{p!}\Big[V(S\cup\{j\})-V(S)\Big]$$
@@ -170,7 +172,8 @@ value отвечает на тот же вопрос иначе: усредня�
   <p>Руками реально считать при $p=3$ или $p=4$, дальше объём выкладок растёт слишком быстро. Веса стоит уметь
   выписать за десять секунд:</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>$|S|$</th><th>$p=3$: $\dfrac{|S|!(2-|S|)!}{6}$</th><th>сколько таких $S$</th>
         <th>$p=4$: $\dfrac{|S|!(3-|S|)!}{24}$</th><th>сколько таких $S$</th></tr>
     <tr><td>0</td><td>$\frac{1\cdot2}{6}=\frac13$</td><td>1</td><td>$\frac{1\cdot6}{24}=\frac14$</td><td>1</td></tr>
@@ -180,6 +183,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><th>сумма</th><th colspan="2">$\frac13+2\cdot\frac16+\frac13=1$ ✓</th>
         <th colspan="2">$\frac14+3\cdot\frac1{12}+3\cdot\frac1{12}+\frac14=1$ ✓</th></tr>
   </table>
+</div>
 
   <p><b>Проверка, которую стоит делать всегда:</b> $\sum_{S\subseteq F\setminus\{j\}}w(|S|)=1$.
   Если не единица — где-то потеряно или задвоено подмножество.</p>
@@ -213,7 +217,8 @@ value отвечает на тот же вопрос иначе: усредня�
   так устроена проверка в задаче четырёх игроков ниже).</p>
 
   <h3>Классические четыре (теоретико-игровая формулировка)</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Аксиома</th><th>Формально</th><th>Смысл одной фразой</th></tr>
     <tr>
       <td><b>Efficiency</b><br>(эффективность)</td>
@@ -239,6 +244,7 @@ value отвечает на тот же вопрос иначе: усредня�
       Shapley по деревьям — на этом стоит TreeSHAP.</td>
     </tr>
   </table>
+</div>
 
   <p><b>Теорема Шепли (1953).</b> Эти четыре аксиомы определяют $\phi$ <b>однозначно</b>: существует
   ровно один способ разделить выигрыш, им удовлетворяющий, и это формула из раздела 1. Именно
@@ -249,7 +255,8 @@ value отвечает на тот же вопрос иначе: усредня�
   объяснение имеет вид линейной модели на бинарных «признак присутствует / отсутствует»:</p>
   $$g(z')=\phi_0+\sum_{j=1}^{p}\phi_j z'_j,\qquad z'\in\{0,1\}^p$$
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Свойство</th><th>Формально</th><th>Соответствие</th></tr>
     <tr>
       <td><b>1. Local accuracy</b></td>
@@ -270,6 +277,7 @@ value отвечает на тот же вопрос иначе: усредня�
       важнее <i>при каждой</i> коалиции, его атрибуция не может упасть</td>
     </tr>
   </table>
+</div>
 
   <p><b>Теорема 1 (Lundberg &amp; Lee).</b> В классе additive feature attribution methods существует
   <b>единственное</b> решение, удовлетворяющее свойствам 1–3, — и это Shapley values.</p>
@@ -313,12 +321,14 @@ value отвечает на тот же вопрос иначе: усредня�
   <p>Модель с тремя признаками $F=\{1,2,3\}$. Value-функция $V(S)$ — предсказание модели, знающей
   только признаки из $S$ (отклонение от среднего предсказания, поэтому $V(\varnothing)=0$):</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>$S$</th><td>$\varnothing$</td><td>$\{1\}$</td><td>$\{2\}$</td><td>$\{3\}$</td>
         <td>$\{1,2\}$</td><td>$\{1,3\}$</td><td>$\{2,3\}$</td><td>$\{1,2,3\}$</td></tr>
     <tr><th>$V(S)$</th><td class="num">0</td><td class="num">10</td><td class="num">10</td><td class="num">0</td>
         <td class="num">40</td><td class="num">10</td><td class="num">10</td><td class="num">40</td></tr>
   </table>
+</div>
   <div class="src illustr">Значения $V(S)$ сконструированы для разбора; воспроизводить стоит механику, не числа</div>
 
   <p><b>Что за модель могла бы дать такую таблицу.</b> Читается прямо из чисел: признаки 1 и 2 по
@@ -340,7 +350,8 @@ value отвечает на тот же вопрос иначе: усредня�
     телескопическая сумма, и это встроенная проверка каждой строки.
   </div>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>#</th><th>Порядок $\tau$</th><th>Расчёт по шагам</th>
         <th>$\Delta_1$</th><th>$\Delta_2$</th><th>$\Delta_3$</th><th>Σ строки</th></tr>
     <tr><td>1</td><td>$(1,2,3)$</td>
@@ -363,6 +374,7 @@ value отвечает на тот же вопрос иначе: усредня�
         <td class="num">30</td><td class="num">10</td><td class="num">0</td><td class="num">40 ✓</td></tr>
     <tr><th colspan="3">Сумма столбца</th><th class="num">120</th><th class="num">120</th><th class="num">0</th><th class="num">240</th></tr>
   </table>
+</div>
 
   <p><b>Как читать таблицу.</b> В строке 1 признак 1 зашёл первым и получил свои «одиночные» 10;
   признак 2 зашёл вторым и забрал всю интеракцию — 30. В строке 3 они поменялись ролями. Обратите
@@ -385,7 +397,8 @@ value отвечает на тот же вопрос иначе: усредня�
   <p>Второй способ полезен как независимая проверка — если время есть, это независимая проверка.
   Считаем $\phi_1$: перебираем $S\subseteq\{2,3\}$, весами берём $w(0)=\frac13$, $w(1)=\frac16$, $w(2)=\frac13$.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>$S$</th><th>$|S|$</th><th>$\Delta_1(S)=V(S\cup\{1\})-V(S)$</th><th>$w(|S|)$</th><th>$w\cdot\Delta$</th></tr>
     <tr><td>$\varnothing$</td><td>0</td><td>$10-0=10$</td><td>$\frac13$</td><td class="num">$10/3$</td></tr>
     <tr><td>$\{2\}$</td><td>1</td><td>$40-10=30$</td><td>$\frac16$</td><td class="num">$5$</td></tr>
@@ -393,6 +406,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td>$\{2,3\}$</td><td>2</td><td>$40-10=30$</td><td>$\frac13$</td><td class="num">$10$</td></tr>
     <tr><th colspan="4">Сумма</th><th class="num">$\frac{10}{3}+5+\frac53+10=20$ ✓</th></tr>
   </table>
+</div>
 
   <p>Сходится с $\phi_1=20$. Заодно видно, зачем нужны разные веса: без них
   ($\frac14$ каждому) вышло бы $\frac{10+30+10+30}{4}=20$ — в этом симметричном примере совпало
@@ -453,7 +467,8 @@ value отвечает на тот же вопрос иначе: усредня�
   Есть путь короче: <b>маргинальный вклад игрока выводится алгебраически</b>, один раз,
   и дальше подставляются только индикаторы. Это экономит около десять.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Игрок</th><th>$\Delta_i(S)=\text{payoff}(S\cup\{i\})-\text{payoff}(S)$</th><th>Как получено</th></tr>
     <tr><td>$t$</td><td>$5+20\,\mathbb{I}\{m\in S\}+20\,\mathbb{I}\{\{m,s\}\subseteq S\}$</td>
         <td>приход $t$ включает свою пятёрку, парную интеракцию (если $m$ уже там) и тройную (если $m$ и $s$ уже там)</td></tr>
@@ -465,6 +480,7 @@ value отвечает на тот же вопрос иначе: усредня�
         <td>$+2$ всегда; штраф включается, как только в коалиции есть хоть кто-то из $t,m,s$ —
         а других игроков и нет</td></tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Шаг 2. Веса для $p=4$.</b> Зависят только от $|S|$:
@@ -476,7 +492,8 @@ value отвечает на тот же вопрос иначе: усредня�
   </div>
 
   <h3>Шаг 3. Таблица для игрока $t$ (остальные — той же схемой)</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>$S\subseteq\{m,s,j\}$</th><th>$|S|$</th><th>$\Delta_t(S)$</th><th>$w$</th><th>$w\Delta_t$</th></tr>
     <tr><td>$\varnothing$</td><td>0</td><td>$5+0+0=5$</td><td>$\frac14$</td><td class="num">$5/4$</td></tr>
     <tr><td>$\{m\}$</td><td>1</td><td>$5+20+0=25$</td><td>$\frac1{12}$</td><td class="num">$25/12$</td></tr>
@@ -488,6 +505,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td>$\{m,s,j\}$</td><td>3</td><td>$5+20+20=45$</td><td>$\frac14$</td><td class="num">$45/4$</td></tr>
     <tr><th colspan="4">Сумма</th><th class="num">$\phi_t=\frac{245}{12}\approx 20.417$</th></tr>
   </table>
+</div>
 
   <p><b>Арифметика суммы, по шагам:</b> приводим к двенадцатым долям —
   $\frac{15}{12}+\frac{25}{12}+\frac{5}{12}+\frac{5}{12}+\frac{45}{12}+\frac{25}{12}+\frac{5}{12}+\frac{135}{12}
@@ -522,7 +540,8 @@ value отвечает на тот же вопрос иначе: усредня�
   его важность по модулю ($9.25$) сопоставима с важностью $s$.</div>
 
   <h3>Проверка аксиом на посчитанной игре (Q3c) — готовый скелет ответа</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Аксиома</th><th>Что проверяем</th><th>Вывод</th></tr>
     <tr><td><b>Symmetry</b></td>
         <td>сравнить $\Delta_t(S)$ и $\Delta_m(S)$ для всех $S\subseteq\{s,j\}$</td>
@@ -539,6 +558,7 @@ value отвечает на тот же вопрос иначе: усредня�
         <td>$\sum_i\phi_i=\text{payoff}(P)$</td>
         <td>$504/12=42$ ✓</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Частая ошибка «проверьте аксиомы».</b> Efficiency проверяется <b>арифметически</b>
   (сложить и сравнить), а symmetry, dummy и additivity — <b>структурно</b>, по виду payoff-функции,
@@ -696,7 +716,8 @@ value отвечает на тот же вопрос иначе: усредня�
   ровно как гибридные входы SHAP. Здесь — только та часть, которую спрашивают <i>в этом</i> блоке:
   почему KernelSHAP есть «LIME с правильным ядром».</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>LIME</th><th>KernelSHAP</th></tr>
     <tr><td><b>Форма объяснения</b></td>
         <td colspan="2" style="text-align:center;">одна и та же: $g(z')=\phi_0+\sum_j\phi_j z'_j$ — additive feature attribution</td></tr>
@@ -716,6 +737,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td><b>Уровень</b></td>
         <td colspan="2" style="text-align:center;">локальный (оба); глобальный FI получается агрегацией</td></tr>
   </table>
+</div>
 
   <p><b>Формулировка на один абзац, если спросят «сравните».</b> «LIME и KernelSHAP решают
   <i>одну и ту же</i> задачу — подобрать линейную суррогатную модель на бинарных индикаторах
@@ -753,7 +775,8 @@ value отвечает на тот же вопрос иначе: усредня�
   предсказание относительно среднего».</div>
 
   <h3>Три уровня, которые надо различать в ответе</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Уровень</th><th>Объект</th><th>Что получаем</th></tr>
     <tr><td><b>Локальный</b></td><td>одно наблюдение $x^{(i)}$</td>
         <td>вектор $(\phi_1^{(i)},\dots,\phi_p^{(i)})$; визуализация — waterfall, force plot</td></tr>
@@ -762,6 +785,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td><b>Глобальный (важность)</b></td><td>все наблюдения, все признаки</td>
         <td>$I_j=\frac1n\sum_i|\phi_j^{(i)}|$; визуализация — bar plot, beeswarm</td></tr>
   </table>
+</div>
 </section>
 
 <!-- ============ WATERFALL ============ -->
@@ -848,7 +872,8 @@ value отвечает на тот же вопрос иначе: усредня�
   <h2>11. Остальные визуализации: dependency, beeswarm, summary</h2>
   <div class="src"><a href="references.html#papers">Lundberg &amp; Lee 2017</a>; документация SHAP — beeswarm и dependence</div>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>График</th><th>Что по осям</th><th>Что читаем</th><th>Аналог из прошлых тем</th></tr>
     <tr>
       <td><b>Waterfall / force</b></td>
@@ -877,6 +902,7 @@ value отвечает на тот же вопрос иначе: усредня�
       <td>прямой конкурент <b>PFI</b> из темы 5</td>
     </tr>
   </table>
+</div>
 
   <div class="fig"><div id="plot-dep" style="height:330px;"></div></div>
   <div class="fig-cap illustr">Рис. 9. Dependency plot: вклад $\phi_{\text{temp}}$ против значения
@@ -913,7 +939,8 @@ value отвечает на тот же вопрос иначе: усредня�
   <h3>Shapley-FI против LOCO — упражнение прямо со слайда</h3>
   <p>Слайд лекции 7 показывает две колонки важностей и спрашивает «что объясняет разницу?».
   Ответ — определение:</p>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>LOCO</th><th>Shapley-FI</th></tr>
     <tr><td><b>Относительно каких коалиций мерим</b></td>
         <td>одной: $V(F)-V(F\setminus\{j\})$</td>
@@ -928,6 +955,7 @@ value отвечает на тот же вопрос иначе: усредня�
         <td>$p$ переобучений модели</td>
         <td>$2^p$ вычислений $V$ (или $M$ сэмплов), без переобучения</td></tr>
   </table>
+</div>
 
   <div class="fig"><div id="plot-dup" style="height:310px;"></div></div>
   <div class="fig-cap illustr">Рис. 10. Три метода на одних и тех же признаках: $x_1$, его точная
@@ -945,7 +973,8 @@ value отвечает на тот же вопрос иначе: усредня�
   <h3>Карточка метода в формате плана подготовки</h3>
   <p><i>что делает → формула → уровень → true-to-model / true-to-data → главная слабость → чем чинят</i></p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>Shapley / SHAP</th></tr>
     <tr><td><b>Что делает</b></td>
         <td>усредняет маргинальный вклад признака по всем коалициям (эквивалентно — по всем порядкам прихода)</td></tr>
@@ -971,6 +1000,7 @@ value отвечает на тот же вопрос иначе: усредня�
         станут обучающие примеры (Data Shapley), в теме 10 — обнаруженные концепты (ConceptSHAP,
         где $V(S)$ — completeness score набора концептов).</td></tr>
   </table>
+</div>
 
   <p>Все переключатели теперь можно расставить на одной картинке: три оси из темы 5 и точки,
   в которых на них стоят три метода, разобранные здесь и там.</p>
@@ -983,7 +1013,8 @@ value отвечает на тот же вопрос иначе: усредня�
   поэтому и болезнь у них общая.</div>
 
   <h3>Где SHAP стоит среди методов тем 5–6</h3>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>PFI</th><th>LOCO</th><th>SHAP (маргинальный)</th><th>SHAP (условный)</th></tr>
     <tr><td><b>Ось «как удаляем»</b></td><td>перестановка (маргинал)</td><td>переобучение без признака</td>
         <td>подстановка из фона (маргинал)</td><td>условное распределение</td></tr>
@@ -996,6 +1027,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td><b>Нужна доп. модель?</b></td><td>нет</td><td>да ($\hat f_{-j}$)</td><td>нет</td><td>да (сэмплер условного)</td></tr>
     <tr><td><b>Сложность</b></td><td>$O(p)$</td><td>$p$ переобучений</td><td colspan="2">$O(2^p)$ точно, $O(M)$ приближённо</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Строка, которую забывают чаще всего:</b> SHAP по умолчанию <b>не смотрит на
   $y$</b> — value-функция построена на <i>предсказании</i>, а не на потере. Значит SHAP отвечает на
@@ -1005,7 +1037,8 @@ value отвечает на тот же вопрос иначе: усредня�
 
 
   <h3>Шесть вопросов, к которым надо быть готовым</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Вопрос</th><th>Ядро ответа в одну строку</th></tr>
     <tr><td>Определите Shapley value и объясните вес</td>
         <td>среднее маргинального вклада по всем порядкам; вес $=$ доля перестановок, где ровно $S$ пришло раньше $j$</td></tr>
@@ -1020,6 +1053,7 @@ value отвечает на тот же вопрос иначе: усредня�
     <tr><td>Прочитайте waterfall</td>
         <td>база $\mathbb{E}[\hat f]$ → крупнейшие вклады со знаком → локальность → сумма замыкается (local accuracy)</td></tr>
   </table>
+</div>
 </section>
 
 <!-- ============ КАНОНИЧЕСКИЕ ИЛЛЮСТРАЦИИ ============ -->
@@ -1055,7 +1089,7 @@ rand = XAI.rng(600001);
 {
   document.getElementById('svg-axis').innerHTML = `
   <svg viewBox="0 0 700 260" width="100%" style="max-width:680px;display:block;margin:0 auto;">
-    <style>#svg-axis .ax{stroke:#B9C7C4;stroke-width:1.6;}#svg-axis .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-axis .hdr{font:600 12.5px Georgia,serif;fill:#2F6F6D;}#svg-axis .dP{fill:#C0392B;}#svg-axis .dL{fill:#2F6F6D;}#svg-axis .dS{fill:#8A5CB8;}
+    <style>#svg-axis .ax{stroke:#B9C7C4;stroke-width:1.6;}#svg-axis .lbl{font:12px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-axis .hdr{font:600 12.5px Georgia,serif;fill:var(--accent);}#svg-axis .dP{fill:var(--calc);}#svg-axis .dL{fill:var(--accent);}#svg-axis .dS{fill:var(--practicum);}
     </style>
     <text class="hdr" x="10" y="30">1 · Feature removal</text>
     <line class="ax" x1="205" y1="25" x2="670" y2="25"/>
@@ -1075,13 +1109,13 @@ rand = XAI.rng(600001);
     <circle class="dP" cx="600" cy="205" r="5.5"/>
     <circle class="dL" cx="580" cy="205" r="5.5"/><text class="lbl" x="545" y="226">поодиночке</text>
 
-    <path d="M470,25 L400,115 L330,205" fill="none" stroke="#8A5CB8" stroke-width="1.7" stroke-dasharray="5 4"/>
-    <path d="M600,25 L600,115 L600,205" fill="none" stroke="#C0392B" stroke-width="1.7"/>
-    <path d="M300,25 L580,115 L580,205" fill="none" stroke="#2F6F6D" stroke-width="1.7" stroke-dasharray="2 3"/>
+    <path d="M470,25 L400,115 L330,205" fill="none" stroke="var(--practicum)" stroke-width="1.7" stroke-dasharray="5 4"/>
+    <path d="M600,25 L600,115 L600,205" fill="none" stroke="var(--calc)" stroke-width="1.7"/>
+    <path d="M300,25 L580,115 L580,205" fill="none" stroke="var(--accent)" stroke-width="1.7" stroke-dasharray="2 3"/>
 
-    <text class="lbl" x="447" y="16" style="fill:#8A5CB8;font-weight:700;">SHAP</text>
-    <text class="lbl" x="612" y="16" style="fill:#C0392B;font-weight:700;">PFI</text>
-    <text class="lbl" x="262" y="16" style="fill:#2F6F6D;font-weight:700;">LOCO</text>
+    <text class="lbl" x="447" y="16" style="fill:var(--practicum);font-weight:700;">SHAP</text>
+    <text class="lbl" x="612" y="16" style="fill:var(--calc);font-weight:700;">PFI</text>
+    <text class="lbl" x="262" y="16" style="fill:var(--accent);font-weight:700;">LOCO</text>
   </svg>`;
 }
 

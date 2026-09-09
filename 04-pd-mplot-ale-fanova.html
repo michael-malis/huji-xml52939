@@ -436,7 +436,8 @@
     <b>Дано.</b> Модель $\hat f(x_1,x_2)=2x_1+3x_2+0{,}5\,x_1x_2$ — интеракция нужна, иначе задача
     вырождается. Строим ALE по <b>первому</b> признаку: сетка идёт по $x_1$, фоном служит $x_2$.
     Шесть наблюдений, $K=3$ бина с границами $z_0=0$, $z_1=3$, $z_2=6$, $z_3=9$:
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>$i$</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
       <tr><th>$x_1$</th><td class="num">1</td><td class="num">2</td><td class="num">4</td>
           <td class="num">5</td><td class="num">7</td><td class="num">8</td></tr>
@@ -445,6 +446,7 @@
       <tr><th>бин</th><td colspan="2">1: $(0,3]$</td><td colspan="2">2: $(3,6]$</td>
           <td colspan="2">3: $(6,9]$</td></tr>
     </table>
+</div>
     В каждый бин попало по два наблюдения: $n_j(k)=2$.
   </div>
 
@@ -461,7 +463,8 @@
 
   <div class="calcbox">
     <b>Шаги 1–3. Локальные эффекты по бинам.</b>
-    <table class="plain" style="margin:8px 0;">
+    <div class="table-wrap" tabindex="0">
+<table class="plain" style="margin:8px 0;">
       <tr><th>Бин</th><th>границы</th><th>наблюдения (их $x_2$)</th><th>вклады $6+1{,}5x_2$</th><th>среднее</th></tr>
       <tr><td>1</td><td>$0\to3$</td><td>1 ($x_2{=}1$), 2 ($x_2{=}2$)</td>
           <td class="num">7,5 · 9,0</td><td class="num"><b>8,25</b></td></tr>
@@ -470,6 +473,7 @@
       <tr><td>3</td><td>$6\to9$</td><td>5 ($x_2{=}2$), 6 ($x_2{=}4$)</td>
           <td class="num">9,0 · 12,0</td><td class="num"><b>10,50</b></td></tr>
     </table>
+</div>
   </div>
 
   <div class="calcbox">
@@ -512,12 +516,14 @@
   <p>Начнём с ALE, потому что у него больше всего механики. Берём $K=3$ интервала с границами
   $z_0=0,\ z_1=2,\ z_2=4,\ z_3=6$ и заполняем внутреннюю сумму оценщика.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Интервал</th><th>Кто попал</th><th>Разность на границах $\hat f(z_k,x_2)-\hat f(z_{k-1},x_2)$</th><th>Локальный эффект</th></tr>
     <tr><td>$N_1=(0,2]$</td><td>$x_1=1,2$ (их $x_2=1,2$)</td><td>$2x_2-0 \Rightarrow 2,\ 4$</td><td>$\tfrac{2+4}{2}=3$</td></tr>
     <tr><td>$N_2=(2,4]$</td><td>$x_1=3,4$ (их $x_2=3,4$)</td><td>$4x_2-2x_2=2x_2 \Rightarrow 6,\ 8$</td><td>$\tfrac{6+8}{2}=7$</td></tr>
     <tr><td>$N_3=(4,6]$</td><td>$x_1=5,6$ (их $x_2=5,6$)</td><td>$6x_2-4x_2=2x_2 \Rightarrow 10,\ 12$</td><td>$\tfrac{10+12}{2}=11$</td></tr>
   </table>
+</div>
 
   <p><b>Накопление</b> (внешняя сумма): $\hat g(z_1)=3$, $\hat g(z_2)=3+7=10$, $\hat g(z_3)=10+11=21$.<br>
   <b>Центрирование</b> (веса $n_j(k)=2$ в каждом интервале):
@@ -687,7 +693,8 @@
   функция $\hat f$, рассмотренная с разной степенью агрегирования; отличаются только тем, сколько
   объектов усредняется.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Уровень</th><th>Объект</th><th>Сколько выдаёт</th><th>На какой вопрос отвечает</th></tr>
     <tr><td>одно наблюдение</td><td><b>CP</b> (Ceteris Paribus)</td><td>1 кривая</td><td>как изменится предсказание <i>для этого клиента</i></td></tr>
     <tr><td>все наблюдения, по отдельности</td><td><b>ICE</b></td><td>$n$ кривых</td><td>ведут ли себя наблюдения <i>одинаково</i> (есть ли интеракция)</td></tr>
@@ -695,11 +702,13 @@
     <tr><td>функция целиком</td><td><b>functional ANOVA</b></td><td>$2^p$ компонент</td><td>из каких эффектов и интеракций <i>вообще состоит</i> модель</td></tr>
     <tr><td>сводка (уже л. 5)</td><td><b>PDI</b></td><td>1 число на признак</td><td>насколько признак <i>важен</i></td></tr>
   </table>
+</div>
 
   <p>Три метода среднего уровня различались одним решением — откуда брать $x_{-j}$ — и одним приёмом —
   усреднять уровень или разность. Всё остальное, что мы про них вывели, из этих двух строк и следует:</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>PD</th><th>M-plot</th><th>ALE</th></tr>
     <tr><td>Распределение $X_{-j}$</td><td>маргинальное</td><td>условное</td><td>условное (в интервале)</td></tr>
     <tr><td>Что усредняет</td><td>предсказание</td><td>предсказание</td><td><b>разность</b> предсказаний</td></tr>
@@ -707,9 +716,11 @@
     <tr><td>OVB</td><td>нет</td><td><b>да</b></td><td>нет</td></tr>
     <tr><td>Стоимость</td><td>высокая</td><td>средняя</td><td><b>низкая</b></td></tr>
   </table>
+</div>
 
   <p><b>Дополнительные строки, которые почти наверняка спросят подпунктом</b> (те же три метода, другие оси):</p>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>PD</th><th>M-plot</th><th>ALE</th></tr>
     <tr><td>Уровень</td><td>глобальный</td><td>глобальный</td><td>глобальный</td></tr>
     <tr><td>Нужен доступ к параметрам</td><td>нет (black box)</td><td>нет</td><td>нет</td></tr>
@@ -717,6 +728,7 @@
     <tr><td>Что возвращает в аддитивной модели</td><td>истинное $f_j$ (+const)</td><td>смещено при корреляции</td><td>истинное $f_j$ (+const)</td></tr>
     <tr><td>Когда все три совпадают</td><td colspan="3">при <b>независимых</b> признаках</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Как отвечать на «сравните методы» за 4 предложения.</b> Назвать общую цель (кривая
   эффекта одного признака) → назвать <i>одно</i> различие, порождающее все остальные (какое распределение
@@ -736,7 +748,8 @@
   будь то PD, SHAP, LIME, Grad-CAM или influence functions. Все методы этого блока уже построены,
   поэтому по каждой оси можно сразу указать, куда они попадают и <i>из какого шага</i> это следует.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Ось</th><th>Вопрос, который она задаёт</th><th>Что означают полюса</th><th>Куда попадает наш блок</th></tr>
 
     <tr>
@@ -793,6 +806,7 @@
       шагов 2, 5 и 6.</td>
     </tr>
   </table>
+</div>
 
   <p>Дополнительная ось, которая появится в л. 12 для концептов: <b>at-training vs post-hoc</b>
   (объяснимость встроена в обучение или надстроена сверху) × <b>supervised vs unsupervised</b>
@@ -813,7 +827,8 @@
   или алгоритм → глобальный или локальный → true-to-the-model или true-to-the-data → главная
   слабость → чем её чинят</i>.</p>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th></th><th>Что делает</th><th>Уровень</th><th>Слабость</th><th>Чем чинят</th></tr>
     <tr><td><b>CP</b></td><td>кривая для одного наблюдения</td><td>локальный</td><td>только одно наблюдение</td><td>ICE (собрать все)</td></tr>
     <tr><td><b>ICE</b></td><td>пучок CP-кривых</td><td>локальный ×n</td><td>нечитаемо при большом $n$; уровни смешаны</td><td>c-ICE / d-ICE, затем PD</td></tr>
@@ -822,6 +837,7 @@
     <tr><td><b>ALE</b></td><td>накопленные условные разности</td><td>глобальный</td><td>зависит от выбора $K$; интерпретируется как накопленный эффект, не как уровень</td><td>—</td></tr>
     <tr><td><b>fANOVA</b></td><td>разложение функции на $2^p$ компонент</td><td>глобальный</td><td>при зависимости — вес на невозможные области</td><td>gfANOVA (ценой ортогональности) или ALE</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Три вещи, которые на этом блоке теряют баллы чаще всего.</b>
   (1) Сказать «ALE использует условное распределение» и остановиться — <b>это только половина ответа</b>,
@@ -938,7 +954,7 @@ rand = XAI.rng(400007);
 {
   document.getElementById('svg-fanova').innerHTML = `
   <svg viewBox="0 0 700 190" width="100%" style="max-width:660px;display:block;margin:0 auto;">
-    <style>#svg-fanova .box{fill:#EBF2F1;stroke:#2F6F6D;stroke-width:1.3;}#svg-fanova .lbl{font:13px ui-monospace,Menlo,Consolas,monospace;fill:#1E2430;}#svg-fanova .ln{stroke:#B9C7C4;stroke-width:1.3;}
+    <style>#svg-fanova .box{fill:var(--accent-bg);stroke:var(--accent);stroke-width:1.3;}#svg-fanova .lbl{font:13px ui-monospace,Menlo,Consolas,monospace;fill:var(--ink);}#svg-fanova .ln{stroke:#B9C7C4;stroke-width:1.3;}
     </style>
     <rect class="box" x="290" y="10" width="120" height="34" rx="3"/>
     <text class="lbl" x="350" y="32" text-anchor="middle">f₀</text>
@@ -956,7 +972,7 @@ rand = XAI.rng(400007);
     <line class="ln" x1="350" y1="44" x2="350" y2="90"/>
     <line class="ln" x1="350" y1="44" x2="560" y2="90"/>
 
-    <text class="lbl" x="350" y="165" text-anchor="middle" style="font-style:italic;fill:#5B6472;">
+    <text class="lbl" x="350" y="165" text-anchor="middle" style="font-style:italic;fill:var(--ink-soft);">
       f(x) = f₀ + f₁(x₁) + f₂(x₂) + f₁₂(x₁,x₂) + …
     </text>
   </svg>`;

@@ -88,12 +88,14 @@
   <p>Ключевой вопрос всей темы: концепт для человека и концепт для модели — <b>разные объекты</b>,
   и каждый метод по-своему их состыковывает.</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Как концепт представляет <b>человек</b></th><th>Как концепт представляет <b>модель</b></th><th>Кто так стыкует</th></tr>
     <tr><td>произвольный набор примеров</td><td>отдельный «нейрон» / фильтр</td><td>Network Dissection</td></tr>
     <tr><td>контрастные наборы (concept vs random)</td><td>центр кластера (прототипическая активация)</td><td>—</td></tr>
     <tr><td>слово / набор слов</td><td><b>направление</b> в пространстве представлений</td><td>TCAV, Yeh, SAE</td></tr>
   </table>
+</div>
   <p>Обычно стыковка — <b>простое преобразование над пространством представлений</b>: порог,
   линейный классификатор, проекция.</p>
 
@@ -127,13 +129,15 @@
   единственное место, где теряется пространственная информация; CAM просто «не делает» этот шаг
   и потому восстанавливает карту бесплатно, без каких-либо дополнительных вычислений.</div>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Плюс</th><td>локализация объектов за <b>один forward-проход</b>, при обучении только
     на метках <b>уровня изображения</b>: 37,1 % top-5 ошибка локализации на ILSVRC 2014 против
     34,2 % у полностью supervised подхода</td></tr>
     <tr><th>Минус</th><td>требует <b>специальной архитектуры</b> (GAP перед выходом) — обычную сеть
     надо переделывать и <b>дообучать</b></td></tr>
   </table>
+</div>
 </section>
 
 <!-- ============ GRAD-CAM ============ -->
@@ -325,7 +329,8 @@
   (в лекции упоминался порог значимости $0{,}05$). Без этой проверки высокий TCAV-скор можно
   получить и для бессмысленного «концепта».</p>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Плюсы TCAV</th><th>Минусы TCAV</th></tr>
     <tr><td>
       <ul style="margin:4px 0;">
@@ -343,6 +348,7 @@
       </ul></td>
     </tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Глобальный или локальный? — ГЛОБАЛЬНЫЙ.</b> Цель — общее утверждение
   о важности концепта для <b>целого класса</b> («насколько полоски важны для распознавания зебры»),
@@ -355,7 +361,8 @@
   <h2>7. Network Dissection vs TCAV</h2>
   <div class="src"><a href="references.html#papers">Kim et al. 2018</a> — TCAV</div>
 
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th></th><th>Network Dissection</th><th>TCAV</th></tr>
     <tr><td><b>Концепт в модели</b></td><td><b>отдельный фильтр / юнит</b></td>
         <td><b>направление</b> в пространстве активаций</td></tr>
@@ -371,6 +378,7 @@
     <tr><td><b>Предположение</b></td><td>концепт локализован в <b>одном</b> нейроне</td>
         <td>концепт — <b>линейное направление</b> (может быть распределён по нейронам)</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Главная концептуальная разница — за неё и дают баллы.</b>
   ND предполагает, что концепт живёт <b>в одном нейроне</b>, что противоречит <b>суперпозиции</b>
@@ -494,7 +502,8 @@
   Все три стратегии — это три способа их скомбинировать.</p>
 
   <h3>(б) Три стратегии обучения</h3>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Стратегия</th><th>Как обучается</th><th>Формула</th></tr>
     <tr>
       <td><b>Independent</b></td>
@@ -517,6 +526,7 @@
           +\sum_j\lambda\,L_{C_j}\big(g(x^{(i)});c^{(i)}\big)\Big]$</td>
     </tr>
   </table>
+</div>
 
   <div class="calcbox">
     <b>Два предельных случая, которые стоит назвать — они показывают, что joint содержит остальные.</b>
@@ -636,7 +646,8 @@
   </ol>
 
   <h3>Валидация концептов</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Способ</th><th>Что делают</th><th>Результат</th></tr>
     <tr><td><b>Autointerpretation</b><br>(Bills et al. 2023)</td>
         <td>автоматический bottom-up → попросить LLM <b>предсказать активации</b> на тест-сете
@@ -651,6 +662,7 @@
         за контрфактическое поведение</td>
         <td>точнее прежних разложений в задаче <b>indirect object identification</b></td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Частая ошибка.</b> SAE — <b>unsupervised</b> и <b>post-hoc</b>: он не требует
   разметки концептов (в отличие от ND и CBM), но и <b>не гарантирует</b>, что найденные направления
@@ -728,7 +740,8 @@
   <h2>12. Ключевые выводы главы</h2>
   <div class="src"><a href="references.html#papers">Cunningham et al. 2023</a>; <a href="references.html#papers">Bills et al. 2023</a></div>
 
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Метод</th><th>Что делает</th><th>Ядро механики</th><th>Уровень</th><th>Слабость</th></tr>
     <tr><td><b>CAM</b></td><td>проецирует веса выходного слоя на карты признаков</td>
         <td>$M_c(x,y)=\sum_k w^c_k f_k(x,y)$</td><td>локальный (карта на изображение)</td>
@@ -755,9 +768,11 @@
         <td>глобальный (словарь) + локальный (активации)</td>
         <td>unsupervised — понятность не гарантирована; ненулевая ошибка реконструкции</td></tr>
   </table>
+</div>
 
   <h3>Раскладка всех методов лекции по двум осям таксономии</h3>
-  <table class="plain">
+  <div class="table-wrap" tabindex="0">
+<table class="plain">
     <tr><th>Метод</th><th>Когда</th><th>Как определяются концепты</th><th>Что представляет концепт</th></tr>
     <tr><td><b>CAM / Grad-CAM</b></td><td>Post-hoc</td><td>— (только классы из $y$)</td>
         <td>карта последнего свёрточного слоя</td></tr>
@@ -771,10 +786,12 @@
         <td>явный слой-бутылочное горлышко</td></tr>
     <tr><td><b>SAE</b></td><td>Post-hoc</td><td><b>Unsupervised</b></td><td>направления в словаре</td></tr>
   </table>
+</div>
 </section>
 
   <h3>Шесть вопросов, к которым надо быть готовым</h3>
-  <table class="contrast">
+  <div class="table-wrap" tabindex="0">
+<table class="contrast">
     <tr><th>Вопрос</th><th>Ядро ответа в одну строку</th></tr>
     <tr><td>Этапы Network Dissection <span style="color:var(--pitfall);">(без формул)</span></td>
         <td>активации на Broden → порог верхнего 0,5 %-квантиля по всему датасету → апсемплинг
@@ -796,6 +813,7 @@
         <td>переполненный словарь на активациях, $L=$ реконструкция $+\ \alpha\ell_1$; используется
         через bottom-up аннотацию, autointerpretation и steering</td></tr>
   </table>
+</div>
 
   <div class="pitfall"><b>Четыре вещи, которые на этом блоке теряют баллы чаще всего.</b>
   (1) Назвать ND или TCAV <b>локальными</b> — оба глобальные.
