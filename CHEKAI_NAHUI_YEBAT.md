@@ -191,9 +191,15 @@ unrendered `$…$` math, because neither has a local fallback (REFACTOR_PLAN Pha
 item 10 — "CDN scripts without SRI and without offline fallback" — was already flagged
 and remains unaddressed).
 
-## 5. Remaining technical debt
+## 5. Technical debt — ACCEPTED AND CLOSED
 
-In descending order of how much a reader would notice:
+> **Status as of 2026-09-09: the refactoring project is 100% finished and closed.**
+> Every item in this section has been **deliberately descoped**. None of it will be
+> fixed. This is a personal study guide, and the cost of fixing these outweighs what
+> a single reader would gain; see the STATUS banner at the top of `REFACTOR_PLAN.md`.
+> The list survives as a record of what is knowingly imperfect, not as a backlog.
+
+In descending order of how much a reader would notice — **all accepted, none open**:
 
 1. **Plotly charts are not theme-aware** (§4c). ~44 call sites; fixing requires a small
    piece of new JS logic (resolve CSS custom properties, redraw on theme toggle), not a
@@ -228,6 +234,10 @@ In descending order of how much a reader would notice:
    `prefers-reduced-motion`/`:focus-visible` audit) remain entirely as scoped in the plan
    — this run's instructions narrowed Phase 5/6 to the items covered above, and that
    narrower scope is what was completed.
+
+> **Closing note.** Items 1, 2, 3, 5 and 7 above are permanently accepted. Item 4 is an
+> environment quirk, not repository content. Item 6 (CRLF churn) resolved itself — the
+> working tree is clean. The book ships as it stands.
 
 ## 6. Environment notes (not content, but worth recording)
 
