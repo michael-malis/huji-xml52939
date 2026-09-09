@@ -469,6 +469,21 @@ section.practicum > h2::before {
 }
 .calcbox b { color: var(--accent); }
 
+/* Attribution — a quiet, calcbox-style callout (same accent tokens, same
+   left-border language) for the personal-project / course-credit note. */
+.attribution {
+  background: var(--accent-bg);
+  border-left: 3px solid var(--accent);
+  padding: .75rem 1rem;
+  margin: 1rem 0 1.5rem;
+  border-radius: 0 4px 4px 0;
+  font-size: .92rem;
+  color: var(--ink-soft);
+}
+.attribution ul { margin: 0; padding-left: 1.25rem; }
+.attribution li { margin: .2rem 0; }
+.attribution b { color: var(--ink); }
+
 /* Внутри практикума расчётные шаги окрашены в цвет практикума. */
 section.practicum .calcbox {
   background: var(--practicum-bg);
