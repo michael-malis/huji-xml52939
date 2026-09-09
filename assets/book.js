@@ -141,7 +141,10 @@ window.MathJax = {
   /* ------------------------------------------------------------------------
      3. Общие настройки Plotly
      ------------------------------------------------------------------------ */
-  XAI.CFG = { displayModeBar: false, scrollZoom: false, doubleClick: false, responsive: true };
+  /* doubleClick: "reset" — выделение рамкой по-прежнему приближает график,
+     а двойной клик возвращает исходный масштаб. При прежнем false двойной
+     клик не делал ничего, хотя Plotly продолжал показывать подсказку о нём. */
+  XAI.CFG = { displayModeBar: false, scrollZoom: false, doubleClick: "reset", responsive: true };
   XAI.AXIS = { zeroline: false, gridcolor: "#EEEDE7" };
 
   /* ------------------------------------------------------------------------

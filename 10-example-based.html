@@ -19,10 +19,7 @@
 
 <a class="back-link" href="index.html">← Оглавление</a>
 <h1>Пространство примеров: прототипы · influence functions · Data Shapley</h1>
-<div class="meta">52939 · Statistical Perspectives on ML Interpretability · Лекции 10–11 · тема 9</div>
-<div class="badges">
-  <span class="badge core" style="background:#B5540B;">Повышенная вероятность</span>
-</div>
+<div class="meta">Часть V · Глава 10</div>
 
 <nav class="toc">
   Оглавление —
@@ -261,7 +258,7 @@
       <td>прототипы несут достаточно информации, чтобы модель на них работала</td>
     </tr>
     <tr>
-      <td><b>Сравнение со случайной выборкой</b><br><span style="font-size:0.9em;color:#B5540B;">
+      <td><b>Сравнение со случайной выборкой</b><br><span style="font-size:0.9em;color:var(--pitfall);">
       главный контроль</span></td>
       <td>взять <b>случайные</b> точки того же количества и сравнить</td>
       <td><b>если прототипы не лучше случайных точек — метод бесполезен</b></td>
@@ -884,17 +881,19 @@ rand = XAI.rng(1000005);
     S(gradR,'Gradient Shapley','#8A5CB8','dash',true),
     S(looR,'LOO','#C0392B','dashdot',true),
     S(rndR,'случайное удаление','#9AA0A6','dot',true)
-  ], {margin:{l:56,r:14,t:34,b:84},
+  ], {margin:{l:56,r:14,t:58,b:84},
       grid:{rows:1,columns:2,pattern:'independent'},
       xaxis:{title:'доля удалённых точек',domain:[0,0.46],tickformat:'.0%',...AXIS},
       yaxis:{title:'accuracy',range:[0.24,0.90],...AXIS},
       xaxis2:{title:'доля удалённых точек',domain:[0.56,1],tickformat:'.0%',...AXIS},
       yaxis2:{range:[0.24,0.90],...AXIS},
       annotations:[
-        {x:0.2,y:1.11,xref:'paper',yref:'paper',showarrow:false,font:{size:11.5},
-         text:'<b>Удаляем ДЕШЁВЫЕ</b> — хорошо, если растёт ↑'},
-        {x:0.86,y:1.11,xref:'paper',yref:'paper',showarrow:false,font:{size:11.5},
-         text:'<b>Удаляем ДОРОГИЕ</b> — хорошо, если падает ↓'},
+        {x:0,y:1.14,xref:'paper',yref:'paper',xanchor:'left',yanchor:'top',
+         showarrow:false,align:'left',font:{size:11},
+         text:'<b>Удаляем ДЕШЁВЫЕ</b><br>хорошо, если растёт ↑'},
+        {x:1,y:1.14,xref:'paper',yref:'paper',xanchor:'right',yanchor:'top',
+         showarrow:false,align:'right',font:{size:11},
+         text:'<b>Удаляем ДОРОГИЕ</b><br>хорошо, если падает ↓'},
         {x:0.30,y:0.833,xref:'x',yref:'y',ax:40,ay:-30,font:{size:10,color:'#C0392B'},
          text:'LOO: насыщение<br>и разворот вниз',arrowcolor:'#C0392B',arrowsize:0.7}
       ],
